@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package api.requestEth.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "requestEth/api/requestEth/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.helloworld.v1";
+option java_outer_classname = "HelloworldProtoV1";
+
+service Transaction {
+  rpc SendTransaction (SendTransactionRequest) returns (SendTransactionReply) {
+    option (google.api.http) = {
+      post: "/api/transaction"
+      body: "send_body"
+    };
+  }
+
+  rpc Transaction (TransactionRequest) returns (TransactionReply) {
+    option (google.api.http) = {
+      get: "/api/transaction/{tx}"
+    };
+  }
+
+  rpc GenerateKey (GenerateKeyRequest) returns (GenerateKeyReply) {
+    option (google.api.http) = {
+      get: "/api/generate_key"
+    };
+  }
+}
+
+message SendTransactionRequest {
+  message SendBody{
+    string privateKey = 1;
+    string toAddr = 2;
+    string amount = 3;
+  }
+
+  SendBody send_body = 1;
+}
+
+message SendTransactionReply {
+  string tx = 1;
+  string err = 2;
+}
+
+message TransactionRequest {
+  string tx = 1;
+}
+
+message TransactionReply {
+  uint64 status = 1;
+}
+
+message GenerateKeyRequest {
+}
+
+message GenerateKeyReply {
+  string address = 1;
+  string privateKey = 2;
+  string err = 3;
+}
