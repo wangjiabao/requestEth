@@ -17,6 +17,13 @@ service Transaction {
     };
   }
 
+  rpc SendTransactionEth (SendTransactionEthRequest) returns (SendTransactionEthReply) {
+    option (google.api.http) = {
+      post: "/api/transaction_eth"
+      body: "send_body"
+    };
+  }
+
   rpc Transaction (TransactionRequest) returns (TransactionReply) {
     option (google.api.http) = {
       get: "/api/transaction/{tx}"
@@ -44,6 +51,22 @@ message SendTransactionReply {
   string tx = 1;
   string err = 2;
 }
+
+message SendTransactionEthRequest {
+  message SendBody{
+    string privateKey = 1;
+    string toAddr = 2;
+    string amount = 3;
+  }
+
+  SendBody send_body = 1;
+}
+
+message SendTransactionEthReply {
+  string tx = 1;
+  string err = 2;
+}
+
 
 message TransactionRequest {
   string tx = 1;

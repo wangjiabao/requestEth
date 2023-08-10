@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TransactionClient interface {
 	SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*SendTransactionReply, error)
+	SendTransactionEth(ctx context.Context, in *SendTransactionEthRequest, opts ...grpc.CallOption) (*SendTransactionEthReply, error)
 	Transaction(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionReply, error)
 	GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error)
 }
@@ -38,6 +39,15 @@ func NewTransactionClient(cc grpc.ClientConnInterface) TransactionClient {
 func (c *transactionClient) SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*SendTransactionReply, error) {
 	out := new(SendTransactionReply)
 	err := c.cc.Invoke(ctx, "/api.requestEth.v1.Transaction/SendTransaction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) SendTransactionEth(ctx context.Context, in *SendTransactionEthRequest, opts ...grpc.CallOption) (*SendTransactionEthReply, error) {
+	out := new(SendTransactionEthReply)
+	err := c.cc.Invoke(ctx, "/api.requestEth.v1.Transaction/SendTransactionEth", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +77,7 @@ func (c *transactionClient) GenerateKey(ctx context.Context, in *GenerateKeyRequ
 // for forward compatibility
 type TransactionServer interface {
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
+	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	mustEmbedUnimplementedTransactionServer()
@@ -78,6 +89,9 @@ type UnimplementedTransactionServer struct {
 
 func (UnimplementedTransactionServer) SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendTransaction not implemented")
+}
+func (UnimplementedTransactionServer) SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTransactionEth not implemented")
 }
 func (UnimplementedTransactionServer) Transaction(context.Context, *TransactionRequest) (*TransactionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Transaction not implemented")
@@ -112,6 +126,24 @@ func _Transaction_SendTransaction_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TransactionServer).SendTransaction(ctx, req.(*SendTransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_SendTransactionEth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTransactionEthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).SendTransactionEth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.requestEth.v1.Transaction/SendTransactionEth",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).SendTransactionEth(ctx, req.(*SendTransactionEthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -162,6 +194,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendTransaction",
 			Handler:    _Transaction_SendTransaction_Handler,
+		},
+		{
+			MethodName: "SendTransactionEth",
+			Handler:    _Transaction_SendTransactionEth_Handler,
 		},
 		{
 			MethodName: "Transaction",
