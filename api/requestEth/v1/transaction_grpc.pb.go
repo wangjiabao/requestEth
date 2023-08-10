@@ -25,6 +25,7 @@ type TransactionClient interface {
 	SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*SendTransactionReply, error)
 	SendTransactionEth(ctx context.Context, in *SendTransactionEthRequest, opts ...grpc.CallOption) (*SendTransactionEthReply, error)
 	Transaction(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionReply, error)
+	EthBalance(ctx context.Context, in *EthBalanceRequest, opts ...grpc.CallOption) (*EthBalanceReply, error)
 	GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error)
 }
 
@@ -63,6 +64,15 @@ func (c *transactionClient) Transaction(ctx context.Context, in *TransactionRequ
 	return out, nil
 }
 
+func (c *transactionClient) EthBalance(ctx context.Context, in *EthBalanceRequest, opts ...grpc.CallOption) (*EthBalanceReply, error) {
+	out := new(EthBalanceReply)
+	err := c.cc.Invoke(ctx, "/api.requestEth.v1.Transaction/EthBalance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transactionClient) GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error) {
 	out := new(GenerateKeyReply)
 	err := c.cc.Invoke(ctx, "/api.requestEth.v1.Transaction/GenerateKey", in, out, opts...)
@@ -79,6 +89,7 @@ type TransactionServer interface {
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
+	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
@@ -95,6 +106,9 @@ func (UnimplementedTransactionServer) SendTransactionEth(context.Context, *SendT
 }
 func (UnimplementedTransactionServer) Transaction(context.Context, *TransactionRequest) (*TransactionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Transaction not implemented")
+}
+func (UnimplementedTransactionServer) EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EthBalance not implemented")
 }
 func (UnimplementedTransactionServer) GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateKey not implemented")
@@ -166,6 +180,24 @@ func _Transaction_Transaction_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_EthBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EthBalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).EthBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.requestEth.v1.Transaction/EthBalance",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).EthBalance(ctx, req.(*EthBalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Transaction_GenerateKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GenerateKeyRequest)
 	if err := dec(in); err != nil {
@@ -202,6 +234,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Transaction",
 			Handler:    _Transaction_Transaction_Handler,
+		},
+		{
+			MethodName: "EthBalance",
+			Handler:    _Transaction_EthBalance_Handler,
 		},
 		{
 			MethodName: "GenerateKey",

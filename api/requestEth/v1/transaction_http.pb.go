@@ -19,12 +19,14 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
 
 type TransactionHTTPServer interface {
+	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
@@ -36,6 +38,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.POST("/api/transaction", _Transaction_SendTransaction0_HTTP_Handler(srv))
 	r.POST("/api/transaction_eth", _Transaction_SendTransactionEth0_HTTP_Handler(srv))
 	r.GET("/api/transaction/{tx}", _Transaction_Transaction0_HTTP_Handler(srv))
+	r.GET("/api/eth_balance", _Transaction_EthBalance0_HTTP_Handler(srv))
 	r.GET("/api/generate_key", _Transaction_GenerateKey0_HTTP_Handler(srv))
 }
 
@@ -105,6 +108,25 @@ func _Transaction_Transaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx 
 	}
 }
 
+func _Transaction_EthBalance0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in EthBalanceRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionEthBalance)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.EthBalance(ctx, req.(*EthBalanceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*EthBalanceReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Transaction_GenerateKey0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GenerateKeyRequest
@@ -125,6 +147,7 @@ func _Transaction_GenerateKey0_HTTP_Handler(srv TransactionHTTPServer) func(ctx 
 }
 
 type TransactionHTTPClient interface {
+	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
@@ -137,6 +160,19 @@ type TransactionHTTPClientImpl struct {
 
 func NewTransactionHTTPClient(client *http.Client) TransactionHTTPClient {
 	return &TransactionHTTPClientImpl{client}
+}
+
+func (c *TransactionHTTPClientImpl) EthBalance(ctx context.Context, in *EthBalanceRequest, opts ...http.CallOption) (*EthBalanceReply, error) {
+	var out EthBalanceReply
+	pattern := "/api/eth_balance"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionEthBalance))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *TransactionHTTPClientImpl) GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...http.CallOption) (*GenerateKeyReply, error) {

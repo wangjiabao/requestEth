@@ -30,6 +30,12 @@ service Transaction {
     };
   }
 
+  rpc EthBalance (EthBalanceRequest) returns (EthBalanceReply) {
+    option (google.api.http) = {
+      get: "/api/eth_balance"
+    };
+  }
+
   rpc GenerateKey (GenerateKeyRequest) returns (GenerateKeyReply) {
     option (google.api.http) = {
       get: "/api/generate_key"
@@ -64,6 +70,15 @@ message SendTransactionEthRequest {
 
 message SendTransactionEthReply {
   string tx = 1;
+  string err = 2;
+}
+
+message EthBalanceRequest {
+  string address = 1;
+}
+
+message EthBalanceReply {
+  string balance = 1;
   string err = 2;
 }
 

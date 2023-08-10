@@ -241,6 +241,31 @@ func toBnB(toAccount string, fromPrivateKey string, toAmount string, url1 string
 	return true, signedTx.Hash().Hex(), nil
 }
 
+func (s *TransactionService) EthBalance(ctx context.Context, req *pb.EthBalanceRequest) (*pb.EthBalanceReply, error) {
+	//client, err := ethclient.Dial("https://data-seed-prebsc-1-s3.binance.org:8545/")
+	client, err := ethclient.Dial("https://bsc-dataseed4.binance.org/")
+	if err != nil {
+		return &pb.EthBalanceReply{
+			Balance: "",
+			Err:     err.Error(),
+		}, nil
+	}
+
+	account := common.HexToAddress(req.Address)
+	balance, err := client.BalanceAt(context.Background(), account, nil)
+	if err != nil {
+		return &pb.EthBalanceReply{
+			Balance: "",
+			Err:     err.Error(),
+		}, nil
+	}
+
+	return &pb.EthBalanceReply{
+		Balance: balance.String(),
+		Err:     err.Error(),
+	}, nil
+}
+
 func (s *TransactionService) Transaction(ctx context.Context, req *pb.TransactionRequest) (*pb.TransactionReply, error) {
 	// https://data-seed-prebsc-1-s3.binance.org:8545/
 	// https://bsc-dataseed.binance.org/
