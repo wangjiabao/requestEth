@@ -262,7 +262,7 @@ func (s *TransactionService) EthBalance(ctx context.Context, req *pb.EthBalanceR
 
 	return &pb.EthBalanceReply{
 		Balance: balance.String(),
-		Err:     err.Error(),
+		Err:     "",
 	}, nil
 }
 
