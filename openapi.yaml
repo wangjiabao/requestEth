@@ -119,6 +119,29 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/usdt_balance:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_UsdtBalance
+            parameters:
+                - name: address
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UsdtBalanceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         EthBalanceReply:
@@ -197,7 +220,13 @@ components:
             type: object
             properties:
                 status:
-                    type: integer
-                    format: uint64
+                    type: string
+        UsdtBalanceReply:
+            type: object
+            properties:
+                balance:
+                    type: string
+                err:
+                    type: string
 tags:
     - name: Transaction

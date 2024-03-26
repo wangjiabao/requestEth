@@ -41,6 +41,21 @@ service Transaction {
       get: "/api/generate_key"
     };
   }
+
+  rpc UsdtBalance (UsdtBalanceRequest) returns (UsdtBalanceReply) {
+    option (google.api.http) = {
+      get: "/api/usdt_balance"
+    };
+  }
+}
+
+message UsdtBalanceRequest {
+  string address = 1;
+}
+
+message UsdtBalanceReply {
+  string balance = 1;
+  string err = 2;
 }
 
 message SendTransactionRequest {

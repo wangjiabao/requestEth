@@ -4,11 +4,11 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/crypto/sha3"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
 	"time"
@@ -35,8 +35,14 @@ func (s *TransactionService) SendTransaction(ctx context.Context, req *pb.SendTr
 		//tmpUrl1      = "https://data-seed-prebsc-1-s3.binance.org:8545/"
 	)
 
+	if 0 == len(req.SendBody.ToAddr) {
+		return &pb.SendTransactionReply{
+			Tx: tx,
+		}, nil
+	}
+
 	for i := 0; i <= 5; i++ {
-		_, tx, err = toToken(req.SendBody.PrivateKey, req.SendBody.ToAddr, req.SendBody.Amount, tokenAddress, tmpUrl1)
+		tx, err = toToken(req.SendBody.PrivateKey, req.SendBody.ToAddr, req.SendBody.Amount, tokenAddress, tmpUrl1)
 		if err == nil {
 			break
 		} else if "insufficient funds for gas * price + value" == err.Error() {
@@ -74,6 +80,55 @@ func (s *TransactionService) SendTransaction(ctx context.Context, req *pb.SendTr
 	}, nil
 }
 
+func toToken(userPrivateKey string, toAccount string, withdrawAmount string, withdrawTokenAddress string, url1 string) (string, error) {
+	client, err := ethclient.Dial(url1)
+	//client, err := ethclient.Dial("https://bsc-dataseed.binance.org/")
+	if err != nil {
+		return "", err
+	}
+
+	tokenAddress := common.HexToAddress(withdrawTokenAddress)
+	instance, err := NewUsdt(tokenAddress, client)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	var authUser *bind.TransactOpts
+
+	var privateKey *ecdsa.PrivateKey
+	privateKey, err = crypto.HexToECDSA(userPrivateKey)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	//gasPrice, err := client.SuggestGasPrice(context.Background())
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return "", err
+	//}
+
+	authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	tmpWithdrawAmount, _ := new(big.Int).SetString(withdrawAmount, 10)
+	var tx *types.Transaction
+	tx, err = instance.Transfer(&bind.TransactOpts{
+		From:     authUser.From,
+		Signer:   authUser.Signer,
+		GasLimit: 0,
+	}, common.HexToAddress(toAccount), tmpWithdrawAmount)
+	if err != nil {
+		return "", err
+	}
+
+	return tx.Hash().Hex(), nil
+}
+
 func (s *TransactionService) SendTransactionEth(ctx context.Context, req *pb.SendTransactionEthRequest) (*pb.SendTransactionEthReply, error) {
 
 	var (
@@ -83,6 +138,12 @@ func (s *TransactionService) SendTransactionEth(ctx context.Context, req *pb.Sen
 		//tokenAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd"
 		//tmpUrl1      = "https://data-seed-prebsc-1-s3.binance.org:8545/"
 	)
+
+	if 0 == len(req.SendBody.ToAddr) {
+		return &pb.SendTransactionEthReply{
+			Tx: tx,
+		}, nil
+	}
 
 	for i := 0; i <= 5; i++ {
 		_, tx, err = toBnB(req.SendBody.ToAddr, req.SendBody.PrivateKey, req.SendBody.Amount, tmpUrl1)
@@ -121,77 +182,6 @@ func (s *TransactionService) SendTransactionEth(ctx context.Context, req *pb.Sen
 		Tx:  tx,
 		Err: err.Error(),
 	}, nil
-}
-
-func toToken(userPrivateKey string, toAccount string, withdrawAmount string, withdrawTokenAddress string, url1 string) (bool, string, error) {
-	//client, err := ethclient.Dial("https://data-seed-prebsc-1-s3.binance.org:8545/")
-	client, err := ethclient.Dial(url1)
-	if err != nil {
-		return false, "", err
-	}
-	// 转token
-	privateKey, err := crypto.HexToECDSA(userPrivateKey)
-	if err != nil {
-		return false, "", err
-	}
-	publicKey := privateKey.Public()
-	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-	if !ok {
-		return false, "", err
-	}
-	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
-	if err != nil {
-		return false, "", err
-	}
-	value := big.NewInt(0) // in wei (0 eth)
-	gasPrice, err := client.SuggestGasPrice(context.Background())
-	if err != nil {
-		return false, "", err
-	}
-
-	toAddress := common.HexToAddress(toAccount)
-	// 0x337610d27c682E347C9cD60BD4b3b107C9d34dDd
-	// 0x55d398326f99059fF775485246999027B3197955
-	// tokenAddress := common.HexToAddress("0x55d398326f99059fF775485246999027B3197955")
-	// tokenAddress := common.HexToAddress("0x337610d27c682E347C9cD60BD4b3b107C9d34dDd")
-	tokenAddress := common.HexToAddress(withdrawTokenAddress)
-	transferFnSignature := []byte("transfer(address,uint256)")
-	hash := sha3.NewKeccak256()
-	hash.Write(transferFnSignature)
-	methodID := hash.Sum(nil)[:4]
-
-	paddedAddress := common.LeftPadBytes(toAddress.Bytes(), 32)
-
-	amount := new(big.Int)
-
-	amount.SetString(withdrawAmount, 10) // 提现的金额恢复
-	paddedAmount := common.LeftPadBytes(amount.Bytes(), 32)
-
-	var data []byte
-	data = append(data, methodID...)
-	data = append(data, paddedAddress...)
-	data = append(data, paddedAmount...)
-
-	tx := types.NewTransaction(nonce, tokenAddress, value, 3000000, gasPrice, data)
-
-	chainID, err := client.NetworkID(context.Background())
-	if err != nil {
-		return false, "", err
-	}
-
-	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
-	if err != nil {
-		return false, "", err
-	}
-
-	err = client.SendTransaction(context.Background(), signedTx)
-	if err != nil {
-		fmt.Println(err)
-		return false, "", err
-	}
-
-	return true, signedTx.Hash().Hex(), nil
 }
 
 func toBnB(toAccount string, fromPrivateKey string, toAmount string, url1 string) (bool, string, error) {
@@ -262,6 +252,40 @@ func (s *TransactionService) EthBalance(ctx context.Context, req *pb.EthBalanceR
 
 	return &pb.EthBalanceReply{
 		Balance: balance.String(),
+		Err:     "",
+	}, nil
+}
+
+func (s *TransactionService) UsdtBalance(ctx context.Context, req *pb.UsdtBalanceRequest) (*pb.UsdtBalanceReply, error) {
+	//client, err := ethclient.Dial("https://data-seed-prebsc-1-s3.binance.org:8545/")
+	client, err := ethclient.Dial("https://bsc-dataseed.binance.org/")
+	if err != nil {
+		return &pb.UsdtBalanceReply{
+			Balance: "",
+			Err:     err.Error(),
+		}, nil
+	}
+
+	tokenAddress := common.HexToAddress("0x55d398326f99059fF775485246999027B3197955")
+	instance, err := NewUsdt(tokenAddress, client)
+	if err != nil {
+		return &pb.UsdtBalanceReply{
+			Balance: "",
+			Err:     err.Error(),
+		}, nil
+	}
+
+	address := common.HexToAddress(req.Address)
+	bal, err := instance.BalanceOf(&bind.CallOpts{}, address)
+	if err != nil {
+		return &pb.UsdtBalanceReply{
+			Balance: "",
+			Err:     err.Error(),
+		}, nil
+	}
+
+	return &pb.UsdtBalanceReply{
+		Balance: bal.String(),
 		Err:     "",
 	}, nil
 }
