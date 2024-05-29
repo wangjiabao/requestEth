@@ -25,6 +25,7 @@ const (
 	Transaction_EthBalance_FullMethodName         = "/api.requestEth.v1.Transaction/EthBalance"
 	Transaction_GenerateKey_FullMethodName        = "/api.requestEth.v1.Transaction/GenerateKey"
 	Transaction_UsdtBalance_FullMethodName        = "/api.requestEth.v1.Transaction/UsdtBalance"
+	Transaction_UsdtBalanceBiw_FullMethodName     = "/api.requestEth.v1.Transaction/UsdtBalanceBiw"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -37,6 +38,7 @@ type TransactionClient interface {
 	EthBalance(ctx context.Context, in *EthBalanceRequest, opts ...grpc.CallOption) (*EthBalanceReply, error)
 	GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error)
 	UsdtBalance(ctx context.Context, in *UsdtBalanceRequest, opts ...grpc.CallOption) (*UsdtBalanceReply, error)
+	UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceBiwRequest, opts ...grpc.CallOption) (*UsdtBalanceBiwReply, error)
 }
 
 type transactionClient struct {
@@ -101,6 +103,15 @@ func (c *transactionClient) UsdtBalance(ctx context.Context, in *UsdtBalanceRequ
 	return out, nil
 }
 
+func (c *transactionClient) UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceBiwRequest, opts ...grpc.CallOption) (*UsdtBalanceBiwReply, error) {
+	out := new(UsdtBalanceBiwReply)
+	err := c.cc.Invoke(ctx, Transaction_UsdtBalanceBiw_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -111,6 +122,7 @@ type TransactionServer interface {
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error)
+	UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -135,6 +147,9 @@ func (UnimplementedTransactionServer) GenerateKey(context.Context, *GenerateKeyR
 }
 func (UnimplementedTransactionServer) UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UsdtBalance not implemented")
+}
+func (UnimplementedTransactionServer) UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UsdtBalanceBiw not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -257,6 +272,24 @@ func _Transaction_UsdtBalance_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_UsdtBalanceBiw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UsdtBalanceBiwRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).UsdtBalanceBiw(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_UsdtBalanceBiw_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).UsdtBalanceBiw(ctx, req.(*UsdtBalanceBiwRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +320,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UsdtBalance",
 			Handler:    _Transaction_UsdtBalance_Handler,
+		},
+		{
+			MethodName: "UsdtBalanceBiw",
+			Handler:    _Transaction_UsdtBalanceBiw_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -47,6 +47,12 @@ service Transaction {
       get: "/api/usdt_balance"
     };
   }
+
+  rpc UsdtBalanceBiw (UsdtBalanceBiwRequest) returns (UsdtBalanceBiwReply) {
+    option (google.api.http) = {
+      get: "/api/usdt_balance_biw"
+    };
+  }
 }
 
 message UsdtBalanceRequest {
@@ -54,6 +60,15 @@ message UsdtBalanceRequest {
 }
 
 message UsdtBalanceReply {
+  string balance = 1;
+  string err = 2;
+}
+
+message UsdtBalanceBiwRequest {
+  string address = 1;
+}
+
+message UsdtBalanceBiwReply {
   string balance = 1;
   string err = 2;
 }
