@@ -1,8 +1,9 @@
 module requestEth
 
-go 1.20
+go 1.22
 
 require (
+	github.com/BioforestChain/go-bfmeta-wallet-sdk v0.0.0-20240531100828-e0527ffab682
 	github.com/go-kratos/kratos/v2 v2.4.1
 	github.com/google/wire v0.5.0
 	google.golang.org/genproto v0.0.0-20220829175752-36a9c930ecbf

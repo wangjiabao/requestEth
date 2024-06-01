@@ -1,24 +1,21 @@
 package service
 
 import (
-	"bufio"
 	"context"
 	"crypto/ecdsa"
-	"encoding/json"
-	"errors"
+	"encoding/hex"
 	"fmt"
+	sdk "github.com/BioforestChain/go-bfmeta-wallet-sdk"
+	"github.com/BioforestChain/go-bfmeta-wallet-sdk/entity/req/address"
+	"github.com/BioforestChain/go-bfmeta-wallet-sdk/entity/req/broadcastTra"
+	"github.com/BioforestChain/go-bfmeta-wallet-sdk/entity/req/createTransferAsset"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"io"
 	"math/big"
-	"os/exec"
-	"strconv"
-	"strings"
-	"sync"
 	"time"
 
 	pb "requestEth/api/requestEth/v1"
@@ -299,19 +296,19 @@ func (s *TransactionService) UsdtBalance(ctx context.Context, req *pb.UsdtBalanc
 }
 
 func (s *TransactionService) UsdtBalanceBiw(ctx context.Context, req *pb.UsdtBalanceBiwRequest) (*pb.UsdtBalanceBiwReply, error) {
-
-	sdk := newBCFWalletSDK()
-	if nil == sdk.nodeProcess {
-		return nil, nil
+	sdkClient := sdk.NewBCFWalletSDK()
+	wallet := sdkClient.NewBCFWallet("35.213.66.234", 30003, "https://tracker.biw-meta.info/browser")
+	p := address.Params{
+		req.Address,
+		"JWWWB",
+		"BIW",
 	}
+	balance := wallet.GetAddressBalance(p)
+	defer sdkClient.Close()
 
-	wallet := sdk.newBCFWallet("34.84.178.63", 19503, "https://qapmapi.pmchainbox.com/browser")
-	balance := wallet.getAddressBalance("cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma", "XXVXQ", "PMC")
-	fmt.Println("balance=", balance)
-	defer sdk.Close()
-
-	return nil, nil
-
+	return &pb.UsdtBalanceBiwReply{
+		Balance: balance.Result.Amount,
+	}, nil
 	//client, err := ethclient.Dial("https://data-seed-prebsc-1-s3.binance.org:8545/")
 	//client, err := ethclient.Dial("https://bsc-dataseed.binance.org/")
 	//if err != nil {
@@ -343,6 +340,61 @@ func (s *TransactionService) UsdtBalanceBiw(ctx context.Context, req *pb.UsdtBal
 	//	Balance: bal.String(),
 	//	Err:     "",
 	//}, nil
+}
+
+func (s *TransactionService) SendTransactionBiw(ctx context.Context, req *pb.SendTransactionBiwRequest) (*pb.SendTransactionBiwReply, error) {
+	sdkClient := sdk.NewBCFWalletSDK()
+	bCFSignUtil := sdkClient.NewBCFSignUtil("b")
+	wallet := sdkClient.NewBCFWallet("35.213.66.234", 30003, "https://tracker.biw-meta.info/browser")
+	bCFSignUtilCreateKeypair, _ := bCFSignUtil.CreateKeypair("")
+
+	reqCreateTransferAsset := createTransferAsset.TransferAssetTransactionParams{
+		TransactionCommonParamsWithRecipientId: createTransferAsset.TransactionCommonParamsWithRecipientId{
+			TransactionCommonParams: createTransferAsset.TransactionCommonParams{
+				PublicKey:        bCFSignUtilCreateKeypair.PublicKey,
+				Fee:              "1000",
+				ApplyBlockHeight: wallet.GetLastBlock().Result.Height,
+				//Remark: map[string]string{
+				//	"note": "example transaction",
+				//},
+				//BinaryInfos: []createTransferAsset.KVStorageInfo{
+				//	{
+				//		Key: "exampleKey",
+				//		FileInfo: createTransferAsset.FileInfo{
+				//			Name: "exampleFile",
+				//			Size: 1234,
+				//		},
+				//	},
+				//},
+				//Timestamp: 1622732931,
+			},
+			RecipientId: req.SendBody.ToAddr, //钱包地址
+		},
+		//SourceChainMagic: "exampleSourceChainMagic",
+		//SourceChainName:  "exampleSourceChainName",
+		//AssetType:        "exampleAssetType",
+		Amount: req.SendBody.Amount,
+	}
+	createTransferAssetResp, _ := wallet.CreateTransferAsset(reqCreateTransferAsset)
+
+	//// 3.3 生成签名
+	var s1 = []byte(createTransferAssetResp.Result.Buffer)
+	var ss = []byte(bCFSignUtilCreateKeypair.SecretKey)
+	detachedSign, _ := bCFSignUtil.DetachedSign(s1, ss)
+
+	//// 3.4 wallet.BroadcastTransferAsset()
+	req1 := broadcastTra.BroadcastTransactionParams{
+		Signature: hex.EncodeToString(detachedSign.Data),
+		//SignSignature: "exampleSignSignature", //非必传
+		Buffer:    createTransferAssetResp.Result.Buffer, //3.2 上面取得的buffer
+		IsOnChain: true,
+	}
+	success, _ := wallet.BroadcastTransferAsset(req1)
+
+	return &pb.SendTransactionBiwReply{
+		Tx:      hex.EncodeToString(detachedSign.Data),
+		Success: success.Success,
+	}, nil
 }
 
 func (s *TransactionService) Transaction(ctx context.Context, req *pb.TransactionRequest) (*pb.TransactionReply, error) {
@@ -405,191 +457,4 @@ func generateKey() (string, string, error) {
 	//fmt.Println(address)
 
 	return address, hexutil.Encode(privateKeyBytes)[2:], nil
-}
-
-type Result struct {
-	Code    int    // 0 fail 1 success
-	Message string //
-}
-
-type NodeProcess struct {
-	ChannelMap sync.Map
-	Cmd        *exec.Cmd
-	Stdin      io.WriteCloser
-	Stdout     io.ReadCloser
-	Stderr     io.ReadCloser
-	//NodeExec    func()
-}
-
-func newNodeProcess(cmd string, args ...string) *NodeProcess {
-	command := exec.Command(cmd, args...)
-
-	stdin, err := command.StdinPipe()
-	if err != nil {
-		//panic(err)
-		fmt.Println(err)
-		return nil
-	}
-
-	stdout, err := command.StdoutPipe()
-	if err != nil {
-		//panic(err)
-		fmt.Println(err)
-		return nil
-	}
-
-	stderr, err := command.StderrPipe()
-	if err != nil {
-		//panic(err)
-		fmt.Println(err)
-		return nil
-	}
-	nodeProcess := &NodeProcess{
-		ChannelMap: sync.Map{},
-		Cmd:        command,
-		Stdin:      stdin,
-		Stdout:     stdout,
-		Stderr:     stderr,
-	}
-
-	err = nodeProcess.Cmd.Start()
-	if err != nil {
-		fmt.Println("Failed to start process:", err)
-		return nil
-	}
-	//if err := cmd.Start(); err != nil {
-	//	fmt.Println("Error starting command:", err)
-	//	return
-	//}
-	// 在一个goroutine中读取stdout
-	var readLines = func(name string, reader io.Reader, resultCode int) {
-		scanner := bufio.NewReader(reader)
-		for {
-			line, err := scanner.ReadString('\n')
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				fmt.Println(name+" read line error:", err)
-				continue
-			}
-			//fmt.Printf("line: %v\n", line)
-			parts := strings.SplitN(line, "Result ", 2)
-			if len(parts) == 2 {
-				//fmt.Printf("node: %v\n", parts[1])
-				// 解析行并提取req_id和json_result
-				parts := strings.SplitN(parts[1], " ", 3)
-				if len(parts) < 2 {
-					fmt.Println(name+" Invalid line format:", line)
-					continue
-				}
-				reqIDStr := parts[0]
-				resultData := parts[1]
-
-				// 将req_id转换为整数
-				reqID, err := strconv.Atoi(reqIDStr)
-				if err != nil {
-					fmt.Println(name+" Invalid req_id:", reqIDStr)
-					continue
-				}
-
-				// 从map中获取并移除通道
-				//if ch, ok := channelMap.LoadAndDelete(reqID); ok {
-				if ch, ok := nodeProcess.ChannelMap.LoadAndDelete(reqID); ok {
-					channel := ch.(chan Result)
-					// 向通道发送结果
-					channel <- Result{Code: resultCode, Message: resultData}
-				} else {
-					fmt.Println(name+" Channel not found for req_id:", reqID)
-				}
-			}
-		}
-		fmt.Println("node-process end")
-	}
-	go readLines("stdout", nodeProcess.Stdout, 1)
-	go readLines("stderr", nodeProcess.Stderr, 0)
-
-	return nodeProcess
-}
-func (p *NodeProcess) CloseProcess() error {
-	p.Stdin.Close()
-	return p.Cmd.Wait()
-}
-
-type BCFWalletSDK struct {
-	nodeProcess *NodeProcess
-}
-
-func (sdk *BCFWalletSDK) Close() {
-	sdk.nodeProcess.CloseProcess()
-}
-
-func newBCFWalletSDK() BCFWalletSDK {
-	//init 结构体
-	// 启动Node.js进程
-	nodeProcess := newNodeProcess("node", "--no-warnings", "./sdk.js")
-	return BCFWalletSDK{nodeProcess: nodeProcess}
-}
-
-var reqIdAcc = 0
-
-// func NodeExec[T any](jsCode string) (T, error) {
-func nodeExec[T any](nodeProcess *NodeProcess, jsCode string) (T, error) {
-	var res T
-	reqIdAcc += 1
-	req_id := reqIdAcc
-	channel := make(chan Result)
-	nodeProcess.ChannelMap.Store(req_id, channel)
-
-	var evalCode = fmt.Sprintf("await returnToGo(%d, async()=>%v)\r\n\n", req_id, jsCode)
-	_, err := nodeProcess.Stdin.Write([]byte(evalCode))
-	if err != nil {
-		return res, err
-	}
-
-	result := <-channel
-	if result.Code == 1 {
-		err := json.Unmarshal([]byte(result.Message), &res)
-		return res, err
-	} else {
-		return res, errors.New(result.Message)
-	}
-}
-
-type BCFWallet struct {
-	nodeProcess *NodeProcess
-	walletId    string
-}
-
-func (sdk BCFWalletSDK) newBCFWallet(ip string, port int, browserPath string) *BCFWallet {
-	//TODO
-	bfcWalletId, _ := nodeExec[int](sdk.nodeProcess, `{
-		const bfcwalletMap = (globalThis.bfcwalletMap??=new Map());
-		globalThis.bfcwalletIdAcc ??= 0
-		const id = globalThis.bfcwalletIdAcc++
-		const bfcwallet = new require('@bfmeta/wallet-bcf').BCFWalletFactory({
-			enable: true,
-            host: [{ ip: "`+ip+`", port: `+strconv.Itoa(port)+` }],
-            browserPath: "`+browserPath+`",
-        });
-		bfcwalletMap.set(id, bfcwallet)
-		return id;
-		}`)
-	return &BCFWallet{nodeProcess: sdk.nodeProcess, walletId: strconv.Itoa(bfcWalletId)}
-}
-
-type BalanceResult struct {
-	Success bool `json:"success"`
-	Result  struct {
-		Amount string `json:"amount"`
-	} `json:"result"`
-}
-
-func (wallet *BCFWallet) getAddressBalance(address string, magic string, assetType string) BalanceResult {
-	//balance, _ := nodeExec[string](`
-	balance, _ := nodeExec[BalanceResult](wallet.nodeProcess, `
-		globalThis.bfcwalletMap.get(`+wallet.walletId+`).getAddressBalance("`+address+`", "`+magic+`", "`+assetType+`")
-	`)
-
-	return balance
 }

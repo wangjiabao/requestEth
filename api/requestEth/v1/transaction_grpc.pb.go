@@ -26,6 +26,7 @@ const (
 	Transaction_GenerateKey_FullMethodName        = "/api.requestEth.v1.Transaction/GenerateKey"
 	Transaction_UsdtBalance_FullMethodName        = "/api.requestEth.v1.Transaction/UsdtBalance"
 	Transaction_UsdtBalanceBiw_FullMethodName     = "/api.requestEth.v1.Transaction/UsdtBalanceBiw"
+	Transaction_SendTransactionBiw_FullMethodName = "/api.requestEth.v1.Transaction/SendTransactionBiw"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -39,6 +40,7 @@ type TransactionClient interface {
 	GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error)
 	UsdtBalance(ctx context.Context, in *UsdtBalanceRequest, opts ...grpc.CallOption) (*UsdtBalanceReply, error)
 	UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceBiwRequest, opts ...grpc.CallOption) (*UsdtBalanceBiwReply, error)
+	SendTransactionBiw(ctx context.Context, in *SendTransactionBiwRequest, opts ...grpc.CallOption) (*SendTransactionBiwReply, error)
 }
 
 type transactionClient struct {
@@ -112,6 +114,15 @@ func (c *transactionClient) UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceB
 	return out, nil
 }
 
+func (c *transactionClient) SendTransactionBiw(ctx context.Context, in *SendTransactionBiwRequest, opts ...grpc.CallOption) (*SendTransactionBiwReply, error) {
+	out := new(SendTransactionBiwReply)
+	err := c.cc.Invoke(ctx, Transaction_SendTransactionBiw_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -123,6 +134,7 @@ type TransactionServer interface {
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error)
 	UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error)
+	SendTransactionBiw(context.Context, *SendTransactionBiwRequest) (*SendTransactionBiwReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -150,6 +162,9 @@ func (UnimplementedTransactionServer) UsdtBalance(context.Context, *UsdtBalanceR
 }
 func (UnimplementedTransactionServer) UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UsdtBalanceBiw not implemented")
+}
+func (UnimplementedTransactionServer) SendTransactionBiw(context.Context, *SendTransactionBiwRequest) (*SendTransactionBiwReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTransactionBiw not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -290,6 +305,24 @@ func _Transaction_UsdtBalanceBiw_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_SendTransactionBiw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTransactionBiwRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).SendTransactionBiw(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_SendTransactionBiw_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).SendTransactionBiw(ctx, req.(*SendTransactionBiwRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -324,6 +357,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UsdtBalanceBiw",
 			Handler:    _Transaction_UsdtBalanceBiw_Handler,
+		},
+		{
+			MethodName: "SendTransactionBiw",
+			Handler:    _Transaction_SendTransactionBiw_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

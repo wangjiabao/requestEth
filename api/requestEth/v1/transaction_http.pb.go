@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
+const OperationTransactionSendTransactionBiw = "/api.requestEth.v1.Transaction/SendTransactionBiw"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
 const OperationTransactionUsdtBalance = "/api.requestEth.v1.Transaction/UsdtBalance"
@@ -31,6 +32,7 @@ type TransactionHTTPServer interface {
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
+	SendTransactionBiw(context.Context, *SendTransactionBiwRequest) (*SendTransactionBiwReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error)
@@ -46,6 +48,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/generate_key", _Transaction_GenerateKey0_HTTP_Handler(srv))
 	r.GET("/api/usdt_balance", _Transaction_UsdtBalance0_HTTP_Handler(srv))
 	r.GET("/api/usdt_balance_biw", _Transaction_UsdtBalanceBiw0_HTTP_Handler(srv))
+	r.POST("/api/send_transaction_biw", _Transaction_SendTransactionBiw0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -190,10 +193,33 @@ func _Transaction_UsdtBalanceBiw0_HTTP_Handler(srv TransactionHTTPServer) func(c
 	}
 }
 
+func _Transaction_SendTransactionBiw0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SendTransactionBiwRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionSendTransactionBiw)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SendTransactionBiw(ctx, req.(*SendTransactionBiwRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SendTransactionBiwReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
+	SendTransactionBiw(ctx context.Context, req *SendTransactionBiwRequest, opts ...http.CallOption) (rsp *SendTransactionBiwReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
 	UsdtBalance(ctx context.Context, req *UsdtBalanceRequest, opts ...http.CallOption) (rsp *UsdtBalanceReply, err error)
@@ -239,6 +265,19 @@ func (c *TransactionHTTPClientImpl) SendTransaction(ctx context.Context, in *Sen
 	pattern := "/api/transaction"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionSendTransaction))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) SendTransactionBiw(ctx context.Context, in *SendTransactionBiwRequest, opts ...http.CallOption) (*SendTransactionBiwReply, error) {
+	var out SendTransactionBiwReply
+	pattern := "/api/send_transaction_biw"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionSendTransactionBiw))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {
