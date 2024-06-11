@@ -172,7 +172,7 @@ func (s *TransactionService) SendTransactionEth(ctx context.Context, req *pb.Sen
 			} else if 4 == i {
 				tmpUrl1 = "https://bsc-dataseed.binance.org"
 			}
-			fmt.Println("err info", req.SendBody.ToAddr, req.SendBody.PrivateKey, req.SendBody.Amount, tmpUrl1)
+			fmt.Println("err info eth", req.SendBody.ToAddr, req.SendBody.PrivateKey, req.SendBody.Amount, tmpUrl1)
 			time.Sleep(3 * time.Second)
 		}
 	}
