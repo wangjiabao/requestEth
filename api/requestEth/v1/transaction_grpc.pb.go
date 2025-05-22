@@ -24,9 +24,8 @@ const (
 	Transaction_Transaction_FullMethodName        = "/api.requestEth.v1.Transaction/Transaction"
 	Transaction_EthBalance_FullMethodName         = "/api.requestEth.v1.Transaction/EthBalance"
 	Transaction_GenerateKey_FullMethodName        = "/api.requestEth.v1.Transaction/GenerateKey"
-	Transaction_UsdtBalance_FullMethodName        = "/api.requestEth.v1.Transaction/UsdtBalance"
-	Transaction_UsdtBalanceBiw_FullMethodName     = "/api.requestEth.v1.Transaction/UsdtBalanceBiw"
-	Transaction_SendTransactionBiw_FullMethodName = "/api.requestEth.v1.Transaction/SendTransactionBiw"
+	Transaction_TokenBalance_FullMethodName       = "/api.requestEth.v1.Transaction/TokenBalance"
+	Transaction_VerifySig_FullMethodName          = "/api.requestEth.v1.Transaction/VerifySig"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -38,9 +37,8 @@ type TransactionClient interface {
 	Transaction(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionReply, error)
 	EthBalance(ctx context.Context, in *EthBalanceRequest, opts ...grpc.CallOption) (*EthBalanceReply, error)
 	GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error)
-	UsdtBalance(ctx context.Context, in *UsdtBalanceRequest, opts ...grpc.CallOption) (*UsdtBalanceReply, error)
-	UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceBiwRequest, opts ...grpc.CallOption) (*UsdtBalanceBiwReply, error)
-	SendTransactionBiw(ctx context.Context, in *SendTransactionBiwRequest, opts ...grpc.CallOption) (*SendTransactionBiwReply, error)
+	TokenBalance(ctx context.Context, in *TokenBalanceRequest, opts ...grpc.CallOption) (*TokenBalanceReply, error)
+	VerifySig(ctx context.Context, in *VerifySigRequest, opts ...grpc.CallOption) (*VerifySigReply, error)
 }
 
 type transactionClient struct {
@@ -96,27 +94,18 @@ func (c *transactionClient) GenerateKey(ctx context.Context, in *GenerateKeyRequ
 	return out, nil
 }
 
-func (c *transactionClient) UsdtBalance(ctx context.Context, in *UsdtBalanceRequest, opts ...grpc.CallOption) (*UsdtBalanceReply, error) {
-	out := new(UsdtBalanceReply)
-	err := c.cc.Invoke(ctx, Transaction_UsdtBalance_FullMethodName, in, out, opts...)
+func (c *transactionClient) TokenBalance(ctx context.Context, in *TokenBalanceRequest, opts ...grpc.CallOption) (*TokenBalanceReply, error) {
+	out := new(TokenBalanceReply)
+	err := c.cc.Invoke(ctx, Transaction_TokenBalance_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *transactionClient) UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceBiwRequest, opts ...grpc.CallOption) (*UsdtBalanceBiwReply, error) {
-	out := new(UsdtBalanceBiwReply)
-	err := c.cc.Invoke(ctx, Transaction_UsdtBalanceBiw_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *transactionClient) SendTransactionBiw(ctx context.Context, in *SendTransactionBiwRequest, opts ...grpc.CallOption) (*SendTransactionBiwReply, error) {
-	out := new(SendTransactionBiwReply)
-	err := c.cc.Invoke(ctx, Transaction_SendTransactionBiw_FullMethodName, in, out, opts...)
+func (c *transactionClient) VerifySig(ctx context.Context, in *VerifySigRequest, opts ...grpc.CallOption) (*VerifySigReply, error) {
+	out := new(VerifySigReply)
+	err := c.cc.Invoke(ctx, Transaction_VerifySig_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -132,9 +121,8 @@ type TransactionServer interface {
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
-	UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error)
-	UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error)
-	SendTransactionBiw(context.Context, *SendTransactionBiwRequest) (*SendTransactionBiwReply, error)
+	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
+	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -157,14 +145,11 @@ func (UnimplementedTransactionServer) EthBalance(context.Context, *EthBalanceReq
 func (UnimplementedTransactionServer) GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateKey not implemented")
 }
-func (UnimplementedTransactionServer) UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UsdtBalance not implemented")
+func (UnimplementedTransactionServer) TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TokenBalance not implemented")
 }
-func (UnimplementedTransactionServer) UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UsdtBalanceBiw not implemented")
-}
-func (UnimplementedTransactionServer) SendTransactionBiw(context.Context, *SendTransactionBiwRequest) (*SendTransactionBiwReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendTransactionBiw not implemented")
+func (UnimplementedTransactionServer) VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifySig not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -269,56 +254,38 @@ func _Transaction_GenerateKey_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Transaction_UsdtBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UsdtBalanceRequest)
+func _Transaction_TokenBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenBalanceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TransactionServer).UsdtBalance(ctx, in)
+		return srv.(TransactionServer).TokenBalance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Transaction_UsdtBalance_FullMethodName,
+		FullMethod: Transaction_TokenBalance_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServer).UsdtBalance(ctx, req.(*UsdtBalanceRequest))
+		return srv.(TransactionServer).TokenBalance(ctx, req.(*TokenBalanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Transaction_UsdtBalanceBiw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UsdtBalanceBiwRequest)
+func _Transaction_VerifySig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifySigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TransactionServer).UsdtBalanceBiw(ctx, in)
+		return srv.(TransactionServer).VerifySig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Transaction_UsdtBalanceBiw_FullMethodName,
+		FullMethod: Transaction_VerifySig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServer).UsdtBalanceBiw(ctx, req.(*UsdtBalanceBiwRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Transaction_SendTransactionBiw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendTransactionBiwRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TransactionServer).SendTransactionBiw(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Transaction_SendTransactionBiw_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServer).SendTransactionBiw(ctx, req.(*SendTransactionBiwRequest))
+		return srv.(TransactionServer).VerifySig(ctx, req.(*VerifySigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -351,16 +318,12 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Transaction_GenerateKey_Handler,
 		},
 		{
-			MethodName: "UsdtBalance",
-			Handler:    _Transaction_UsdtBalance_Handler,
+			MethodName: "TokenBalance",
+			Handler:    _Transaction_TokenBalance_Handler,
 		},
 		{
-			MethodName: "UsdtBalanceBiw",
-			Handler:    _Transaction_UsdtBalanceBiw_Handler,
-		},
-		{
-			MethodName: "SendTransactionBiw",
-			Handler:    _Transaction_SendTransactionBiw_Handler,
+			MethodName: "VerifySig",
+			Handler:    _Transaction_VerifySig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

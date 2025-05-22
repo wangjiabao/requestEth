@@ -3,12 +3,8 @@ package service
 import (
 	"context"
 	"crypto/ecdsa"
-	"encoding/hex"
 	"fmt"
-	sdk "github.com/BioforestChain/go-bfmeta-wallet-sdk"
-	"github.com/BioforestChain/go-bfmeta-wallet-sdk/entity/req/address"
-	"github.com/BioforestChain/go-bfmeta-wallet-sdk/entity/req/broadcastTra"
-	"github.com/BioforestChain/go-bfmeta-wallet-sdk/entity/req/createTransferAsset"
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -32,10 +28,9 @@ func NewTransactionService() *TransactionService {
 func (s *TransactionService) SendTransaction(ctx context.Context, req *pb.SendTransactionRequest) (*pb.SendTransactionReply, error) {
 
 	var (
-		err          error
-		tx           string
-		tokenAddress = "0x55d398326f99059fF775485246999027B3197955"
-		tmpUrl1      = "https://bsc-dataseed4.binance.org/"
+		err     error
+		tx      string
+		tmpUrl1 = "https://bsc-dataseed4.binance.org/"
 		//tokenAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd"
 		//tmpUrl1      = "https://data-seed-prebsc-1-s3.binance.org:8545/"
 	)
@@ -47,7 +42,7 @@ func (s *TransactionService) SendTransaction(ctx context.Context, req *pb.SendTr
 	}
 
 	for i := 0; i <= 5; i++ {
-		tx, err = toToken(req.SendBody.PrivateKey, req.SendBody.ToAddr, req.SendBody.Amount, tokenAddress, tmpUrl1)
+		tx, err = toToken(req.SendBody.PrivateKey, req.SendBody.ToAddr, req.SendBody.Amount, req.SendBody.Token, tmpUrl1)
 		if err == nil {
 			break
 		} else if "insufficient funds for gas * price + value" == err.Error() {
@@ -68,7 +63,7 @@ func (s *TransactionService) SendTransaction(ctx context.Context, req *pb.SendTr
 			} else if 4 == i {
 				tmpUrl1 = "https://bsc-dataseed.binance.org"
 			}
-			fmt.Println("err info", req.SendBody.PrivateKey, req.SendBody.ToAddr, req.SendBody.Amount, tokenAddress, tmpUrl1)
+			fmt.Println("err info", req.SendBody.PrivateKey, req.SendBody.ToAddr, req.SendBody.Amount, req.SendBody.Token, tmpUrl1)
 			time.Sleep(3 * time.Second)
 		}
 	}
@@ -140,7 +135,6 @@ func (s *TransactionService) SendTransactionEth(ctx context.Context, req *pb.Sen
 		err     error
 		tx      string
 		tmpUrl1 = "https://bsc-dataseed4.binance.org/"
-		//tokenAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd"
 		//tmpUrl1      = "https://data-seed-prebsc-1-s3.binance.org:8545/"
 	)
 
@@ -261,20 +255,20 @@ func (s *TransactionService) EthBalance(ctx context.Context, req *pb.EthBalanceR
 	}, nil
 }
 
-func (s *TransactionService) UsdtBalance(ctx context.Context, req *pb.UsdtBalanceRequest) (*pb.UsdtBalanceReply, error) {
+func (s *TransactionService) TokenBalance(ctx context.Context, req *pb.TokenBalanceRequest) (*pb.TokenBalanceReply, error) {
 	//client, err := ethclient.Dial("https://data-seed-prebsc-1-s3.binance.org:8545/")
 	client, err := ethclient.Dial("https://bsc-dataseed.binance.org/")
 	if err != nil {
-		return &pb.UsdtBalanceReply{
+		return &pb.TokenBalanceReply{
 			Balance: "",
 			Err:     err.Error(),
 		}, nil
 	}
 
-	tokenAddress := common.HexToAddress("0x55d398326f99059fF775485246999027B3197955")
+	tokenAddress := common.HexToAddress(req.Token)
 	instance, err := NewUsdt(tokenAddress, client)
 	if err != nil {
-		return &pb.UsdtBalanceReply{
+		return &pb.TokenBalanceReply{
 			Balance: "",
 			Err:     err.Error(),
 		}, nil
@@ -283,140 +277,53 @@ func (s *TransactionService) UsdtBalance(ctx context.Context, req *pb.UsdtBalanc
 	address := common.HexToAddress(req.Address)
 	bal, err := instance.BalanceOf(&bind.CallOpts{}, address)
 	if err != nil {
-		return &pb.UsdtBalanceReply{
+		return &pb.TokenBalanceReply{
 			Balance: "",
 			Err:     err.Error(),
 		}, nil
 	}
 
-	return &pb.UsdtBalanceReply{
+	return &pb.TokenBalanceReply{
 		Balance: bal.String(),
 		Err:     "",
 	}, nil
 }
 
-func (s *TransactionService) UsdtBalanceBiw(ctx context.Context, req *pb.UsdtBalanceBiwRequest) (*pb.UsdtBalanceBiwReply, error) {
-	sdkClient := sdk.NewBCFWalletSDK()
-	wallet := sdkClient.NewBCFWallet("35.213.66.234", 30003, "https://tracker.biw-meta.info/browser")
-	p := address.Params{
-		req.Address,
-		"JWWWB",
-		"BIW",
-	}
-	balance := wallet.GetAddressBalance(p)
-	defer sdkClient.Close()
-
-	return &pb.UsdtBalanceBiwReply{
-		Balance: balance.Result.Amount,
-	}, nil
-	//client, err := ethclient.Dial("https://data-seed-prebsc-1-s3.binance.org:8545/")
-	//client, err := ethclient.Dial("https://bsc-dataseed.binance.org/")
-	//if err != nil {
-	//	return &pb.UsdtBalanceBiwReply{
-	//		Balance: "",
-	//		Err:     err.Error(),
-	//	}, nil
-	//}
-	//
-	//tokenAddress := common.HexToAddress("0x55d398326f99059fF775485246999027B3197955")
-	//instance, err := NewUsdt(tokenAddress, client)
-	//if err != nil {
-	//	return &pb.UsdtBalanceBiwReply{
-	//		Balance: "",
-	//		Err:     err.Error(),
-	//	}, nil
-	//}
-	//
-	//address := common.HexToAddress(req.Address)
-	//bal, err := instance.BalanceOf(&bind.CallOpts{}, address)
-	//if err != nil {
-	//	return &pb.UsdtBalanceBiwReply{
-	//		Balance: "",
-	//		Err:     err.Error(),
-	//	}, nil
-	//}
-	//
-	//return &pb.UsdtBalanceBiwReply{
-	//	Balance: bal.String(),
-	//	Err:     "",
-	//}, nil
-}
-
-func (s *TransactionService) SendTransactionBiw(ctx context.Context, req *pb.SendTransactionBiwRequest) (*pb.SendTransactionBiwReply, error) {
-	sdkClient := sdk.NewBCFWalletSDK()
-	bCFSignUtil := sdkClient.NewBCFSignUtil("b")
-	wallet := sdkClient.NewBCFWallet("35.213.66.234", 30003, "https://tracker.biw-meta.info/browser")
-	bCFSignUtilCreateKeypair, _ := bCFSignUtil.CreateKeypair("")
-
-	reqCreateTransferAsset := createTransferAsset.TransferAssetTransactionParams{
-		TransactionCommonParamsWithRecipientId: createTransferAsset.TransactionCommonParamsWithRecipientId{
-			TransactionCommonParams: createTransferAsset.TransactionCommonParams{
-				PublicKey:        bCFSignUtilCreateKeypair.PublicKey,
-				Fee:              "1000",
-				ApplyBlockHeight: wallet.GetLastBlock().Result.Height,
-				//Remark: map[string]string{
-				//	"note": "example transaction",
-				//},
-				//BinaryInfos: []createTransferAsset.KVStorageInfo{
-				//	{
-				//		Key: "exampleKey",
-				//		FileInfo: createTransferAsset.FileInfo{
-				//			Name: "exampleFile",
-				//			Size: 1234,
-				//		},
-				//	},
-				//},
-				//Timestamp: 1622732931,
-			},
-			RecipientId: req.SendBody.ToAddr, //钱包地址
-		},
-		//SourceChainMagic: "exampleSourceChainMagic",
-		//SourceChainName:  "exampleSourceChainName",
-		//AssetType:        "exampleAssetType",
-		Amount: req.SendBody.Amount,
-	}
-	createTransferAssetResp, _ := wallet.CreateTransferAsset(reqCreateTransferAsset)
-
-	//// 3.3 生成签名
-	var s1 = []byte(createTransferAssetResp.Result.Buffer)
-	var ss = []byte(bCFSignUtilCreateKeypair.SecretKey)
-	detachedSign, _ := bCFSignUtil.DetachedSign(s1, ss)
-
-	//// 3.4 wallet.BroadcastTransferAsset()
-	req1 := broadcastTra.BroadcastTransactionParams{
-		Signature: hex.EncodeToString(detachedSign.Data),
-		//SignSignature: "exampleSignSignature", //非必传
-		Buffer:    createTransferAssetResp.Result.Buffer, //3.2 上面取得的buffer
-		IsOnChain: true,
-	}
-	success, _ := wallet.BroadcastTransferAsset(req1)
-
-	return &pb.SendTransactionBiwReply{
-		Tx:      hex.EncodeToString(detachedSign.Data),
-		Success: success.Success,
-	}, nil
-}
-
 func (s *TransactionService) Transaction(ctx context.Context, req *pb.TransactionRequest) (*pb.TransactionReply, error) {
-	// https://data-seed-prebsc-1-s3.binance.org:8545/
-	// https://bsc-dataseed.binance.org/
-	client, err := ethclient.Dial("https://bsc-dataseed4.binance.org/")
-	if err != nil {
-		return &pb.TransactionReply{
-			Status: 99,
-		}, nil
-	}
+	for i := 0; i <= 5; i++ {
+		tmpUrl1 := ""
+		if 0 == i {
+			tmpUrl1 = "https://bsc-dataseed4.binance.org/"
+		} else if 1 == i {
+			tmpUrl1 = "https://bsc-dataseed3.binance.org/"
+		} else if 2 == i {
+			tmpUrl1 = "https://bsc-dataseed2.binance.org/"
+		} else if 3 == i {
+			tmpUrl1 = "https://bnb-bscnews.rpc.blxrbdn.com/"
+		} else if 4 == i {
+			tmpUrl1 = "https://bsc-dataseed.binance.org/"
+		}
 
-	receipt, err := client.TransactionReceipt(context.Background(), common.HexToHash(req.GetTx()))
-	if err != nil {
+		// https://data-seed-prebsc-1-s3.binance.org:8545/
+		// https://bsc-dataseed.binance.org/
+		client, err := ethclient.Dial(tmpUrl1)
+		if err != nil {
+			continue
+		}
+
+		receipt, err := client.TransactionReceipt(context.Background(), common.HexToHash(req.GetTx()))
+		if err != nil {
+			continue
+		}
+
 		return &pb.TransactionReply{
-			Status: 99,
-		}, nil
+			Status: receipt.Status,
+		}, err
 	}
 
 	return &pb.TransactionReply{
-		Status: receipt.Status,
-	}, err
+		Status: 99,
+	}, nil
 }
 
 func (s *TransactionService) GenerateKey(ctx context.Context, req *pb.GenerateKeyRequest) (*pb.GenerateKeyReply, error) {
@@ -457,4 +364,31 @@ func generateKey() (string, string, error) {
 	//fmt.Println(address)
 
 	return address, hexutil.Encode(privateKeyBytes)[2:], nil
+}
+
+func (s *TransactionService) VerifySig(ctx context.Context, req *pb.VerifySigRequest) (*pb.VerifySigReply, error) {
+	sig := hexutil.MustDecode(req.Sign)
+	msg := accounts.TextHash([]byte(req.Content))
+
+	if sig[crypto.RecoveryIDOffset] == 27 || sig[crypto.RecoveryIDOffset] == 28 {
+		sig[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
+	}
+
+	recovered, err := crypto.SigToPub(msg, sig)
+	if err != nil {
+		return &pb.VerifySigReply{
+			Res:     false,
+			Address: "",
+		}, err
+	}
+
+	recoveredAddr := crypto.PubkeyToAddress(*recovered)
+
+	sigPublicKeyBytes := crypto.FromECDSAPub(recovered)
+	signatureNoRecoverID := sig[:len(sig)-1] // remove recovery id
+	verified := crypto.VerifySignature(sigPublicKeyBytes, msg, signatureNoRecoverID)
+	return &pb.VerifySigReply{
+		Res:     verified,
+		Address: recoveredAddr.Hex(),
+	}, nil
 }

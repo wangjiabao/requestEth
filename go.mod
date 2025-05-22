@@ -3,7 +3,6 @@ module requestEth
 go 1.22
 
 require (
-	github.com/BioforestChain/go-bfmeta-wallet-sdk v0.0.0-20240531100828-e0527ffab682
 	github.com/go-kratos/kratos/v2 v2.4.1
 	github.com/google/wire v0.5.0
 	google.golang.org/genproto v0.0.0-20220829175752-36a9c930ecbf
@@ -36,6 +35,7 @@ require (
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/prometheus/client_golang v1.13.0 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/supranational/blst v0.3.11 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect

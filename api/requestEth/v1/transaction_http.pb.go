@@ -22,21 +22,19 @@ const _ = http.SupportPackageIsVersion1
 const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
-const OperationTransactionSendTransactionBiw = "/api.requestEth.v1.Transaction/SendTransactionBiw"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
+const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
-const OperationTransactionUsdtBalance = "/api.requestEth.v1.Transaction/UsdtBalance"
-const OperationTransactionUsdtBalanceBiw = "/api.requestEth.v1.Transaction/UsdtBalanceBiw"
+const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
 
 type TransactionHTTPServer interface {
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
-	SendTransactionBiw(context.Context, *SendTransactionBiwRequest) (*SendTransactionBiwReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
+	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
-	UsdtBalance(context.Context, *UsdtBalanceRequest) (*UsdtBalanceReply, error)
-	UsdtBalanceBiw(context.Context, *UsdtBalanceBiwRequest) (*UsdtBalanceBiwReply, error)
+	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
 }
 
 func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
@@ -46,9 +44,8 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/transaction/{tx}", _Transaction_Transaction0_HTTP_Handler(srv))
 	r.GET("/api/eth_balance", _Transaction_EthBalance0_HTTP_Handler(srv))
 	r.GET("/api/generate_key", _Transaction_GenerateKey0_HTTP_Handler(srv))
-	r.GET("/api/usdt_balance", _Transaction_UsdtBalance0_HTTP_Handler(srv))
-	r.GET("/api/usdt_balance_biw", _Transaction_UsdtBalanceBiw0_HTTP_Handler(srv))
-	r.POST("/api/send_transaction_biw", _Transaction_SendTransactionBiw0_HTTP_Handler(srv))
+	r.GET("/api/usdt_balance", _Transaction_TokenBalance0_HTTP_Handler(srv))
+	r.GET("/api/verify_sig", _Transaction_VerifySig0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -155,62 +152,40 @@ func _Transaction_GenerateKey0_HTTP_Handler(srv TransactionHTTPServer) func(ctx 
 	}
 }
 
-func _Transaction_UsdtBalance0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+func _Transaction_TokenBalance0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UsdtBalanceRequest
+		var in TokenBalanceRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationTransactionUsdtBalance)
+		http.SetOperation(ctx, OperationTransactionTokenBalance)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UsdtBalance(ctx, req.(*UsdtBalanceRequest))
+			return srv.TokenBalance(ctx, req.(*TokenBalanceRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UsdtBalanceReply)
+		reply := out.(*TokenBalanceReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Transaction_UsdtBalanceBiw0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+func _Transaction_VerifySig0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UsdtBalanceBiwRequest
+		var in VerifySigRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationTransactionUsdtBalanceBiw)
+		http.SetOperation(ctx, OperationTransactionVerifySig)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UsdtBalanceBiw(ctx, req.(*UsdtBalanceBiwRequest))
+			return srv.VerifySig(ctx, req.(*VerifySigRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UsdtBalanceBiwReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Transaction_SendTransactionBiw0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in SendTransactionBiwRequest
-		if err := ctx.Bind(&in.SendBody); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationTransactionSendTransactionBiw)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SendTransactionBiw(ctx, req.(*SendTransactionBiwRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*SendTransactionBiwReply)
+		reply := out.(*VerifySigReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -219,11 +194,10 @@ type TransactionHTTPClient interface {
 	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
-	SendTransactionBiw(ctx context.Context, req *SendTransactionBiwRequest, opts ...http.CallOption) (rsp *SendTransactionBiwReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
+	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
-	UsdtBalance(ctx context.Context, req *UsdtBalanceRequest, opts ...http.CallOption) (rsp *UsdtBalanceReply, err error)
-	UsdtBalanceBiw(ctx context.Context, req *UsdtBalanceBiwRequest, opts ...http.CallOption) (rsp *UsdtBalanceBiwReply, err error)
+	VerifySig(ctx context.Context, req *VerifySigRequest, opts ...http.CallOption) (rsp *VerifySigReply, err error)
 }
 
 type TransactionHTTPClientImpl struct {
@@ -273,11 +247,11 @@ func (c *TransactionHTTPClientImpl) SendTransaction(ctx context.Context, in *Sen
 	return &out, err
 }
 
-func (c *TransactionHTTPClientImpl) SendTransactionBiw(ctx context.Context, in *SendTransactionBiwRequest, opts ...http.CallOption) (*SendTransactionBiwReply, error) {
-	var out SendTransactionBiwReply
-	pattern := "/api/send_transaction_biw"
+func (c *TransactionHTTPClientImpl) SendTransactionEth(ctx context.Context, in *SendTransactionEthRequest, opts ...http.CallOption) (*SendTransactionEthReply, error) {
+	var out SendTransactionEthReply
+	pattern := "/api/transaction_eth"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationTransactionSendTransactionBiw))
+	opts = append(opts, http.Operation(OperationTransactionSendTransactionEth))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {
@@ -286,13 +260,13 @@ func (c *TransactionHTTPClientImpl) SendTransactionBiw(ctx context.Context, in *
 	return &out, err
 }
 
-func (c *TransactionHTTPClientImpl) SendTransactionEth(ctx context.Context, in *SendTransactionEthRequest, opts ...http.CallOption) (*SendTransactionEthReply, error) {
-	var out SendTransactionEthReply
-	pattern := "/api/transaction_eth"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationTransactionSendTransactionEth))
+func (c *TransactionHTTPClientImpl) TokenBalance(ctx context.Context, in *TokenBalanceRequest, opts ...http.CallOption) (*TokenBalanceReply, error) {
+	var out TokenBalanceReply
+	pattern := "/api/usdt_balance"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionTokenBalance))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -312,24 +286,11 @@ func (c *TransactionHTTPClientImpl) Transaction(ctx context.Context, in *Transac
 	return &out, err
 }
 
-func (c *TransactionHTTPClientImpl) UsdtBalance(ctx context.Context, in *UsdtBalanceRequest, opts ...http.CallOption) (*UsdtBalanceReply, error) {
-	var out UsdtBalanceReply
-	pattern := "/api/usdt_balance"
+func (c *TransactionHTTPClientImpl) VerifySig(ctx context.Context, in *VerifySigRequest, opts ...http.CallOption) (*VerifySigReply, error) {
+	var out VerifySigReply
+	pattern := "/api/verify_sig"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationTransactionUsdtBalance))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *TransactionHTTPClientImpl) UsdtBalanceBiw(ctx context.Context, in *UsdtBalanceBiwRequest, opts ...http.CallOption) (*UsdtBalanceBiwReply, error) {
-	var out UsdtBalanceBiwReply
-	pattern := "/api/usdt_balance_biw"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationTransactionUsdtBalanceBiw))
+	opts = append(opts, http.Operation(OperationTransactionVerifySig))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

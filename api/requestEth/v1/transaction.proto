@@ -42,40 +42,36 @@ service Transaction {
     };
   }
 
-  rpc UsdtBalance (UsdtBalanceRequest) returns (UsdtBalanceReply) {
+  rpc TokenBalance (TokenBalanceRequest) returns (TokenBalanceReply) {
     option (google.api.http) = {
       get: "/api/usdt_balance"
     };
   }
 
-  rpc UsdtBalanceBiw (UsdtBalanceBiwRequest) returns (UsdtBalanceBiwReply) {
+  rpc VerifySig (VerifySigRequest) returns (VerifySigReply) {
     option (google.api.http) = {
-      get: "/api/usdt_balance_biw"
-    };
-  }
-
-  rpc SendTransactionBiw (SendTransactionBiwRequest) returns (SendTransactionBiwReply) {
-    option (google.api.http) = {
-      post: "/api/send_transaction_biw"
-      body: "send_body"
+      get: "/api/verify_sig"
     };
   }
 }
 
-message UsdtBalanceRequest {
+
+message VerifySigRequest {
+  string sign = 2;
+  string content = 1;
+}
+
+message VerifySigReply {
+  bool res = 1;
+  string address = 2;
+}
+
+message TokenBalanceRequest {
+  string token = 2;
   string address = 1;
 }
 
-message UsdtBalanceReply {
-  string balance = 1;
-  string err = 2;
-}
-
-message UsdtBalanceBiwRequest {
-  string address = 1;
-}
-
-message UsdtBalanceBiwReply {
+message TokenBalanceReply {
   string balance = 1;
   string err = 2;
 }
@@ -84,6 +80,7 @@ message SendTransactionRequest {
   message SendBody{
     string privateKey = 1;
     string toAddr = 2;
+    string token = 4;
     string amount = 3;
   }
 
@@ -135,18 +132,4 @@ message GenerateKeyReply {
   string address = 1;
   string privateKey = 2;
   string err = 3;
-}
-
-message SendTransactionBiwRequest {
-  message SendBody{
-    string toAddr = 2;
-    string amount = 3;
-  }
-
-  SendBody send_body = 1;
-}
-
-message SendTransactionBiwReply {
-  string tx = 1;
-  bool success = 2;
 }
