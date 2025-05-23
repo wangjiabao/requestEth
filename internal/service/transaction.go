@@ -392,3 +392,348 @@ func (s *TransactionService) VerifySig(ctx context.Context, req *pb.VerifySigReq
 		Address: recoveredAddr.Hex(),
 	}, nil
 }
+
+func (s *TransactionService) GetReserves(ctx context.Context, req *pb.GetReservesRequest) (*pb.GetReservesReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress(req.Pair) // LP Pair 地址
+		instance, err := NewPair(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		// 获取储备量
+		reserves, err := instance.GetReserves(&bind.CallOpts{})
+		if err != nil {
+			fmt.Println("GetReserves error:", err)
+			continue
+		}
+
+		return &pb.GetReservesReply{
+			ReservesOne: reserves.Reserve0.String(),
+			ReservesTwo: reserves.Reserve1.String(),
+		}, nil
+	}
+
+	return &pb.GetReservesReply{
+		ReservesOne: "-1",
+		ReservesTwo: "-1",
+	}, nil
+}
+
+func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) (*pb.GetAllReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	tmpTwo := "-1"
+	tmpThree := "-1"
+	tmpFour := "-1"
+	tmpFive := "-1"
+	tmpSix := "-1"
+	tmpOneLength := "-1"
+	tmpTwoLength := "-1"
+	tmpThreeLength := "-1"
+	tmpFourLength := "-1"
+
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			one, errOne := instance.One(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errOne != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+
+		if "-1" == tmpTwo {
+			two, errTwo := instance.Two(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errTwo != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		if "-1" == tmpThree {
+			three, errThree := instance.Three(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errThree != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpThree = three.String()
+		}
+
+		if "-1" == tmpFour {
+			four, errFour := instance.Four(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errFour != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpFour = four.String()
+		}
+
+		if "-1" == tmpFive {
+			five, errFive := instance.LpAmount(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errFive != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpFive = five.String()
+		}
+
+		if "-1" == tmpSix {
+			six, errSix := instance.LpAmountTotal(&bind.CallOpts{})
+			if errSix != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpSix = six.String()
+		}
+
+		if "-1" == tmpOneLength {
+			six, errSix := instance.GetOneArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errSix != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpOneLength = six.String()
+		}
+
+		if "-1" == tmpTwoLength {
+			six, errSix := instance.GetTwoArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errSix != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpTwoLength = six.String()
+		}
+
+		if "-1" == tmpThreeLength {
+			six, errSix := instance.GetThreeArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errSix != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpThreeLength = six.String()
+		}
+
+		if "-1" == tmpFourLength {
+			six, errSix := instance.GetFourArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errSix != nil {
+				fmt.Println("GetReserves error:", err)
+				continue
+			}
+
+			tmpFourLength = six.String()
+		}
+
+		if "-1" != tmpOne && "-1" != tmpTwo && "-1" != tmpThree && "-1" != tmpFour &&
+			"-1" != tmpFive && "-1" != tmpSix &&
+			"-1" != tmpOneLength && "-1" != tmpTwoLength && "-1" != tmpThreeLength && "-1" != tmpFourLength {
+			break
+		}
+	}
+
+	return &pb.GetAllReply{
+		One:           tmpOne,
+		Two:           tmpTwo,
+		Three:         tmpThree,
+		Four:          tmpFour,
+		LpAmount:      tmpFive,
+		LpAmountTotal: tmpSix,
+		OneLength:     tmpOneLength,
+		ThreeLength:   tmpThreeLength,
+		TwoLength:     tmpTwoLength,
+		FourLength:    tmpFourLength,
+	}, nil
+}
+
+func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest) (*pb.PushOneReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		var (
+			tx *types.Transaction
+		)
+		address := make([]common.Address, 0)
+		one := make([]*big.Int, 0)
+		for _, v := range req.SendBody.Address {
+			address = append(address, common.HexToAddress(v.Address))
+			tmpAmount, _ := new(big.Int).SetString(v.One, 10)
+			one = append(one, tmpAmount)
+		}
+
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		tx, err = instance.SetOneTwo(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 0,
+		}, address, one)
+		if err != nil {
+			fmt.Println("GetReserves error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.PushOneReply{
+				Res: "-1",
+			}, nil
+		}
+
+	}
+
+	return &pb.PushOneReply{
+		Res: "ok",
+	}, nil
+}
+
+func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThreeFourRequest) (*pb.PushThreeFourReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		var (
+			tx *types.Transaction
+		)
+		address := make([]common.Address, 0)
+		three := make([]*big.Int, 0)
+		four := make([]*big.Int, 0)
+		for _, v := range req.SendBody.Address {
+			address = append(address, common.HexToAddress(v.Address))
+			tmpAmount, _ := new(big.Int).SetString(v.Three, 10)
+			tmpAmountTwo, _ := new(big.Int).SetString(v.Four, 10)
+			three = append(three, tmpAmount)
+			four = append(four, tmpAmountTwo)
+		}
+
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		tx, err = instance.SetThreeFour(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 0,
+		}, address, three, four)
+		if err != nil {
+			fmt.Println("GetReserves error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.PushThreeFourReply{
+				Res: "-1",
+			}, nil
+		}
+
+	}
+
+	return &pb.PushThreeFourReply{
+		Res: "ok",
+	}, nil
+}

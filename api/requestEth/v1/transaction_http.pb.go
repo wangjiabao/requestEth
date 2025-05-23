@@ -21,6 +21,10 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
+const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
+const OperationTransactionGetReserves = "/api.requestEth.v1.Transaction/GetReserves"
+const OperationTransactionPushOne = "/api.requestEth.v1.Transaction/PushOne"
+const OperationTransactionPushThreeFour = "/api.requestEth.v1.Transaction/PushThreeFour"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
 const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
@@ -30,6 +34,10 @@ const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
 type TransactionHTTPServer interface {
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
+	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
+	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
+	PushOne(context.Context, *PushOneRequest) (*PushOneReply, error)
+	PushThreeFour(context.Context, *PushThreeFourRequest) (*PushThreeFourReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
@@ -46,6 +54,10 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/generate_key", _Transaction_GenerateKey0_HTTP_Handler(srv))
 	r.GET("/api/usdt_balance", _Transaction_TokenBalance0_HTTP_Handler(srv))
 	r.GET("/api/verify_sig", _Transaction_VerifySig0_HTTP_Handler(srv))
+	r.GET("/api/get_reserves", _Transaction_GetReserves0_HTTP_Handler(srv))
+	r.GET("/api/get_all", _Transaction_GetAll0_HTTP_Handler(srv))
+	r.POST("/api/push_one", _Transaction_PushOne0_HTTP_Handler(srv))
+	r.POST("/api/push_three_four", _Transaction_PushThreeFour0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -190,9 +202,95 @@ func _Transaction_VerifySig0_HTTP_Handler(srv TransactionHTTPServer) func(ctx ht
 	}
 }
 
+func _Transaction_GetReserves0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetReservesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetReserves)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetReserves(ctx, req.(*GetReservesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetReservesReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetAll0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetAllRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetAll)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAll(ctx, req.(*GetAllRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAllReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_PushOne0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PushOneRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionPushOne)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.PushOne(ctx, req.(*PushOneRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PushOneReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_PushThreeFour0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PushThreeFourRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionPushThreeFour)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.PushThreeFour(ctx, req.(*PushThreeFourRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PushThreeFourReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
+	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
+	GetReserves(ctx context.Context, req *GetReservesRequest, opts ...http.CallOption) (rsp *GetReservesReply, err error)
+	PushOne(ctx context.Context, req *PushOneRequest, opts ...http.CallOption) (rsp *PushOneReply, err error)
+	PushThreeFour(ctx context.Context, req *PushThreeFourRequest, opts ...http.CallOption) (rsp *PushThreeFourReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
@@ -228,6 +326,58 @@ func (c *TransactionHTTPClientImpl) GenerateKey(ctx context.Context, in *Generat
 	opts = append(opts, http.Operation(OperationTransactionGenerateKey))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetAll(ctx context.Context, in *GetAllRequest, opts ...http.CallOption) (*GetAllReply, error) {
+	var out GetAllReply
+	pattern := "/api/get_all"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetAll))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetReserves(ctx context.Context, in *GetReservesRequest, opts ...http.CallOption) (*GetReservesReply, error) {
+	var out GetReservesReply
+	pattern := "/api/get_reserves"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetReserves))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) PushOne(ctx context.Context, in *PushOneRequest, opts ...http.CallOption) (*PushOneReply, error) {
+	var out PushOneReply
+	pattern := "/api/push_one"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionPushOne))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) PushThreeFour(ctx context.Context, in *PushThreeFourRequest, opts ...http.CallOption) (*PushThreeFourReply, error) {
+	var out PushThreeFourReply
+	pattern := "/api/push_three_four"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionPushThreeFour))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

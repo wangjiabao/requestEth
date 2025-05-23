@@ -53,8 +53,92 @@ service Transaction {
       get: "/api/verify_sig"
     };
   }
+
+  rpc GetReserves (GetReservesRequest) returns (GetReservesReply) {
+    option (google.api.http) = {
+      get: "/api/get_reserves"
+    };
+  }
+
+  rpc GetAll (GetAllRequest) returns (GetAllReply) {
+    option (google.api.http) = {
+      get: "/api/get_all"
+    };
+  }
+
+  rpc PushOne (PushOneRequest) returns (PushOneReply) {
+    option (google.api.http) = {
+      post: "/api/push_one"
+      body: "send_body"
+    };
+  }
+
+  rpc PushThreeFour (PushThreeFourRequest) returns (PushThreeFourReply) {
+    option (google.api.http) = {
+      post: "/api/push_three_four"
+      body: "send_body"
+    };
+  }
 }
 
+message GetReservesRequest {
+  string pair = 1;
+}
+
+message GetReservesReply {
+  string reservesOne = 1;
+  string reservesTwo = 2;
+}
+
+message GetAllRequest {
+  string address = 1;
+}
+
+message GetAllReply {
+  string one = 1; // usdt额度，铸造
+  string two = 2; // aicat总铸造数量，铸造
+  string three = 3; // 添加流动性usdt额度
+  string four = 4; // 添加流动性aicat额度
+  string lpAmount = 5; // 地址持有lp
+  string lpAmountTotal = 6; // 全局持有lp
+  string oneLength = 7; // 铸造使用u，记录数组当前长度
+  string twoLength = 8; // 铸造产生b，记录数组当前长度
+  string threeLength = 9; // 流动性u使用记录，负数是添加，正数是移除
+  string fourLength = 10; // 流动性b使用记录，负数是添加，正数是移除
+}
+
+message PushOneRequest {
+  message SendBody{
+    repeated List address = 1;
+    message List {
+      string address = 1;
+      string one = 2;
+    }
+  }
+
+  SendBody send_body = 1;
+}
+
+message PushOneReply {
+  string res = 1;
+}
+
+message PushThreeFourRequest {
+  message SendBody{
+    repeated List address = 1;
+    message List {
+      string address = 1;
+      string three = 2;
+      string Four = 3;
+    }
+  }
+
+  SendBody send_body = 1;
+}
+
+message PushThreeFourReply {
+  string res = 1;
+}
 
 message VerifySigRequest {
   string sign = 2;

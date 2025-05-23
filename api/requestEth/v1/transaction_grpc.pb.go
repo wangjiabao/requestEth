@@ -26,6 +26,10 @@ const (
 	Transaction_GenerateKey_FullMethodName        = "/api.requestEth.v1.Transaction/GenerateKey"
 	Transaction_TokenBalance_FullMethodName       = "/api.requestEth.v1.Transaction/TokenBalance"
 	Transaction_VerifySig_FullMethodName          = "/api.requestEth.v1.Transaction/VerifySig"
+	Transaction_GetReserves_FullMethodName        = "/api.requestEth.v1.Transaction/GetReserves"
+	Transaction_GetAll_FullMethodName             = "/api.requestEth.v1.Transaction/GetAll"
+	Transaction_PushOne_FullMethodName            = "/api.requestEth.v1.Transaction/PushOne"
+	Transaction_PushThreeFour_FullMethodName      = "/api.requestEth.v1.Transaction/PushThreeFour"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -39,6 +43,10 @@ type TransactionClient interface {
 	GenerateKey(ctx context.Context, in *GenerateKeyRequest, opts ...grpc.CallOption) (*GenerateKeyReply, error)
 	TokenBalance(ctx context.Context, in *TokenBalanceRequest, opts ...grpc.CallOption) (*TokenBalanceReply, error)
 	VerifySig(ctx context.Context, in *VerifySigRequest, opts ...grpc.CallOption) (*VerifySigReply, error)
+	GetReserves(ctx context.Context, in *GetReservesRequest, opts ...grpc.CallOption) (*GetReservesReply, error)
+	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllReply, error)
+	PushOne(ctx context.Context, in *PushOneRequest, opts ...grpc.CallOption) (*PushOneReply, error)
+	PushThreeFour(ctx context.Context, in *PushThreeFourRequest, opts ...grpc.CallOption) (*PushThreeFourReply, error)
 }
 
 type transactionClient struct {
@@ -112,6 +120,42 @@ func (c *transactionClient) VerifySig(ctx context.Context, in *VerifySigRequest,
 	return out, nil
 }
 
+func (c *transactionClient) GetReserves(ctx context.Context, in *GetReservesRequest, opts ...grpc.CallOption) (*GetReservesReply, error) {
+	out := new(GetReservesReply)
+	err := c.cc.Invoke(ctx, Transaction_GetReserves_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllReply, error) {
+	out := new(GetAllReply)
+	err := c.cc.Invoke(ctx, Transaction_GetAll_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) PushOne(ctx context.Context, in *PushOneRequest, opts ...grpc.CallOption) (*PushOneReply, error) {
+	out := new(PushOneReply)
+	err := c.cc.Invoke(ctx, Transaction_PushOne_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) PushThreeFour(ctx context.Context, in *PushThreeFourRequest, opts ...grpc.CallOption) (*PushThreeFourReply, error) {
+	out := new(PushThreeFourReply)
+	err := c.cc.Invoke(ctx, Transaction_PushThreeFour_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -123,6 +167,10 @@ type TransactionServer interface {
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
+	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
+	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
+	PushOne(context.Context, *PushOneRequest) (*PushOneReply, error)
+	PushThreeFour(context.Context, *PushThreeFourRequest) (*PushThreeFourReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -150,6 +198,18 @@ func (UnimplementedTransactionServer) TokenBalance(context.Context, *TokenBalanc
 }
 func (UnimplementedTransactionServer) VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifySig not implemented")
+}
+func (UnimplementedTransactionServer) GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReserves not implemented")
+}
+func (UnimplementedTransactionServer) GetAll(context.Context, *GetAllRequest) (*GetAllReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedTransactionServer) PushOne(context.Context, *PushOneRequest) (*PushOneReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PushOne not implemented")
+}
+func (UnimplementedTransactionServer) PushThreeFour(context.Context, *PushThreeFourRequest) (*PushThreeFourReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PushThreeFour not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -290,6 +350,78 @@ func _Transaction_VerifySig_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetReserves_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReservesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetReserves(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetReserves_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetReserves(ctx, req.(*GetReservesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetAll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetAll(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_PushOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PushOneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).PushOne(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_PushOne_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).PushOne(ctx, req.(*PushOneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_PushThreeFour_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PushThreeFourRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).PushThreeFour(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_PushThreeFour_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).PushThreeFour(ctx, req.(*PushThreeFourRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -324,6 +456,22 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifySig",
 			Handler:    _Transaction_VerifySig_Handler,
+		},
+		{
+			MethodName: "GetReserves",
+			Handler:    _Transaction_GetReserves_Handler,
+		},
+		{
+			MethodName: "GetAll",
+			Handler:    _Transaction_GetAll_Handler,
+		},
+		{
+			MethodName: "PushOne",
+			Handler:    _Transaction_PushOne_Handler,
+		},
+		{
+			MethodName: "PushThreeFour",
+			Handler:    _Transaction_PushThreeFour_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

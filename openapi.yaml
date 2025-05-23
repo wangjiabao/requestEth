@@ -47,6 +47,100 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/get_all:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetAll
+            parameters:
+                - name: address
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAllReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_reserves:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetReserves
+            parameters:
+                - name: pair
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetReservesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/push_one:
+        post:
+            tags:
+                - Transaction
+            operationId: Transaction_PushOne
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PushOneRequest_SendBody'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PushOneReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/push_three_four:
+        post:
+            tags:
+                - Transaction
+            operationId: Transaction_PushThreeFour
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PushThreeFourRequest_SendBody'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PushThreeFourReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/transaction:
         post:
             tags:
@@ -191,6 +285,36 @@ components:
                     type: string
                 err:
                     type: string
+        GetAllReply:
+            type: object
+            properties:
+                one:
+                    type: string
+                two:
+                    type: string
+                three:
+                    type: string
+                four:
+                    type: string
+                lpAmount:
+                    type: string
+                lpAmountTotal:
+                    type: string
+                oneLength:
+                    type: string
+                twoLength:
+                    type: string
+                threeLength:
+                    type: string
+                fourLength:
+                    type: string
+        GetReservesReply:
+            type: object
+            properties:
+                reservesOne:
+                    type: string
+                reservesTwo:
+                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -199,6 +323,39 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        PushOneReply:
+            type: object
+            properties:
+                res:
+                    type: string
+        PushOneRequest_SendBody:
+            type: object
+            properties:
+                address:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SendBody_List'
+        PushThreeFourReply:
+            type: object
+            properties:
+                res:
+                    type: string
+        PushThreeFourRequest_SendBody:
+            type: object
+            properties:
+                address:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SendBody_List'
+        SendBody_List:
+            type: object
+            properties:
+                address:
+                    type: string
+                three:
+                    type: string
+                Four:
+                    type: string
         SendTransactionEthReply:
             type: object
             properties:
