@@ -646,14 +646,6 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			continue
 		}
 
-		for _, v := range address {
-			fmt.Println(v.Hex())
-		}
-
-		for _, v := range one {
-			fmt.Println(v.String())
-		}
-
 		tx, err = instance.SetOneTwo(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
