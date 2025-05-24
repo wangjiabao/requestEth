@@ -20,6 +20,7 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationTransactionAddLiquidity = "/api.requestEth.v1.Transaction/AddLiquidity"
+const OperationTransactionBuyAICAT = "/api.requestEth.v1.Transaction/BuyAICAT"
 const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
 const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
@@ -37,6 +38,7 @@ const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
 
 type TransactionHTTPServer interface {
 	AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error)
+	BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error)
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
@@ -70,6 +72,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_user_lp", _Transaction_GetUserLp0_HTTP_Handler(srv))
 	r.POST("/api/add_liquidity", _Transaction_AddLiquidity0_HTTP_Handler(srv))
 	r.POST("/api/remove_liquidity", _Transaction_RemoveLiquidity0_HTTP_Handler(srv))
+	r.POST("/api/buy", _Transaction_BuyAICAT0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -372,8 +375,31 @@ func _Transaction_RemoveLiquidity0_HTTP_Handler(srv TransactionHTTPServer) func(
 	}
 }
 
+func _Transaction_BuyAICAT0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in BuyAICATRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionBuyAICAT)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.BuyAICAT(ctx, req.(*BuyAICATRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*BuyAICATReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
+	BuyAICAT(ctx context.Context, req *BuyAICATRequest, opts ...http.CallOption) (rsp *BuyAICATReply, err error)
 	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
@@ -403,6 +429,19 @@ func (c *TransactionHTTPClientImpl) AddLiquidity(ctx context.Context, in *AddLiq
 	pattern := "/api/add_liquidity"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionAddLiquidity))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) BuyAICAT(ctx context.Context, in *BuyAICATRequest, opts ...http.CallOption) (*BuyAICATReply, error) {
+	var out BuyAICATReply
+	pattern := "/api/buy"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionBuyAICAT))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {

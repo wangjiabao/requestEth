@@ -721,6 +721,8 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 						OrderId: vTmp.String(),
 					})
 				}
+
+				break
 			}
 		} else {
 			tmp, errOne := instance.GetReqLpArray(&bind.CallOpts{}, start, end)
@@ -735,6 +737,8 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 						OrderId: vTmp.String(),
 					})
 				}
+
+				break
 			}
 		}
 	}
@@ -883,6 +887,75 @@ func (s *TransactionService) RemoveLiquidity(ctx context.Context, req *pb.Remove
 	}
 
 	return &pb.RemoveLiquidityReply{
+		Res: hashContent,
+	}, nil
+}
+
+func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATRequest) (*pb.BuyAICATReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	hashContent := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("BuyAICAT error:", err)
+			continue
+		}
+
+		var tx *types.Transaction
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
+		amount, _ := new(big.Int).SetString(req.SendBody.UsdtAmount, 10)
+		tx, err = instance.BuyAICAT(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 0,
+		}, orderId, amount)
+		if err != nil {
+			fmt.Println("BuyAICAT error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.BuyAICATReply{
+				Res: hashContent,
+			}, nil
+		}
+
+		return &pb.BuyAICATReply{
+			Res: tx.Hash().Hex(),
+		}, nil
+
+	}
+
+	return &pb.BuyAICATReply{
 		Res: hashContent,
 	}, nil
 }

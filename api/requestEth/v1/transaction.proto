@@ -103,6 +103,13 @@ service Transaction {
       body: "send_body"
     };
   }
+
+  rpc BuyAICAT (BuyAICATRequest) returns (BuyAICATReply) {
+    option (google.api.http) = {
+      post: "/api/buy"
+      body: "send_body"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -189,6 +196,19 @@ message RemoveLiquidityRequest {
 }
 
 message RemoveLiquidityReply {
+  string res = 1;
+}
+
+message BuyAICATRequest {
+  message SendBody{
+    string orderId = 1;
+    string usdtAmount = 2;
+  }
+
+  SendBody send_body = 1;
+}
+
+message BuyAICATReply {
   string res = 1;
 }
 
