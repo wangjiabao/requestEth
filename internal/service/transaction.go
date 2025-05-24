@@ -653,7 +653,7 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 		}, address, one)
 		if err != nil {
 			fmt.Println("PushOne error:", err)
-			return nil, err
+			continue
 		}
 
 		if 0 >= len(tx.Hash().Hex()) {
