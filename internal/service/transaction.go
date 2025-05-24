@@ -600,6 +600,7 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 		"https://data-seed-prebsc-1-s3.binance.org:8545/",
 	}
 
+	hashContent := ""
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
 		if err != nil {
@@ -624,6 +625,18 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			tmpAmount, _ := new(big.Int).SetString(v.One, 10)
 			one = append(one, tmpAmount)
 		}
+
+		for _, v := range address {
+			fmt.Println(v)
+		}
+
+		for _, v := range one {
+			fmt.Println(v)
+		}
+
+		return &pb.PushOneReply{
+			Res: hashContent,
+		}, nil
 
 		var authUser *bind.TransactOpts
 
@@ -656,10 +669,11 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			}, nil
 		}
 
+		hashContent = tx.Hash().Hex()
 	}
 
 	return &pb.PushOneReply{
-		Res: "ok",
+		Res: hashContent,
 	}, nil
 }
 
