@@ -473,7 +473,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpOne {
 			one, errOne := instance.One(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errOne != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -483,7 +483,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpTwo {
 			two, errTwo := instance.Two(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errTwo != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -493,7 +493,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpThree {
 			three, errThree := instance.Three(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errThree != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -503,7 +503,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpFour {
 			four, errFour := instance.Four(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errFour != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -513,7 +513,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpFive {
 			five, errFive := instance.LpAmount(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errFive != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -523,7 +523,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpSix {
 			six, errSix := instance.LpAmountTotal(&bind.CallOpts{})
 			if errSix != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -533,7 +533,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpOneLength {
 			six, errSix := instance.GetOneArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errSix != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -543,7 +543,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpTwoLength {
 			six, errSix := instance.GetTwoArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errSix != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -553,7 +553,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpThreeLength {
 			six, errSix := instance.GetThreeArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errSix != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -563,7 +563,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		if "-1" == tmpFourLength {
 			six, errSix := instance.GetFourArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
 			if errSix != nil {
-				fmt.Println("GetReserves error:", err)
+				fmt.Println("GetAll error:", err)
 				continue
 			}
 
@@ -611,7 +611,7 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
-			fmt.Println("NewPair error:", err)
+			fmt.Println("PushOne error:", err)
 			continue
 		}
 
@@ -646,14 +646,22 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			continue
 		}
 
+		for _, v := range address {
+			fmt.Println(v.Hex())
+		}
+
+		for _, v := range one {
+			fmt.Println(v.String())
+		}
+
 		tx, err = instance.SetOneTwo(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
 			GasLimit: 0,
 		}, address, one)
 		if err != nil {
-			fmt.Println("GetReserves error:", err)
-			continue
+			fmt.Println("PushOne error:", err)
+			return nil, err
 		}
 
 		if 0 >= len(tx.Hash().Hex()) {
@@ -728,7 +736,7 @@ func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThre
 			GasLimit: 0,
 		}, address, three, four)
 		if err != nil {
-			fmt.Println("GetReserves error:", err)
+			fmt.Println("PushThreeFour error:", err)
 			continue
 		}
 
