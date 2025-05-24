@@ -790,8 +790,8 @@ func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquid
 		}
 
 		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
-		AmountUsdt, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
-		AmountAicat, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
+		AmountUsdt, _ := new(big.Int).SetString(req.SendBody.AmountUsdt, 10)
+		AmountAicat, _ := new(big.Int).SetString(req.SendBody.AmountAicat, 10)
 		user := common.HexToAddress(req.SendBody.User)
 
 		tx, err = instance.AddLiquidity(&bind.TransactOpts{
