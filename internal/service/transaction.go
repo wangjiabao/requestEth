@@ -615,7 +615,7 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			continue
 		}
 
-		fmt.Println(req.SendBody, req.SendBody.Address)
+		fmt.Println(req, req.SendBody, req.SendBody.Address)
 
 		var (
 			tx *types.Transaction

@@ -331,6 +331,8 @@ components:
         PushOneRequest_SendBody:
             type: object
             properties:
+                addressTwo:
+                    type: string
                 address:
                     type: array
                     items:

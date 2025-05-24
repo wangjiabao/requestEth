@@ -109,6 +109,7 @@ message GetAllReply {
 
 message PushOneRequest {
   message SendBody{
+    string addressTwo = 2;
     repeated List address = 1;
     message List {
       string address = 1;
