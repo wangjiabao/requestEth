@@ -615,8 +615,6 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			continue
 		}
 
-		fmt.Println(req, req.SendBody, req.SendBody.Address)
-
 		var (
 			tx *types.Transaction
 		)
@@ -625,20 +623,13 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 		for _, v := range req.SendBody.Address {
 			address = append(address, common.HexToAddress(v.Address))
 			tmpAmount, _ := new(big.Int).SetString(v.One, 10)
+			if nil == tmpAmount {
+				return &pb.PushOneReply{
+					Res: "err",
+				}, nil
+			}
 			one = append(one, tmpAmount)
 		}
-
-		for _, v := range address {
-			fmt.Println(v)
-		}
-
-		for _, v := range one {
-			fmt.Println(v)
-		}
-
-		return &pb.PushOneReply{
-			Res: hashContent,
-		}, nil
 
 		var authUser *bind.TransactOpts
 
