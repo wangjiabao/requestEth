@@ -907,7 +907,7 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 			fmt.Println("client error:", err)
 			continue
 		}
-
+		fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
 		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
@@ -934,7 +934,6 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
 		amount, _ := new(big.Int).SetString(req.SendBody.UsdtAmount, 10)
 
-		fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount, orderId, amount)
 		tx, err = instance.BuyAICAT(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
