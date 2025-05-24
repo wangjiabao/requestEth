@@ -681,6 +681,7 @@ func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThre
 		"https://data-seed-prebsc-1-s3.binance.org:8545/",
 	}
 
+	hashContent := "-1"
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
 		if err != nil {
@@ -707,6 +708,11 @@ func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThre
 			tmpAmountTwo, _ := new(big.Int).SetString(v.Four, 10)
 			three = append(three, tmpAmount)
 			four = append(four, tmpAmountTwo)
+			if nil == tmpAmount {
+				return &pb.PushThreeFourReply{
+					Res: hashContent,
+				}, nil
+			}
 		}
 
 		var authUser *bind.TransactOpts
@@ -736,13 +742,17 @@ func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThre
 
 		if 0 >= len(tx.Hash().Hex()) {
 			return &pb.PushThreeFourReply{
-				Res: "-1",
+				Res: hashContent,
 			}, nil
 		}
+
+		return &pb.PushThreeFourReply{
+			Res: tx.Hash().Hex(),
+		}, nil
 
 	}
 
 	return &pb.PushThreeFourReply{
-		Res: "ok",
+		Res: hashContent,
 	}, nil
 }
