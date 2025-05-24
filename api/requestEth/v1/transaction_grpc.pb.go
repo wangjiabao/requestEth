@@ -28,8 +28,12 @@ const (
 	Transaction_VerifySig_FullMethodName          = "/api.requestEth.v1.Transaction/VerifySig"
 	Transaction_GetReserves_FullMethodName        = "/api.requestEth.v1.Transaction/GetReserves"
 	Transaction_GetAll_FullMethodName             = "/api.requestEth.v1.Transaction/GetAll"
-	Transaction_PushOne_FullMethodName            = "/api.requestEth.v1.Transaction/PushOne"
-	Transaction_PushThreeFour_FullMethodName      = "/api.requestEth.v1.Transaction/PushThreeFour"
+	Transaction_GetArray_FullMethodName           = "/api.requestEth.v1.Transaction/GetArray"
+	Transaction_GetLpByOrderId_FullMethodName     = "/api.requestEth.v1.Transaction/GetLpByOrderId"
+	Transaction_GetBuyByOrderId_FullMethodName    = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
+	Transaction_GetUserLp_FullMethodName          = "/api.requestEth.v1.Transaction/GetUserLp"
+	Transaction_AddLiquidity_FullMethodName       = "/api.requestEth.v1.Transaction/AddLiquidity"
+	Transaction_RemoveLiquidity_FullMethodName    = "/api.requestEth.v1.Transaction/RemoveLiquidity"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -45,8 +49,12 @@ type TransactionClient interface {
 	VerifySig(ctx context.Context, in *VerifySigRequest, opts ...grpc.CallOption) (*VerifySigReply, error)
 	GetReserves(ctx context.Context, in *GetReservesRequest, opts ...grpc.CallOption) (*GetReservesReply, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllReply, error)
-	PushOne(ctx context.Context, in *PushOneRequest, opts ...grpc.CallOption) (*PushOneReply, error)
-	PushThreeFour(ctx context.Context, in *PushThreeFourRequest, opts ...grpc.CallOption) (*PushThreeFourReply, error)
+	GetArray(ctx context.Context, in *GetArrayRequest, opts ...grpc.CallOption) (*GetArrayReply, error)
+	GetLpByOrderId(ctx context.Context, in *GetLpByOrderIdRequest, opts ...grpc.CallOption) (*GetLpByOrderIdReply, error)
+	GetBuyByOrderId(ctx context.Context, in *GetBuyByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyByOrderIdReply, error)
+	GetUserLp(ctx context.Context, in *GetUserLpRequest, opts ...grpc.CallOption) (*GetUserLpReply, error)
+	AddLiquidity(ctx context.Context, in *AddLiquidityRequest, opts ...grpc.CallOption) (*AddLiquidityReply, error)
+	RemoveLiquidity(ctx context.Context, in *RemoveLiquidityRequest, opts ...grpc.CallOption) (*RemoveLiquidityReply, error)
 }
 
 type transactionClient struct {
@@ -138,18 +146,54 @@ func (c *transactionClient) GetAll(ctx context.Context, in *GetAllRequest, opts 
 	return out, nil
 }
 
-func (c *transactionClient) PushOne(ctx context.Context, in *PushOneRequest, opts ...grpc.CallOption) (*PushOneReply, error) {
-	out := new(PushOneReply)
-	err := c.cc.Invoke(ctx, Transaction_PushOne_FullMethodName, in, out, opts...)
+func (c *transactionClient) GetArray(ctx context.Context, in *GetArrayRequest, opts ...grpc.CallOption) (*GetArrayReply, error) {
+	out := new(GetArrayReply)
+	err := c.cc.Invoke(ctx, Transaction_GetArray_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *transactionClient) PushThreeFour(ctx context.Context, in *PushThreeFourRequest, opts ...grpc.CallOption) (*PushThreeFourReply, error) {
-	out := new(PushThreeFourReply)
-	err := c.cc.Invoke(ctx, Transaction_PushThreeFour_FullMethodName, in, out, opts...)
+func (c *transactionClient) GetLpByOrderId(ctx context.Context, in *GetLpByOrderIdRequest, opts ...grpc.CallOption) (*GetLpByOrderIdReply, error) {
+	out := new(GetLpByOrderIdReply)
+	err := c.cc.Invoke(ctx, Transaction_GetLpByOrderId_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetBuyByOrderId(ctx context.Context, in *GetBuyByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyByOrderIdReply, error) {
+	out := new(GetBuyByOrderIdReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBuyByOrderId_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetUserLp(ctx context.Context, in *GetUserLpRequest, opts ...grpc.CallOption) (*GetUserLpReply, error) {
+	out := new(GetUserLpReply)
+	err := c.cc.Invoke(ctx, Transaction_GetUserLp_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) AddLiquidity(ctx context.Context, in *AddLiquidityRequest, opts ...grpc.CallOption) (*AddLiquidityReply, error) {
+	out := new(AddLiquidityReply)
+	err := c.cc.Invoke(ctx, Transaction_AddLiquidity_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) RemoveLiquidity(ctx context.Context, in *RemoveLiquidityRequest, opts ...grpc.CallOption) (*RemoveLiquidityReply, error) {
+	out := new(RemoveLiquidityReply)
+	err := c.cc.Invoke(ctx, Transaction_RemoveLiquidity_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -169,8 +213,12 @@ type TransactionServer interface {
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
-	PushOne(context.Context, *PushOneRequest) (*PushOneReply, error)
-	PushThreeFour(context.Context, *PushThreeFourRequest) (*PushThreeFourReply, error)
+	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
+	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
+	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
+	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
+	AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error)
+	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -205,11 +253,23 @@ func (UnimplementedTransactionServer) GetReserves(context.Context, *GetReservesR
 func (UnimplementedTransactionServer) GetAll(context.Context, *GetAllRequest) (*GetAllReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedTransactionServer) PushOne(context.Context, *PushOneRequest) (*PushOneReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PushOne not implemented")
+func (UnimplementedTransactionServer) GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArray not implemented")
 }
-func (UnimplementedTransactionServer) PushThreeFour(context.Context, *PushThreeFourRequest) (*PushThreeFourReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PushThreeFour not implemented")
+func (UnimplementedTransactionServer) GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLpByOrderId not implemented")
+}
+func (UnimplementedTransactionServer) GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuyByOrderId not implemented")
+}
+func (UnimplementedTransactionServer) GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserLp not implemented")
+}
+func (UnimplementedTransactionServer) AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddLiquidity not implemented")
+}
+func (UnimplementedTransactionServer) RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveLiquidity not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -386,38 +446,110 @@ func _Transaction_GetAll_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Transaction_PushOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PushOneRequest)
+func _Transaction_GetArray_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArrayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TransactionServer).PushOne(ctx, in)
+		return srv.(TransactionServer).GetArray(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Transaction_PushOne_FullMethodName,
+		FullMethod: Transaction_GetArray_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServer).PushOne(ctx, req.(*PushOneRequest))
+		return srv.(TransactionServer).GetArray(ctx, req.(*GetArrayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Transaction_PushThreeFour_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PushThreeFourRequest)
+func _Transaction_GetLpByOrderId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLpByOrderIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TransactionServer).PushThreeFour(ctx, in)
+		return srv.(TransactionServer).GetLpByOrderId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Transaction_PushThreeFour_FullMethodName,
+		FullMethod: Transaction_GetLpByOrderId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServer).PushThreeFour(ctx, req.(*PushThreeFourRequest))
+		return srv.(TransactionServer).GetLpByOrderId(ctx, req.(*GetLpByOrderIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetBuyByOrderId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuyByOrderIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBuyByOrderId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBuyByOrderId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBuyByOrderId(ctx, req.(*GetBuyByOrderIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetUserLp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserLpRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetUserLp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetUserLp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetUserLp(ctx, req.(*GetUserLpRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_AddLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).AddLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_AddLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).AddLiquidity(ctx, req.(*AddLiquidityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_RemoveLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).RemoveLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_RemoveLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).RemoveLiquidity(ctx, req.(*RemoveLiquidityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -466,12 +598,28 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Transaction_GetAll_Handler,
 		},
 		{
-			MethodName: "PushOne",
-			Handler:    _Transaction_PushOne_Handler,
+			MethodName: "GetArray",
+			Handler:    _Transaction_GetArray_Handler,
 		},
 		{
-			MethodName: "PushThreeFour",
-			Handler:    _Transaction_PushThreeFour_Handler,
+			MethodName: "GetLpByOrderId",
+			Handler:    _Transaction_GetLpByOrderId_Handler,
+		},
+		{
+			MethodName: "GetBuyByOrderId",
+			Handler:    _Transaction_GetBuyByOrderId_Handler,
+		},
+		{
+			MethodName: "GetUserLp",
+			Handler:    _Transaction_GetUserLp_Handler,
+		},
+		{
+			MethodName: "AddLiquidity",
+			Handler:    _Transaction_AddLiquidity_Handler,
+		},
+		{
+			MethodName: "RemoveLiquidity",
+			Handler:    _Transaction_RemoveLiquidity_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

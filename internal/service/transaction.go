@@ -446,15 +446,6 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 
 	tmpOne := "-1"
 	tmpTwo := "-1"
-	tmpThree := "-1"
-	tmpFour := "-1"
-	tmpFive := "-1"
-	tmpSix := "-1"
-	tmpOneLength := "-1"
-	tmpTwoLength := "-1"
-	tmpThreeLength := "-1"
-	tmpFourLength := "-1"
-
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
 		if err != nil {
@@ -462,7 +453,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("NewPair error:", err)
@@ -471,7 +462,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 
 		// 获取储备量
 		if "-1" == tmpOne {
-			one, errOne := instance.One(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			one, errOne := instance.GetReqLpArrayLength(&bind.CallOpts{})
 			if errOne != nil {
 				fmt.Println("GetAll error:", err)
 				continue
@@ -481,7 +472,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 		}
 
 		if "-1" == tmpTwo {
-			two, errTwo := instance.Two(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			two, errTwo := instance.GetBuyArrayLength(&bind.CallOpts{})
 			if errTwo != nil {
 				fmt.Println("GetAll error:", err)
 				continue
@@ -490,108 +481,270 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 			tmpTwo = two.String()
 		}
 
+		if "-1" != tmpOne && "-1" != tmpTwo {
+			break
+		}
+	}
+
+	return &pb.GetAllReply{
+		ReqLpArrayLength: tmpOne,
+		BuyArrayLength:   tmpTwo,
+	}, nil
+}
+
+func (s *TransactionService) GetBuyByOrderId(ctx context.Context, req *pb.GetBuyByOrderIdRequest) (*pb.GetBuyByOrderIdReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	tmpTwo := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetBuyByOrderId error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			start, _ := new(big.Int).SetString(req.OrderId, 10)
+			one, errOne := instance.UsdtArray(&bind.CallOpts{}, start)
+			if errOne != nil {
+				fmt.Println("GetBuyByOrderId error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+
+		if "-1" == tmpTwo {
+			start, _ := new(big.Int).SetString(req.OrderId, 10)
+			two, errTwo := instance.CatArray(&bind.CallOpts{}, start)
+			if errTwo != nil {
+				fmt.Println("GetBuyByOrderId error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		if "-1" != tmpOne && "-1" != tmpTwo {
+			break
+		}
+	}
+
+	return &pb.GetBuyByOrderIdReply{
+		UsdtArray: tmpOne,
+		CatArray:  tmpTwo,
+	}, nil
+}
+
+func (s *TransactionService) GetLpByOrderId(ctx context.Context, req *pb.GetLpByOrderIdRequest) (*pb.GetLpByOrderIdReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	tmpTwo := "-1"
+	tmpThree := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetLpByOrderId error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			start, _ := new(big.Int).SetString(req.OrderId, 10)
+			one, errOne := instance.LpArray(&bind.CallOpts{}, start)
+			if errOne != nil {
+				fmt.Println("GetLpByOrderId error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+
+		if "-1" == tmpTwo {
+			start, _ := new(big.Int).SetString(req.OrderId, 10)
+			two, errTwo := instance.LpUsdtArray(&bind.CallOpts{}, start)
+			if errTwo != nil {
+				fmt.Println("GetLpByOrderId error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
 		if "-1" == tmpThree {
-			three, errThree := instance.Three(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			start, _ := new(big.Int).SetString(req.OrderId, 10)
+			three, errThree := instance.LpCatArray(&bind.CallOpts{}, start)
 			if errThree != nil {
-				fmt.Println("GetAll error:", err)
+				fmt.Println("GetLpByOrderId error:", err)
 				continue
 			}
 
 			tmpThree = three.String()
 		}
 
-		if "-1" == tmpFour {
-			four, errFour := instance.Four(&bind.CallOpts{}, common.HexToAddress(req.Address))
-			if errFour != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpFour = four.String()
-		}
-
-		if "-1" == tmpFive {
-			five, errFive := instance.LpAmount(&bind.CallOpts{}, common.HexToAddress(req.Address))
-			if errFive != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpFive = five.String()
-		}
-
-		if "-1" == tmpSix {
-			six, errSix := instance.LpAmountTotal(&bind.CallOpts{})
-			if errSix != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpSix = six.String()
-		}
-
-		if "-1" == tmpOneLength {
-			six, errSix := instance.GetOneArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
-			if errSix != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpOneLength = six.String()
-		}
-
-		if "-1" == tmpTwoLength {
-			six, errSix := instance.GetTwoArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
-			if errSix != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpTwoLength = six.String()
-		}
-
-		if "-1" == tmpThreeLength {
-			six, errSix := instance.GetThreeArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
-			if errSix != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpThreeLength = six.String()
-		}
-
-		if "-1" == tmpFourLength {
-			six, errSix := instance.GetFourArrayLength(&bind.CallOpts{}, common.HexToAddress(req.Address))
-			if errSix != nil {
-				fmt.Println("GetAll error:", err)
-				continue
-			}
-
-			tmpFourLength = six.String()
-		}
-
-		if "-1" != tmpOne && "-1" != tmpTwo && "-1" != tmpThree && "-1" != tmpFour &&
-			"-1" != tmpFive && "-1" != tmpSix &&
-			"-1" != tmpOneLength && "-1" != tmpTwoLength && "-1" != tmpThreeLength && "-1" != tmpFourLength {
+		if "-1" != tmpOne && "-1" != tmpTwo && "-1" != tmpThree {
 			break
 		}
 	}
 
-	return &pb.GetAllReply{
-		One:           tmpOne,
-		Two:           tmpTwo,
-		Three:         tmpThree,
-		Four:          tmpFour,
-		LpAmount:      tmpFive,
-		LpAmountTotal: tmpSix,
-		OneLength:     tmpOneLength,
-		ThreeLength:   tmpThreeLength,
-		TwoLength:     tmpTwoLength,
-		FourLength:    tmpFourLength,
+	return &pb.GetLpByOrderIdReply{
+		LpArray:     tmpOne,
+		LpUsdtArray: tmpTwo,
+		LpCatArray:  tmpThree,
 	}, nil
 }
 
-func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest) (*pb.PushOneReply, error) {
+func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpRequest) (*pb.GetUserLpReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	tmpTwo := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetUserLp error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			address := common.HexToAddress(req.Address)
+			one, errOne := instance.LpAmount(&bind.CallOpts{}, address)
+			if errOne != nil {
+				fmt.Println("GetUserLp error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+
+		if "-1" == tmpTwo {
+			two, errTwo := instance.LpAmountTotal(&bind.CallOpts{})
+			if errTwo != nil {
+				fmt.Println("GetUserLp error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		if "-1" != tmpOne && "-1" != tmpTwo {
+			break
+		}
+	}
+
+	return &pb.GetUserLpReply{
+		LpAmount:      tmpOne,
+		LpAmountTotal: tmpTwo,
+	}, nil
+}
+
+func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayRequest) (*pb.GetArrayReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	res := make([]*pb.GetArrayReply_List, 0)
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetArray error:", err)
+			continue
+		}
+
+		// 获取储备量
+		start, _ := new(big.Int).SetString(req.Start, 10)
+		end, _ := new(big.Int).SetString(req.End, 10)
+		if "buy" == req.ReqType {
+			tmp, errOne := instance.GetBuyArray(&bind.CallOpts{}, start, end)
+			if errOne != nil {
+				fmt.Println("GetArray error:", err)
+				continue
+			}
+
+			if nil != tmp && 0 < len(tmp) {
+				for _, vTmp := range tmp {
+					res = append(res, &pb.GetArrayReply_List{
+						OrderId: vTmp.String(),
+					})
+				}
+			}
+		} else {
+			tmp, errOne := instance.GetReqLpArray(&bind.CallOpts{}, start, end)
+			if errOne != nil {
+				fmt.Println("GetArray error:", err)
+				continue
+			}
+
+			if nil != tmp && 0 < len(tmp) {
+				for _, vTmp := range tmp {
+					res = append(res, &pb.GetArrayReply_List{
+						OrderId: vTmp.String(),
+					})
+				}
+			}
+		}
+	}
+
+	return &pb.GetArrayReply{
+		List: res,
+	}, nil
+}
+
+func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquidityRequest) (*pb.AddLiquidityReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
 		"https://binance.llamarpc.com/",
@@ -608,31 +761,17 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
-			fmt.Println("PushOne error:", err)
+			fmt.Println("AddLiquidity error:", err)
 			continue
 		}
 
 		var (
 			tx *types.Transaction
 		)
-		address := make([]common.Address, 0)
-		one := make([]*big.Int, 0)
-		for _, v := range req.SendBody.Address {
-			address = append(address, common.HexToAddress(v.Address))
-			tmpAmount, _ := new(big.Int).SetString(v.One, 10)
-			if nil == tmpAmount {
-				return &pb.PushOneReply{
-					Res: hashContent,
-				}, nil
-			}
-			one = append(one, tmpAmount)
-		}
-
 		var authUser *bind.TransactOpts
-
 		var privateKey *ecdsa.PrivateKey
 		privateKey, err = crypto.HexToECDSA("")
 		if err != nil {
@@ -646,33 +785,38 @@ func (s *TransactionService) PushOne(ctx context.Context, req *pb.PushOneRequest
 			continue
 		}
 
-		tx, err = instance.SetOneTwo(&bind.TransactOpts{
+		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
+		AmountUsdt, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
+		AmountAicat, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
+		user := common.HexToAddress(req.SendBody.User)
+
+		tx, err = instance.AddLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
 			GasLimit: 0,
-		}, address, one)
+		}, orderId, user, AmountUsdt, AmountAicat)
 		if err != nil {
-			fmt.Println("PushOne error:", err)
+			fmt.Println("AddLiquidity error:", err)
 			continue
 		}
 
 		if 0 >= len(tx.Hash().Hex()) {
-			return &pb.PushOneReply{
+			return &pb.AddLiquidityReply{
 				Res: hashContent,
 			}, nil
 		}
 
-		return &pb.PushOneReply{
+		return &pb.AddLiquidityReply{
 			Res: tx.Hash().Hex(),
 		}, nil
 	}
 
-	return &pb.PushOneReply{
+	return &pb.AddLiquidityReply{
 		Res: hashContent,
 	}, nil
 }
 
-func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThreeFourRequest) (*pb.PushThreeFourReply, error) {
+func (s *TransactionService) RemoveLiquidity(ctx context.Context, req *pb.RemoveLiquidityRequest) (*pb.RemoveLiquidityReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
 		"https://binance.llamarpc.com/",
@@ -689,32 +833,14 @@ func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThre
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x7d3482934977EE703F9D7B14b6D158691AacBae7")
+		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
-			fmt.Println("NewPair error:", err)
+			fmt.Println("RemoveLiquidity error:", err)
 			continue
 		}
 
-		var (
-			tx *types.Transaction
-		)
-		address := make([]common.Address, 0)
-		three := make([]*big.Int, 0)
-		four := make([]*big.Int, 0)
-		for _, v := range req.SendBody.Address {
-			address = append(address, common.HexToAddress(v.Address))
-			tmpAmount, _ := new(big.Int).SetString(v.Three, 10)
-			tmpAmountTwo, _ := new(big.Int).SetString(v.Four, 10)
-			three = append(three, tmpAmount)
-			four = append(four, tmpAmountTwo)
-			if nil == tmpAmount {
-				return &pb.PushThreeFourReply{
-					Res: hashContent,
-				}, nil
-			}
-		}
-
+		var tx *types.Transaction
 		var authUser *bind.TransactOpts
 
 		var privateKey *ecdsa.PrivateKey
@@ -730,29 +856,33 @@ func (s *TransactionService) PushThreeFour(ctx context.Context, req *pb.PushThre
 			continue
 		}
 
-		tx, err = instance.SetThreeFour(&bind.TransactOpts{
+		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
+		lp, _ := new(big.Int).SetString(req.SendBody.LiquidityAmount, 10)
+		user := common.HexToAddress(req.SendBody.User)
+
+		tx, err = instance.RemoveLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
 			GasLimit: 0,
-		}, address, three, four)
+		}, orderId, user, lp)
 		if err != nil {
-			fmt.Println("PushThreeFour error:", err)
+			fmt.Println("RemoveLiquidity error:", err)
 			continue
 		}
 
 		if 0 >= len(tx.Hash().Hex()) {
-			return &pb.PushThreeFourReply{
+			return &pb.RemoveLiquidityReply{
 				Res: hashContent,
 			}, nil
 		}
 
-		return &pb.PushThreeFourReply{
+		return &pb.RemoveLiquidityReply{
 			Res: tx.Hash().Hex(),
 		}, nil
 
 	}
 
-	return &pb.PushThreeFourReply{
+	return &pb.RemoveLiquidityReply{
 		Res: hashContent,
 	}, nil
 }

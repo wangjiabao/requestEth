@@ -30,7 +30,7 @@ var (
 
 // AdminMetaData contains all meta data concerning the Admin contract.
 var AdminMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountAicat\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"usdtAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minAmount\",\"type\":\"uint256\"}],\"name\":\"buyAICAT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidityAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountAMin\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountBMin\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"users\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_one\",\"type\":\"uint256[]\"}],\"name\":\"setOneTwo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"users\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_three\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_four\",\"type\":\"uint256[]\"}],\"name\":\"setThreeFour\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aicat\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"four\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"fourArray\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"fourTwo\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getFourArray\",\"outputs\":[{\"internalType\":\"int256[]\",\"name\":\"\",\"type\":\"int256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getFourArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getOneArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getOneArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getThreeArray\",\"outputs\":[{\"internalType\":\"int256[]\",\"name\":\"\",\"type\":\"int256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getThreeArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getTwoArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getTwoArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lpAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lpAmountTotal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"one\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"oneArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"three\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"threeArray\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"threeTwo\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"two\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"twoArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"uniswapV2Router\",\"outputs\":[{\"internalType\":\"contractIUniswapV2Router02\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"usdt\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountAicat\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aicat\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"usdtAmount\",\"type\":\"uint256\"}],\"name\":\"buyAICAT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"buyArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"catArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getBuyArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBuyArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getReqLpArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReqLpArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lpAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lpAmountTotal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpCatArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpUsdtArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"liquidityAmount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"reqLpArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setBuyArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setReqLpArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"uniswapV2Router\",\"outputs\":[{\"internalType\":\"contractIUniswapV2Router02\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"usdt\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"usdtArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawETH\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // AdminABI is the input ABI used to generate the binding from.
@@ -303,12 +303,12 @@ func (_Admin *AdminCallerSession) Aicat() (common.Address, error) {
 	return _Admin.Contract.Aicat(&_Admin.CallOpts)
 }
 
-// Four is a free data retrieval call binding the contract method 0x4e0baeab.
+// BuyArray is a free data retrieval call binding the contract method 0xad1961bc.
 //
-// Solidity: function four(address ) view returns(uint256)
-func (_Admin *AdminCaller) Four(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
+// Solidity: function buyArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) BuyArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "four", arg0)
+	err := _Admin.contract.Call(opts, &out, "buyArray", arg0)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -320,26 +320,26 @@ func (_Admin *AdminCaller) Four(opts *bind.CallOpts, arg0 common.Address) (*big.
 
 }
 
-// Four is a free data retrieval call binding the contract method 0x4e0baeab.
+// BuyArray is a free data retrieval call binding the contract method 0xad1961bc.
 //
-// Solidity: function four(address ) view returns(uint256)
-func (_Admin *AdminSession) Four(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.Four(&_Admin.CallOpts, arg0)
+// Solidity: function buyArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) BuyArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.BuyArray(&_Admin.CallOpts, arg0)
 }
 
-// Four is a free data retrieval call binding the contract method 0x4e0baeab.
+// BuyArray is a free data retrieval call binding the contract method 0xad1961bc.
 //
-// Solidity: function four(address ) view returns(uint256)
-func (_Admin *AdminCallerSession) Four(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.Four(&_Admin.CallOpts, arg0)
+// Solidity: function buyArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) BuyArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.BuyArray(&_Admin.CallOpts, arg0)
 }
 
-// FourArray is a free data retrieval call binding the contract method 0x9f9779f1.
+// CatArray is a free data retrieval call binding the contract method 0xcbf10fb6.
 //
-// Solidity: function fourArray(address , uint256 ) view returns(int256)
-func (_Admin *AdminCaller) FourArray(opts *bind.CallOpts, arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
+// Solidity: function catArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) CatArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "fourArray", arg0, arg1)
+	err := _Admin.contract.Call(opts, &out, "catArray", arg0)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -351,57 +351,26 @@ func (_Admin *AdminCaller) FourArray(opts *bind.CallOpts, arg0 common.Address, a
 
 }
 
-// FourArray is a free data retrieval call binding the contract method 0x9f9779f1.
+// CatArray is a free data retrieval call binding the contract method 0xcbf10fb6.
 //
-// Solidity: function fourArray(address , uint256 ) view returns(int256)
-func (_Admin *AdminSession) FourArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.FourArray(&_Admin.CallOpts, arg0, arg1)
+// Solidity: function catArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) CatArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.CatArray(&_Admin.CallOpts, arg0)
 }
 
-// FourArray is a free data retrieval call binding the contract method 0x9f9779f1.
+// CatArray is a free data retrieval call binding the contract method 0xcbf10fb6.
 //
-// Solidity: function fourArray(address , uint256 ) view returns(int256)
-func (_Admin *AdminCallerSession) FourArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.FourArray(&_Admin.CallOpts, arg0, arg1)
+// Solidity: function catArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) CatArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.CatArray(&_Admin.CallOpts, arg0)
 }
 
-// FourTwo is a free data retrieval call binding the contract method 0x96810ae7.
+// GetBuyArray is a free data retrieval call binding the contract method 0x3bfc6177.
 //
-// Solidity: function fourTwo(address ) view returns(int256)
-func (_Admin *AdminCaller) FourTwo(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
+// Solidity: function getBuyArray(uint256 startIndex, uint256 endIndex) view returns(uint256[])
+func (_Admin *AdminCaller) GetBuyArray(opts *bind.CallOpts, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "fourTwo", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// FourTwo is a free data retrieval call binding the contract method 0x96810ae7.
-//
-// Solidity: function fourTwo(address ) view returns(int256)
-func (_Admin *AdminSession) FourTwo(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.FourTwo(&_Admin.CallOpts, arg0)
-}
-
-// FourTwo is a free data retrieval call binding the contract method 0x96810ae7.
-//
-// Solidity: function fourTwo(address ) view returns(int256)
-func (_Admin *AdminCallerSession) FourTwo(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.FourTwo(&_Admin.CallOpts, arg0)
-}
-
-// GetFourArray is a free data retrieval call binding the contract method 0xe58c41cd.
-//
-// Solidity: function getFourArray(address user, uint256 startIndex, uint256 endIndex) view returns(int256[])
-func (_Admin *AdminCaller) GetFourArray(opts *bind.CallOpts, user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getFourArray", user, startIndex, endIndex)
+	err := _Admin.contract.Call(opts, &out, "getBuyArray", startIndex, endIndex)
 
 	if err != nil {
 		return *new([]*big.Int), err
@@ -413,26 +382,26 @@ func (_Admin *AdminCaller) GetFourArray(opts *bind.CallOpts, user common.Address
 
 }
 
-// GetFourArray is a free data retrieval call binding the contract method 0xe58c41cd.
+// GetBuyArray is a free data retrieval call binding the contract method 0x3bfc6177.
 //
-// Solidity: function getFourArray(address user, uint256 startIndex, uint256 endIndex) view returns(int256[])
-func (_Admin *AdminSession) GetFourArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetFourArray(&_Admin.CallOpts, user, startIndex, endIndex)
+// Solidity: function getBuyArray(uint256 startIndex, uint256 endIndex) view returns(uint256[])
+func (_Admin *AdminSession) GetBuyArray(startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
+	return _Admin.Contract.GetBuyArray(&_Admin.CallOpts, startIndex, endIndex)
 }
 
-// GetFourArray is a free data retrieval call binding the contract method 0xe58c41cd.
+// GetBuyArray is a free data retrieval call binding the contract method 0x3bfc6177.
 //
-// Solidity: function getFourArray(address user, uint256 startIndex, uint256 endIndex) view returns(int256[])
-func (_Admin *AdminCallerSession) GetFourArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetFourArray(&_Admin.CallOpts, user, startIndex, endIndex)
+// Solidity: function getBuyArray(uint256 startIndex, uint256 endIndex) view returns(uint256[])
+func (_Admin *AdminCallerSession) GetBuyArray(startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
+	return _Admin.Contract.GetBuyArray(&_Admin.CallOpts, startIndex, endIndex)
 }
 
-// GetFourArrayLength is a free data retrieval call binding the contract method 0xc446a8c5.
+// GetBuyArrayLength is a free data retrieval call binding the contract method 0x59c2f8fe.
 //
-// Solidity: function getFourArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCaller) GetFourArrayLength(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
+// Solidity: function getBuyArrayLength() view returns(uint256)
+func (_Admin *AdminCaller) GetBuyArrayLength(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getFourArrayLength", user)
+	err := _Admin.contract.Call(opts, &out, "getBuyArrayLength")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -444,26 +413,26 @@ func (_Admin *AdminCaller) GetFourArrayLength(opts *bind.CallOpts, user common.A
 
 }
 
-// GetFourArrayLength is a free data retrieval call binding the contract method 0xc446a8c5.
+// GetBuyArrayLength is a free data retrieval call binding the contract method 0x59c2f8fe.
 //
-// Solidity: function getFourArrayLength(address user) view returns(uint256)
-func (_Admin *AdminSession) GetFourArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetFourArrayLength(&_Admin.CallOpts, user)
+// Solidity: function getBuyArrayLength() view returns(uint256)
+func (_Admin *AdminSession) GetBuyArrayLength() (*big.Int, error) {
+	return _Admin.Contract.GetBuyArrayLength(&_Admin.CallOpts)
 }
 
-// GetFourArrayLength is a free data retrieval call binding the contract method 0xc446a8c5.
+// GetBuyArrayLength is a free data retrieval call binding the contract method 0x59c2f8fe.
 //
-// Solidity: function getFourArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCallerSession) GetFourArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetFourArrayLength(&_Admin.CallOpts, user)
+// Solidity: function getBuyArrayLength() view returns(uint256)
+func (_Admin *AdminCallerSession) GetBuyArrayLength() (*big.Int, error) {
+	return _Admin.Contract.GetBuyArrayLength(&_Admin.CallOpts)
 }
 
-// GetOneArray is a free data retrieval call binding the contract method 0x1ddf2ffb.
+// GetReqLpArray is a free data retrieval call binding the contract method 0x6bc09544.
 //
-// Solidity: function getOneArray(address user, uint256 startIndex, uint256 endIndex) view returns(uint256[])
-func (_Admin *AdminCaller) GetOneArray(opts *bind.CallOpts, user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
+// Solidity: function getReqLpArray(uint256 startIndex, uint256 endIndex) view returns(uint256[])
+func (_Admin *AdminCaller) GetReqLpArray(opts *bind.CallOpts, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getOneArray", user, startIndex, endIndex)
+	err := _Admin.contract.Call(opts, &out, "getReqLpArray", startIndex, endIndex)
 
 	if err != nil {
 		return *new([]*big.Int), err
@@ -475,26 +444,26 @@ func (_Admin *AdminCaller) GetOneArray(opts *bind.CallOpts, user common.Address,
 
 }
 
-// GetOneArray is a free data retrieval call binding the contract method 0x1ddf2ffb.
+// GetReqLpArray is a free data retrieval call binding the contract method 0x6bc09544.
 //
-// Solidity: function getOneArray(address user, uint256 startIndex, uint256 endIndex) view returns(uint256[])
-func (_Admin *AdminSession) GetOneArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetOneArray(&_Admin.CallOpts, user, startIndex, endIndex)
+// Solidity: function getReqLpArray(uint256 startIndex, uint256 endIndex) view returns(uint256[])
+func (_Admin *AdminSession) GetReqLpArray(startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
+	return _Admin.Contract.GetReqLpArray(&_Admin.CallOpts, startIndex, endIndex)
 }
 
-// GetOneArray is a free data retrieval call binding the contract method 0x1ddf2ffb.
+// GetReqLpArray is a free data retrieval call binding the contract method 0x6bc09544.
 //
-// Solidity: function getOneArray(address user, uint256 startIndex, uint256 endIndex) view returns(uint256[])
-func (_Admin *AdminCallerSession) GetOneArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetOneArray(&_Admin.CallOpts, user, startIndex, endIndex)
+// Solidity: function getReqLpArray(uint256 startIndex, uint256 endIndex) view returns(uint256[])
+func (_Admin *AdminCallerSession) GetReqLpArray(startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
+	return _Admin.Contract.GetReqLpArray(&_Admin.CallOpts, startIndex, endIndex)
 }
 
-// GetOneArrayLength is a free data retrieval call binding the contract method 0x13fc530d.
+// GetReqLpArrayLength is a free data retrieval call binding the contract method 0x63917b68.
 //
-// Solidity: function getOneArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCaller) GetOneArrayLength(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
+// Solidity: function getReqLpArrayLength() view returns(uint256)
+func (_Admin *AdminCaller) GetReqLpArrayLength(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getOneArrayLength", user)
+	err := _Admin.contract.Call(opts, &out, "getReqLpArrayLength")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -506,18 +475,18 @@ func (_Admin *AdminCaller) GetOneArrayLength(opts *bind.CallOpts, user common.Ad
 
 }
 
-// GetOneArrayLength is a free data retrieval call binding the contract method 0x13fc530d.
+// GetReqLpArrayLength is a free data retrieval call binding the contract method 0x63917b68.
 //
-// Solidity: function getOneArrayLength(address user) view returns(uint256)
-func (_Admin *AdminSession) GetOneArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetOneArrayLength(&_Admin.CallOpts, user)
+// Solidity: function getReqLpArrayLength() view returns(uint256)
+func (_Admin *AdminSession) GetReqLpArrayLength() (*big.Int, error) {
+	return _Admin.Contract.GetReqLpArrayLength(&_Admin.CallOpts)
 }
 
-// GetOneArrayLength is a free data retrieval call binding the contract method 0x13fc530d.
+// GetReqLpArrayLength is a free data retrieval call binding the contract method 0x63917b68.
 //
-// Solidity: function getOneArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCallerSession) GetOneArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetOneArrayLength(&_Admin.CallOpts, user)
+// Solidity: function getReqLpArrayLength() view returns(uint256)
+func (_Admin *AdminCallerSession) GetReqLpArrayLength() (*big.Int, error) {
+	return _Admin.Contract.GetReqLpArrayLength(&_Admin.CallOpts)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
@@ -549,130 +518,6 @@ func (_Admin *AdminSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
 func (_Admin *AdminCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
 	return _Admin.Contract.GetRoleAdmin(&_Admin.CallOpts, role)
-}
-
-// GetThreeArray is a free data retrieval call binding the contract method 0xa25bc52d.
-//
-// Solidity: function getThreeArray(address user, uint256 startIndex, uint256 endIndex) view returns(int256[])
-func (_Admin *AdminCaller) GetThreeArray(opts *bind.CallOpts, user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getThreeArray", user, startIndex, endIndex)
-
-	if err != nil {
-		return *new([]*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
-
-	return out0, err
-
-}
-
-// GetThreeArray is a free data retrieval call binding the contract method 0xa25bc52d.
-//
-// Solidity: function getThreeArray(address user, uint256 startIndex, uint256 endIndex) view returns(int256[])
-func (_Admin *AdminSession) GetThreeArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetThreeArray(&_Admin.CallOpts, user, startIndex, endIndex)
-}
-
-// GetThreeArray is a free data retrieval call binding the contract method 0xa25bc52d.
-//
-// Solidity: function getThreeArray(address user, uint256 startIndex, uint256 endIndex) view returns(int256[])
-func (_Admin *AdminCallerSession) GetThreeArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetThreeArray(&_Admin.CallOpts, user, startIndex, endIndex)
-}
-
-// GetThreeArrayLength is a free data retrieval call binding the contract method 0x7a74ed09.
-//
-// Solidity: function getThreeArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCaller) GetThreeArrayLength(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getThreeArrayLength", user)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetThreeArrayLength is a free data retrieval call binding the contract method 0x7a74ed09.
-//
-// Solidity: function getThreeArrayLength(address user) view returns(uint256)
-func (_Admin *AdminSession) GetThreeArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetThreeArrayLength(&_Admin.CallOpts, user)
-}
-
-// GetThreeArrayLength is a free data retrieval call binding the contract method 0x7a74ed09.
-//
-// Solidity: function getThreeArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCallerSession) GetThreeArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetThreeArrayLength(&_Admin.CallOpts, user)
-}
-
-// GetTwoArray is a free data retrieval call binding the contract method 0x44c71c3d.
-//
-// Solidity: function getTwoArray(address user, uint256 startIndex, uint256 endIndex) view returns(uint256[])
-func (_Admin *AdminCaller) GetTwoArray(opts *bind.CallOpts, user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getTwoArray", user, startIndex, endIndex)
-
-	if err != nil {
-		return *new([]*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
-
-	return out0, err
-
-}
-
-// GetTwoArray is a free data retrieval call binding the contract method 0x44c71c3d.
-//
-// Solidity: function getTwoArray(address user, uint256 startIndex, uint256 endIndex) view returns(uint256[])
-func (_Admin *AdminSession) GetTwoArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetTwoArray(&_Admin.CallOpts, user, startIndex, endIndex)
-}
-
-// GetTwoArray is a free data retrieval call binding the contract method 0x44c71c3d.
-//
-// Solidity: function getTwoArray(address user, uint256 startIndex, uint256 endIndex) view returns(uint256[])
-func (_Admin *AdminCallerSession) GetTwoArray(user common.Address, startIndex *big.Int, endIndex *big.Int) ([]*big.Int, error) {
-	return _Admin.Contract.GetTwoArray(&_Admin.CallOpts, user, startIndex, endIndex)
-}
-
-// GetTwoArrayLength is a free data retrieval call binding the contract method 0xadac6d10.
-//
-// Solidity: function getTwoArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCaller) GetTwoArrayLength(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "getTwoArrayLength", user)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetTwoArrayLength is a free data retrieval call binding the contract method 0xadac6d10.
-//
-// Solidity: function getTwoArrayLength(address user) view returns(uint256)
-func (_Admin *AdminSession) GetTwoArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetTwoArrayLength(&_Admin.CallOpts, user)
-}
-
-// GetTwoArrayLength is a free data retrieval call binding the contract method 0xadac6d10.
-//
-// Solidity: function getTwoArrayLength(address user) view returns(uint256)
-func (_Admin *AdminCallerSession) GetTwoArrayLength(user common.Address) (*big.Int, error) {
-	return _Admin.Contract.GetTwoArrayLength(&_Admin.CallOpts, user)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
@@ -768,12 +613,12 @@ func (_Admin *AdminCallerSession) LpAmountTotal() (*big.Int, error) {
 	return _Admin.Contract.LpAmountTotal(&_Admin.CallOpts)
 }
 
-// One is a free data retrieval call binding the contract method 0xf2889ac4.
+// LpArray is a free data retrieval call binding the contract method 0x3a9072a9.
 //
-// Solidity: function one(address ) view returns(uint256)
-func (_Admin *AdminCaller) One(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
+// Solidity: function lpArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) LpArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "one", arg0)
+	err := _Admin.contract.Call(opts, &out, "lpArray", arg0)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -785,26 +630,26 @@ func (_Admin *AdminCaller) One(opts *bind.CallOpts, arg0 common.Address) (*big.I
 
 }
 
-// One is a free data retrieval call binding the contract method 0xf2889ac4.
+// LpArray is a free data retrieval call binding the contract method 0x3a9072a9.
 //
-// Solidity: function one(address ) view returns(uint256)
-func (_Admin *AdminSession) One(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.One(&_Admin.CallOpts, arg0)
+// Solidity: function lpArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) LpArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.LpArray(&_Admin.CallOpts, arg0)
 }
 
-// One is a free data retrieval call binding the contract method 0xf2889ac4.
+// LpArray is a free data retrieval call binding the contract method 0x3a9072a9.
 //
-// Solidity: function one(address ) view returns(uint256)
-func (_Admin *AdminCallerSession) One(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.One(&_Admin.CallOpts, arg0)
+// Solidity: function lpArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) LpArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.LpArray(&_Admin.CallOpts, arg0)
 }
 
-// OneArray is a free data retrieval call binding the contract method 0x91ffa503.
+// LpCatArray is a free data retrieval call binding the contract method 0x572e7abd.
 //
-// Solidity: function oneArray(address , uint256 ) view returns(uint256)
-func (_Admin *AdminCaller) OneArray(opts *bind.CallOpts, arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
+// Solidity: function lpCatArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) LpCatArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "oneArray", arg0, arg1)
+	err := _Admin.contract.Call(opts, &out, "lpCatArray", arg0)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -816,18 +661,49 @@ func (_Admin *AdminCaller) OneArray(opts *bind.CallOpts, arg0 common.Address, ar
 
 }
 
-// OneArray is a free data retrieval call binding the contract method 0x91ffa503.
+// LpCatArray is a free data retrieval call binding the contract method 0x572e7abd.
 //
-// Solidity: function oneArray(address , uint256 ) view returns(uint256)
-func (_Admin *AdminSession) OneArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.OneArray(&_Admin.CallOpts, arg0, arg1)
+// Solidity: function lpCatArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) LpCatArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.LpCatArray(&_Admin.CallOpts, arg0)
 }
 
-// OneArray is a free data retrieval call binding the contract method 0x91ffa503.
+// LpCatArray is a free data retrieval call binding the contract method 0x572e7abd.
 //
-// Solidity: function oneArray(address , uint256 ) view returns(uint256)
-func (_Admin *AdminCallerSession) OneArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.OneArray(&_Admin.CallOpts, arg0, arg1)
+// Solidity: function lpCatArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) LpCatArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.LpCatArray(&_Admin.CallOpts, arg0)
+}
+
+// LpUsdtArray is a free data retrieval call binding the contract method 0x6d799c2d.
+//
+// Solidity: function lpUsdtArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) LpUsdtArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _Admin.contract.Call(opts, &out, "lpUsdtArray", arg0)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// LpUsdtArray is a free data retrieval call binding the contract method 0x6d799c2d.
+//
+// Solidity: function lpUsdtArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) LpUsdtArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.LpUsdtArray(&_Admin.CallOpts, arg0)
+}
+
+// LpUsdtArray is a free data retrieval call binding the contract method 0x6d799c2d.
+//
+// Solidity: function lpUsdtArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) LpUsdtArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.LpUsdtArray(&_Admin.CallOpts, arg0)
 }
 
 // Pair is a free data retrieval call binding the contract method 0xa8aa1b31.
@@ -861,6 +737,37 @@ func (_Admin *AdminCallerSession) Pair() (common.Address, error) {
 	return _Admin.Contract.Pair(&_Admin.CallOpts)
 }
 
+// ReqLpArray is a free data retrieval call binding the contract method 0xa3b49d7a.
+//
+// Solidity: function reqLpArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) ReqLpArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _Admin.contract.Call(opts, &out, "reqLpArray", arg0)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// ReqLpArray is a free data retrieval call binding the contract method 0xa3b49d7a.
+//
+// Solidity: function reqLpArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) ReqLpArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.ReqLpArray(&_Admin.CallOpts, arg0)
+}
+
+// ReqLpArray is a free data retrieval call binding the contract method 0xa3b49d7a.
+//
+// Solidity: function reqLpArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) ReqLpArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.ReqLpArray(&_Admin.CallOpts, arg0)
+}
+
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
@@ -890,161 +797,6 @@ func (_Admin *AdminSession) SupportsInterface(interfaceId [4]byte) (bool, error)
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
 func (_Admin *AdminCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
 	return _Admin.Contract.SupportsInterface(&_Admin.CallOpts, interfaceId)
-}
-
-// Three is a free data retrieval call binding the contract method 0x9c82cb25.
-//
-// Solidity: function three(address ) view returns(uint256)
-func (_Admin *AdminCaller) Three(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "three", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// Three is a free data retrieval call binding the contract method 0x9c82cb25.
-//
-// Solidity: function three(address ) view returns(uint256)
-func (_Admin *AdminSession) Three(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.Three(&_Admin.CallOpts, arg0)
-}
-
-// Three is a free data retrieval call binding the contract method 0x9c82cb25.
-//
-// Solidity: function three(address ) view returns(uint256)
-func (_Admin *AdminCallerSession) Three(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.Three(&_Admin.CallOpts, arg0)
-}
-
-// ThreeArray is a free data retrieval call binding the contract method 0xf43588fa.
-//
-// Solidity: function threeArray(address , uint256 ) view returns(int256)
-func (_Admin *AdminCaller) ThreeArray(opts *bind.CallOpts, arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "threeArray", arg0, arg1)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// ThreeArray is a free data retrieval call binding the contract method 0xf43588fa.
-//
-// Solidity: function threeArray(address , uint256 ) view returns(int256)
-func (_Admin *AdminSession) ThreeArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.ThreeArray(&_Admin.CallOpts, arg0, arg1)
-}
-
-// ThreeArray is a free data retrieval call binding the contract method 0xf43588fa.
-//
-// Solidity: function threeArray(address , uint256 ) view returns(int256)
-func (_Admin *AdminCallerSession) ThreeArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.ThreeArray(&_Admin.CallOpts, arg0, arg1)
-}
-
-// ThreeTwo is a free data retrieval call binding the contract method 0xe7329e77.
-//
-// Solidity: function threeTwo(address ) view returns(int256)
-func (_Admin *AdminCaller) ThreeTwo(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "threeTwo", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// ThreeTwo is a free data retrieval call binding the contract method 0xe7329e77.
-//
-// Solidity: function threeTwo(address ) view returns(int256)
-func (_Admin *AdminSession) ThreeTwo(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.ThreeTwo(&_Admin.CallOpts, arg0)
-}
-
-// ThreeTwo is a free data retrieval call binding the contract method 0xe7329e77.
-//
-// Solidity: function threeTwo(address ) view returns(int256)
-func (_Admin *AdminCallerSession) ThreeTwo(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.ThreeTwo(&_Admin.CallOpts, arg0)
-}
-
-// Two is a free data retrieval call binding the contract method 0xc1ec5b3f.
-//
-// Solidity: function two(address ) view returns(uint256)
-func (_Admin *AdminCaller) Two(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "two", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// Two is a free data retrieval call binding the contract method 0xc1ec5b3f.
-//
-// Solidity: function two(address ) view returns(uint256)
-func (_Admin *AdminSession) Two(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.Two(&_Admin.CallOpts, arg0)
-}
-
-// Two is a free data retrieval call binding the contract method 0xc1ec5b3f.
-//
-// Solidity: function two(address ) view returns(uint256)
-func (_Admin *AdminCallerSession) Two(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.Two(&_Admin.CallOpts, arg0)
-}
-
-// TwoArray is a free data retrieval call binding the contract method 0x059362e9.
-//
-// Solidity: function twoArray(address , uint256 ) view returns(uint256)
-func (_Admin *AdminCaller) TwoArray(opts *bind.CallOpts, arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "twoArray", arg0, arg1)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// TwoArray is a free data retrieval call binding the contract method 0x059362e9.
-//
-// Solidity: function twoArray(address , uint256 ) view returns(uint256)
-func (_Admin *AdminSession) TwoArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.TwoArray(&_Admin.CallOpts, arg0, arg1)
-}
-
-// TwoArray is a free data retrieval call binding the contract method 0x059362e9.
-//
-// Solidity: function twoArray(address , uint256 ) view returns(uint256)
-func (_Admin *AdminCallerSession) TwoArray(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.TwoArray(&_Admin.CallOpts, arg0, arg1)
 }
 
 // UniswapV2Router is a free data retrieval call binding the contract method 0x1694505e.
@@ -1109,46 +861,77 @@ func (_Admin *AdminCallerSession) Usdt() (common.Address, error) {
 	return _Admin.Contract.Usdt(&_Admin.CallOpts)
 }
 
-// AddLiquidity is a paid mutator transaction binding the contract method 0x9cd441da.
+// UsdtArray is a free data retrieval call binding the contract method 0x317c3410.
 //
-// Solidity: function addLiquidity(uint256 amountUsdt, uint256 amountAicat) returns()
-func (_Admin *AdminTransactor) AddLiquidity(opts *bind.TransactOpts, amountUsdt *big.Int, amountAicat *big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "addLiquidity", amountUsdt, amountAicat)
+// Solidity: function usdtArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCaller) UsdtArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _Admin.contract.Call(opts, &out, "usdtArray", arg0)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
 }
 
-// AddLiquidity is a paid mutator transaction binding the contract method 0x9cd441da.
+// UsdtArray is a free data retrieval call binding the contract method 0x317c3410.
 //
-// Solidity: function addLiquidity(uint256 amountUsdt, uint256 amountAicat) returns()
-func (_Admin *AdminSession) AddLiquidity(amountUsdt *big.Int, amountAicat *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, amountUsdt, amountAicat)
+// Solidity: function usdtArray(uint256 ) view returns(uint256)
+func (_Admin *AdminSession) UsdtArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.UsdtArray(&_Admin.CallOpts, arg0)
 }
 
-// AddLiquidity is a paid mutator transaction binding the contract method 0x9cd441da.
+// UsdtArray is a free data retrieval call binding the contract method 0x317c3410.
 //
-// Solidity: function addLiquidity(uint256 amountUsdt, uint256 amountAicat) returns()
-func (_Admin *AdminTransactorSession) AddLiquidity(amountUsdt *big.Int, amountAicat *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, amountUsdt, amountAicat)
+// Solidity: function usdtArray(uint256 ) view returns(uint256)
+func (_Admin *AdminCallerSession) UsdtArray(arg0 *big.Int) (*big.Int, error) {
+	return _Admin.Contract.UsdtArray(&_Admin.CallOpts, arg0)
+}
+
+// AddLiquidity is a paid mutator transaction binding the contract method 0x95164bae.
+//
+// Solidity: function addLiquidity(uint256 orderId, address user, uint256 amountUsdt, uint256 amountAicat) returns()
+func (_Admin *AdminTransactor) AddLiquidity(opts *bind.TransactOpts, orderId *big.Int, user common.Address, amountUsdt *big.Int, amountAicat *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "addLiquidity", orderId, user, amountUsdt, amountAicat)
+}
+
+// AddLiquidity is a paid mutator transaction binding the contract method 0x95164bae.
+//
+// Solidity: function addLiquidity(uint256 orderId, address user, uint256 amountUsdt, uint256 amountAicat) returns()
+func (_Admin *AdminSession) AddLiquidity(orderId *big.Int, user common.Address, amountUsdt *big.Int, amountAicat *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, orderId, user, amountUsdt, amountAicat)
+}
+
+// AddLiquidity is a paid mutator transaction binding the contract method 0x95164bae.
+//
+// Solidity: function addLiquidity(uint256 orderId, address user, uint256 amountUsdt, uint256 amountAicat) returns()
+func (_Admin *AdminTransactorSession) AddLiquidity(orderId *big.Int, user common.Address, amountUsdt *big.Int, amountAicat *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, orderId, user, amountUsdt, amountAicat)
 }
 
 // BuyAICAT is a paid mutator transaction binding the contract method 0x3c3b0ecf.
 //
-// Solidity: function buyAICAT(uint256 usdtAmount, uint256 minAmount) returns()
-func (_Admin *AdminTransactor) BuyAICAT(opts *bind.TransactOpts, usdtAmount *big.Int, minAmount *big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "buyAICAT", usdtAmount, minAmount)
+// Solidity: function buyAICAT(uint256 orderId, uint256 usdtAmount) returns()
+func (_Admin *AdminTransactor) BuyAICAT(opts *bind.TransactOpts, orderId *big.Int, usdtAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "buyAICAT", orderId, usdtAmount)
 }
 
 // BuyAICAT is a paid mutator transaction binding the contract method 0x3c3b0ecf.
 //
-// Solidity: function buyAICAT(uint256 usdtAmount, uint256 minAmount) returns()
-func (_Admin *AdminSession) BuyAICAT(usdtAmount *big.Int, minAmount *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.BuyAICAT(&_Admin.TransactOpts, usdtAmount, minAmount)
+// Solidity: function buyAICAT(uint256 orderId, uint256 usdtAmount) returns()
+func (_Admin *AdminSession) BuyAICAT(orderId *big.Int, usdtAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.BuyAICAT(&_Admin.TransactOpts, orderId, usdtAmount)
 }
 
 // BuyAICAT is a paid mutator transaction binding the contract method 0x3c3b0ecf.
 //
-// Solidity: function buyAICAT(uint256 usdtAmount, uint256 minAmount) returns()
-func (_Admin *AdminTransactorSession) BuyAICAT(usdtAmount *big.Int, minAmount *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.BuyAICAT(&_Admin.TransactOpts, usdtAmount, minAmount)
+// Solidity: function buyAICAT(uint256 orderId, uint256 usdtAmount) returns()
+func (_Admin *AdminTransactorSession) BuyAICAT(orderId *big.Int, usdtAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.BuyAICAT(&_Admin.TransactOpts, orderId, usdtAmount)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
@@ -1172,25 +955,25 @@ func (_Admin *AdminTransactorSession) GrantRole(role [32]byte, account common.Ad
 	return _Admin.Contract.GrantRole(&_Admin.TransactOpts, role, account)
 }
 
-// RemoveLiquidity is a paid mutator transaction binding the contract method 0x857620e1.
+// RemoveLiquidity is a paid mutator transaction binding the contract method 0xc4ccdeea.
 //
-// Solidity: function removeLiquidity(uint256 liquidityAmount, uint256 amountAMin, uint256 amountBMin) returns()
-func (_Admin *AdminTransactor) RemoveLiquidity(opts *bind.TransactOpts, liquidityAmount *big.Int, amountAMin *big.Int, amountBMin *big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "removeLiquidity", liquidityAmount, amountAMin, amountBMin)
+// Solidity: function removeLiquidity(uint256 orderId, address user, uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactor) RemoveLiquidity(opts *bind.TransactOpts, orderId *big.Int, user common.Address, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "removeLiquidity", orderId, user, liquidityAmount)
 }
 
-// RemoveLiquidity is a paid mutator transaction binding the contract method 0x857620e1.
+// RemoveLiquidity is a paid mutator transaction binding the contract method 0xc4ccdeea.
 //
-// Solidity: function removeLiquidity(uint256 liquidityAmount, uint256 amountAMin, uint256 amountBMin) returns()
-func (_Admin *AdminSession) RemoveLiquidity(liquidityAmount *big.Int, amountAMin *big.Int, amountBMin *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, liquidityAmount, amountAMin, amountBMin)
+// Solidity: function removeLiquidity(uint256 orderId, address user, uint256 liquidityAmount) returns()
+func (_Admin *AdminSession) RemoveLiquidity(orderId *big.Int, user common.Address, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, orderId, user, liquidityAmount)
 }
 
-// RemoveLiquidity is a paid mutator transaction binding the contract method 0x857620e1.
+// RemoveLiquidity is a paid mutator transaction binding the contract method 0xc4ccdeea.
 //
-// Solidity: function removeLiquidity(uint256 liquidityAmount, uint256 amountAMin, uint256 amountBMin) returns()
-func (_Admin *AdminTransactorSession) RemoveLiquidity(liquidityAmount *big.Int, amountAMin *big.Int, amountBMin *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, liquidityAmount, amountAMin, amountBMin)
+// Solidity: function removeLiquidity(uint256 orderId, address user, uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactorSession) RemoveLiquidity(orderId *big.Int, user common.Address, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, orderId, user, liquidityAmount)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
@@ -1235,46 +1018,46 @@ func (_Admin *AdminTransactorSession) RevokeRole(role [32]byte, account common.A
 	return _Admin.Contract.RevokeRole(&_Admin.TransactOpts, role, account)
 }
 
-// SetOneTwo is a paid mutator transaction binding the contract method 0xabc52b6b.
+// SetBuyArray is a paid mutator transaction binding the contract method 0x26a31e97.
 //
-// Solidity: function setOneTwo(address[] users, uint256[] _one) returns()
-func (_Admin *AdminTransactor) SetOneTwo(opts *bind.TransactOpts, users []common.Address, _one []*big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "setOneTwo", users, _one)
+// Solidity: function setBuyArray(uint256 orderId) payable returns()
+func (_Admin *AdminTransactor) SetBuyArray(opts *bind.TransactOpts, orderId *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "setBuyArray", orderId)
 }
 
-// SetOneTwo is a paid mutator transaction binding the contract method 0xabc52b6b.
+// SetBuyArray is a paid mutator transaction binding the contract method 0x26a31e97.
 //
-// Solidity: function setOneTwo(address[] users, uint256[] _one) returns()
-func (_Admin *AdminSession) SetOneTwo(users []common.Address, _one []*big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.SetOneTwo(&_Admin.TransactOpts, users, _one)
+// Solidity: function setBuyArray(uint256 orderId) payable returns()
+func (_Admin *AdminSession) SetBuyArray(orderId *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.SetBuyArray(&_Admin.TransactOpts, orderId)
 }
 
-// SetOneTwo is a paid mutator transaction binding the contract method 0xabc52b6b.
+// SetBuyArray is a paid mutator transaction binding the contract method 0x26a31e97.
 //
-// Solidity: function setOneTwo(address[] users, uint256[] _one) returns()
-func (_Admin *AdminTransactorSession) SetOneTwo(users []common.Address, _one []*big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.SetOneTwo(&_Admin.TransactOpts, users, _one)
+// Solidity: function setBuyArray(uint256 orderId) payable returns()
+func (_Admin *AdminTransactorSession) SetBuyArray(orderId *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.SetBuyArray(&_Admin.TransactOpts, orderId)
 }
 
-// SetThreeFour is a paid mutator transaction binding the contract method 0x75686b64.
+// SetReqLpArray is a paid mutator transaction binding the contract method 0xf5dc7465.
 //
-// Solidity: function setThreeFour(address[] users, uint256[] _three, uint256[] _four) returns()
-func (_Admin *AdminTransactor) SetThreeFour(opts *bind.TransactOpts, users []common.Address, _three []*big.Int, _four []*big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "setThreeFour", users, _three, _four)
+// Solidity: function setReqLpArray(uint256 orderId) payable returns()
+func (_Admin *AdminTransactor) SetReqLpArray(opts *bind.TransactOpts, orderId *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "setReqLpArray", orderId)
 }
 
-// SetThreeFour is a paid mutator transaction binding the contract method 0x75686b64.
+// SetReqLpArray is a paid mutator transaction binding the contract method 0xf5dc7465.
 //
-// Solidity: function setThreeFour(address[] users, uint256[] _three, uint256[] _four) returns()
-func (_Admin *AdminSession) SetThreeFour(users []common.Address, _three []*big.Int, _four []*big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.SetThreeFour(&_Admin.TransactOpts, users, _three, _four)
+// Solidity: function setReqLpArray(uint256 orderId) payable returns()
+func (_Admin *AdminSession) SetReqLpArray(orderId *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.SetReqLpArray(&_Admin.TransactOpts, orderId)
 }
 
-// SetThreeFour is a paid mutator transaction binding the contract method 0x75686b64.
+// SetReqLpArray is a paid mutator transaction binding the contract method 0xf5dc7465.
 //
-// Solidity: function setThreeFour(address[] users, uint256[] _three, uint256[] _four) returns()
-func (_Admin *AdminTransactorSession) SetThreeFour(users []common.Address, _three []*big.Int, _four []*big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.SetThreeFour(&_Admin.TransactOpts, users, _three, _four)
+// Solidity: function setReqLpArray(uint256 orderId) payable returns()
+func (_Admin *AdminTransactorSession) SetReqLpArray(orderId *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.SetReqLpArray(&_Admin.TransactOpts, orderId)
 }
 
 // Withdraw is a paid mutator transaction binding the contract method 0xd9caed12.
@@ -1296,6 +1079,48 @@ func (_Admin *AdminSession) Withdraw(to common.Address, token common.Address, am
 // Solidity: function withdraw(address to, address token, uint256 amount) returns()
 func (_Admin *AdminTransactorSession) Withdraw(to common.Address, token common.Address, amount *big.Int) (*types.Transaction, error) {
 	return _Admin.Contract.Withdraw(&_Admin.TransactOpts, to, token, amount)
+}
+
+// WithdrawETH is a paid mutator transaction binding the contract method 0x4782f779.
+//
+// Solidity: function withdrawETH(address to, uint256 amount) returns()
+func (_Admin *AdminTransactor) WithdrawETH(opts *bind.TransactOpts, to common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "withdrawETH", to, amount)
+}
+
+// WithdrawETH is a paid mutator transaction binding the contract method 0x4782f779.
+//
+// Solidity: function withdrawETH(address to, uint256 amount) returns()
+func (_Admin *AdminSession) WithdrawETH(to common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.WithdrawETH(&_Admin.TransactOpts, to, amount)
+}
+
+// WithdrawETH is a paid mutator transaction binding the contract method 0x4782f779.
+//
+// Solidity: function withdrawETH(address to, uint256 amount) returns()
+func (_Admin *AdminTransactorSession) WithdrawETH(to common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.WithdrawETH(&_Admin.TransactOpts, to, amount)
+}
+
+// Receive is a paid mutator transaction binding the contract receive function.
+//
+// Solidity: receive() payable returns()
+func (_Admin *AdminTransactor) Receive(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Admin.contract.RawTransact(opts, nil) // calldata is disallowed for receive function
+}
+
+// Receive is a paid mutator transaction binding the contract receive function.
+//
+// Solidity: receive() payable returns()
+func (_Admin *AdminSession) Receive() (*types.Transaction, error) {
+	return _Admin.Contract.Receive(&_Admin.TransactOpts)
+}
+
+// Receive is a paid mutator transaction binding the contract receive function.
+//
+// Solidity: receive() payable returns()
+func (_Admin *AdminTransactorSession) Receive() (*types.Transaction, error) {
+	return _Admin.Contract.Receive(&_Admin.TransactOpts)
 }
 
 // AdminRoleAdminChangedIterator is returned from FilterRoleAdminChanged and is used to iterate over the raw logs and unpacked data for RoleAdminChanged events raised by the Admin contract.

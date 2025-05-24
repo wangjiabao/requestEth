@@ -66,16 +66,40 @@ service Transaction {
     };
   }
 
-  rpc PushOne (PushOneRequest) returns (PushOneReply) {
+  rpc GetArray (GetArrayRequest) returns (GetArrayReply) {
     option (google.api.http) = {
-      post: "/api/push_one"
+      get: "/api/get_array"
+    };
+  }
+
+  rpc GetLpByOrderId (GetLpByOrderIdRequest) returns (GetLpByOrderIdReply) {
+    option (google.api.http) = {
+      get: "/api/get_lp"
+    };
+  }
+
+  rpc GetBuyByOrderId (GetBuyByOrderIdRequest) returns (GetBuyByOrderIdReply) {
+    option (google.api.http) = {
+      get: "/api/get_buy"
+    };
+  }
+
+  rpc GetUserLp (GetUserLpRequest) returns (GetUserLpReply) {
+    option (google.api.http) = {
+      get: "/api/get_user_lp"
+    };
+  }
+
+  rpc AddLiquidity (AddLiquidityRequest) returns (AddLiquidityReply) {
+    option (google.api.http) = {
+      post: "/api/add_liquidity"
       body: "send_body"
     };
   }
 
-  rpc PushThreeFour (PushThreeFourRequest) returns (PushThreeFourReply) {
+  rpc RemoveLiquidity (RemoveLiquidityRequest) returns (RemoveLiquidityReply) {
     option (google.api.http) = {
-      post: "/api/push_three_four"
+      post: "/api/remove_liquidity"
       body: "send_body"
     };
   }
@@ -91,53 +115,80 @@ message GetReservesReply {
 }
 
 message GetAllRequest {
-  string address = 1;
 }
 
 message GetAllReply {
-  string one = 1; // usdt额度，铸造
-  string two = 2; // aicat总铸造数量，铸造
-  string three = 3; // 添加流动性usdt额度
-  string four = 4; // 添加流动性aicat额度
-  string lpAmount = 5; // 地址持有lp
-  string lpAmountTotal = 6; // 全局持有lp
-  string oneLength = 7; // 铸造使用u，记录数组当前长度
-  string twoLength = 8; // 铸造产生b，记录数组当前长度
-  string threeLength = 9; // 流动性u使用记录，负数是添加，正数是移除
-  string fourLength = 10; // 流动性b使用记录，负数是添加，正数是移除
+  string buyArrayLength = 1;
+  string reqLpArrayLength = 2;
 }
 
-message PushOneRequest {
+message GetArrayRequest {
+  string reqType = 1;
+  string start = 2;
+  string end = 3;
+}
+
+message GetArrayReply {
+  repeated List list = 1;
+  message List {
+    string orderId = 1;
+  }
+}
+
+message GetBuyByOrderIdRequest {
+  string orderId = 1;
+}
+
+message GetBuyByOrderIdReply {
+  string usdtArray = 2; // 使用u
+  string catArray = 3; // 获得b
+}
+
+message GetLpByOrderIdRequest {
+  string orderId = 1;
+}
+
+message GetLpByOrderIdReply {
+  string lpArray = 1; // 添加时lp获得，移除时lp使用
+  string lpUsdtArray = 2; // 添加时使用u，移除时释放u,
+  string lpCatArray = 3; // 添加时使用b，移除时释放b,
+}
+
+message GetUserLpRequest {
+  string address = 1;
+}
+
+message GetUserLpReply {
+  string lpAmount = 1; // 用户此刻lp
+  string lpAmountTotal = 2; // 全局lp
+}
+
+message AddLiquidityRequest {
   message SendBody{
-    string addressTwo = 2;
-    repeated List address = 1;
-    message List {
-      string address = 1;
-      string one = 2;
-    }
+    string orderId = 1;
+    string user = 2;
+    string amountUsdt = 3;
+    string amountAicat = 4;
   }
 
   SendBody send_body = 1;
 }
 
-message PushOneReply {
+message AddLiquidityReply {
   string res = 1;
 }
 
-message PushThreeFourRequest {
+message RemoveLiquidityRequest {
   message SendBody{
-    repeated List address = 1;
-    message List {
-      string address = 1;
-      string three = 2;
-      string Four = 3;
-    }
+    string orderId = 1;
+    string user = 2;
+    string liquidityAmount = 3;
   }
 
   SendBody send_body = 1;
 }
 
-message PushThreeFourReply {
+message RemoveLiquidityReply {
   string res = 1;
 }
 
