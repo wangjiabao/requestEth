@@ -622,7 +622,6 @@ func (s *TransactionService) GetLpByOrderId(ctx context.Context, req *pb.GetLpBy
 		LpCatArray:  tmpThree,
 	}, nil
 }
-
 func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpRequest) (*pb.GetUserLpReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
@@ -679,6 +678,50 @@ func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpReq
 		LpAmount:      tmpOne,
 		LpAmountTotal: tmpTwo,
 	}, nil
+}
+
+func (s *TransactionService) GetDailyFee(ctx context.Context, req *pb.GetDailyFeeRequest) (*pb.GetDailyFeeReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x8b3B77c80cD453914900858540Ac66E49ADd5FdD")
+		instance, err := NewEarth(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetDailyFee error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			start, _ := new(big.Int).SetString(req.Ts, 10)
+			one, errOne := instance.DailyFee(&bind.CallOpts{}, start)
+			if errOne != nil {
+				fmt.Println("GetDailyFee error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+
+		if "-1" != tmpOne {
+			break
+		}
+	}
+
+	return &pb.GetDailyFeeReply{Ammount: tmpOne}, nil
 }
 
 func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayRequest) (*pb.GetArrayReply, error) {

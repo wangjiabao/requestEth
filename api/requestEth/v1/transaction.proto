@@ -90,6 +90,12 @@ service Transaction {
     };
   }
 
+  rpc GetDailyFee (GetUserLpRequest) returns (GetUserLpReply) {
+    option (google.api.http) = {
+      get: "/api/get_daily_fee"
+    };
+  }
+
   rpc AddLiquidity (AddLiquidityRequest) returns (AddLiquidityReply) {
     option (google.api.http) = {
       post: "/api/add_liquidity"
@@ -168,6 +174,14 @@ message GetUserLpRequest {
 message GetUserLpReply {
   string lpAmount = 1; // 用户此刻lp
   string lpAmountTotal = 2; // 全局lp
+}
+
+message GetDailyFeeRequest {
+  string ts = 1;
+}
+
+message GetDailyFeeReply {
+  string ammount = 1;
 }
 
 message AddLiquidityRequest {
