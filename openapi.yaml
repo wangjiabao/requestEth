@@ -173,7 +173,7 @@ paths:
                 - Transaction
             operationId: Transaction_GetDailyFee
             parameters:
-                - name: address
+                - name: ts
                   in: query
                   schema:
                     type: string
@@ -183,7 +183,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetUserLpReply'
+                                $ref: '#/components/schemas/GetDailyFeeReply'
                 default:
                     description: Default error response
                     content:
@@ -480,6 +480,11 @@ components:
                 usdtArray:
                     type: string
                 catArray:
+                    type: string
+        GetDailyFeeReply:
+            type: object
+            properties:
+                ammount:
                     type: string
         GetLpByOrderIdReply:
             type: object

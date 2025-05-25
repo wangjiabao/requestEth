@@ -90,7 +90,7 @@ service Transaction {
     };
   }
 
-  rpc GetDailyFee (GetUserLpRequest) returns (GetUserLpReply) {
+  rpc GetDailyFee (GetDailyFeeRequest) returns (GetDailyFeeReply) {
     option (google.api.http) = {
       get: "/api/get_daily_fee"
     };

@@ -45,7 +45,7 @@ type TransactionHTTPServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
-	GetDailyFee(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
+	GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error)
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
 	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
@@ -336,19 +336,19 @@ func _Transaction_GetUserLp0_HTTP_Handler(srv TransactionHTTPServer) func(ctx ht
 
 func _Transaction_GetDailyFee0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetUserLpRequest
+		var in GetDailyFeeRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationTransactionGetDailyFee)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetDailyFee(ctx, req.(*GetUserLpRequest))
+			return srv.GetDailyFee(ctx, req.(*GetDailyFeeRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetUserLpReply)
+		reply := out.(*GetDailyFeeReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -427,7 +427,7 @@ type TransactionHTTPClient interface {
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
-	GetDailyFee(ctx context.Context, req *GetUserLpRequest, opts ...http.CallOption) (rsp *GetUserLpReply, err error)
+	GetDailyFee(ctx context.Context, req *GetDailyFeeRequest, opts ...http.CallOption) (rsp *GetDailyFeeReply, err error)
 	GetLpByOrderId(ctx context.Context, req *GetLpByOrderIdRequest, opts ...http.CallOption) (rsp *GetLpByOrderIdReply, err error)
 	GetReserves(ctx context.Context, req *GetReservesRequest, opts ...http.CallOption) (rsp *GetReservesReply, err error)
 	GetUserLp(ctx context.Context, req *GetUserLpRequest, opts ...http.CallOption) (rsp *GetUserLpReply, err error)
@@ -538,8 +538,8 @@ func (c *TransactionHTTPClientImpl) GetBuyByOrderId(ctx context.Context, in *Get
 	return &out, nil
 }
 
-func (c *TransactionHTTPClientImpl) GetDailyFee(ctx context.Context, in *GetUserLpRequest, opts ...http.CallOption) (*GetUserLpReply, error) {
-	var out GetUserLpReply
+func (c *TransactionHTTPClientImpl) GetDailyFee(ctx context.Context, in *GetDailyFeeRequest, opts ...http.CallOption) (*GetDailyFeeReply, error) {
+	var out GetDailyFeeReply
 	pattern := "/api/get_daily_fee"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetDailyFee))
