@@ -32,6 +32,7 @@ const (
 	Transaction_GetLpByOrderId_FullMethodName     = "/api.requestEth.v1.Transaction/GetLpByOrderId"
 	Transaction_GetBuyByOrderId_FullMethodName    = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
 	Transaction_GetUserLp_FullMethodName          = "/api.requestEth.v1.Transaction/GetUserLp"
+	Transaction_GetDailyFee_FullMethodName        = "/api.requestEth.v1.Transaction/GetDailyFee"
 	Transaction_AddLiquidity_FullMethodName       = "/api.requestEth.v1.Transaction/AddLiquidity"
 	Transaction_RemoveLiquidity_FullMethodName    = "/api.requestEth.v1.Transaction/RemoveLiquidity"
 	Transaction_BuyAICAT_FullMethodName           = "/api.requestEth.v1.Transaction/BuyAICAT"
@@ -54,6 +55,7 @@ type TransactionClient interface {
 	GetLpByOrderId(ctx context.Context, in *GetLpByOrderIdRequest, opts ...grpc.CallOption) (*GetLpByOrderIdReply, error)
 	GetBuyByOrderId(ctx context.Context, in *GetBuyByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyByOrderIdReply, error)
 	GetUserLp(ctx context.Context, in *GetUserLpRequest, opts ...grpc.CallOption) (*GetUserLpReply, error)
+	GetDailyFee(ctx context.Context, in *GetDailyFeeRequest, opts ...grpc.CallOption) (*GetDailyFeeReply, error)
 	AddLiquidity(ctx context.Context, in *AddLiquidityRequest, opts ...grpc.CallOption) (*AddLiquidityReply, error)
 	RemoveLiquidity(ctx context.Context, in *RemoveLiquidityRequest, opts ...grpc.CallOption) (*RemoveLiquidityReply, error)
 	BuyAICAT(ctx context.Context, in *BuyAICATRequest, opts ...grpc.CallOption) (*BuyAICATReply, error)
@@ -184,6 +186,15 @@ func (c *transactionClient) GetUserLp(ctx context.Context, in *GetUserLpRequest,
 	return out, nil
 }
 
+func (c *transactionClient) GetDailyFee(ctx context.Context, in *GetDailyFeeRequest, opts ...grpc.CallOption) (*GetDailyFeeReply, error) {
+	out := new(GetDailyFeeReply)
+	err := c.cc.Invoke(ctx, Transaction_GetDailyFee_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transactionClient) AddLiquidity(ctx context.Context, in *AddLiquidityRequest, opts ...grpc.CallOption) (*AddLiquidityReply, error) {
 	out := new(AddLiquidityReply)
 	err := c.cc.Invoke(ctx, Transaction_AddLiquidity_FullMethodName, in, out, opts...)
@@ -228,6 +239,7 @@ type TransactionServer interface {
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
 	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
+	GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error)
 	AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error)
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
 	BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error)
@@ -276,6 +288,9 @@ func (UnimplementedTransactionServer) GetBuyByOrderId(context.Context, *GetBuyBy
 }
 func (UnimplementedTransactionServer) GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserLp not implemented")
+}
+func (UnimplementedTransactionServer) GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDailyFee not implemented")
 }
 func (UnimplementedTransactionServer) AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddLiquidity not implemented")
@@ -533,6 +548,24 @@ func _Transaction_GetUserLp_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetDailyFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDailyFeeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetDailyFee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetDailyFee_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetDailyFee(ctx, req.(*GetDailyFeeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Transaction_AddLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddLiquidityRequest)
 	if err := dec(in); err != nil {
@@ -645,6 +678,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserLp",
 			Handler:    _Transaction_GetUserLp_Handler,
+		},
+		{
+			MethodName: "GetDailyFee",
+			Handler:    _Transaction_GetDailyFee_Handler,
 		},
 		{
 			MethodName: "AddLiquidity",

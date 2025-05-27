@@ -26,6 +26,7 @@ const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/Generate
 const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
 const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
 const OperationTransactionGetBuyByOrderId = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
+const OperationTransactionGetDailyFee = "/api.requestEth.v1.Transaction/GetDailyFee"
 const OperationTransactionGetLpByOrderId = "/api.requestEth.v1.Transaction/GetLpByOrderId"
 const OperationTransactionGetReserves = "/api.requestEth.v1.Transaction/GetReserves"
 const OperationTransactionGetUserLp = "/api.requestEth.v1.Transaction/GetUserLp"
@@ -44,6 +45,7 @@ type TransactionHTTPServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
+	GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error)
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
 	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
@@ -70,6 +72,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_lp", _Transaction_GetLpByOrderId0_HTTP_Handler(srv))
 	r.GET("/api/get_buy", _Transaction_GetBuyByOrderId0_HTTP_Handler(srv))
 	r.GET("/api/get_user_lp", _Transaction_GetUserLp0_HTTP_Handler(srv))
+	r.GET("/api/get_daily_fee", _Transaction_GetDailyFee0_HTTP_Handler(srv))
 	r.POST("/api/add_liquidity", _Transaction_AddLiquidity0_HTTP_Handler(srv))
 	r.POST("/api/remove_liquidity", _Transaction_RemoveLiquidity0_HTTP_Handler(srv))
 	r.POST("/api/buy", _Transaction_BuyAICAT0_HTTP_Handler(srv))
@@ -331,6 +334,25 @@ func _Transaction_GetUserLp0_HTTP_Handler(srv TransactionHTTPServer) func(ctx ht
 	}
 }
 
+func _Transaction_GetDailyFee0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDailyFeeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetDailyFee)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDailyFee(ctx, req.(*GetDailyFeeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetDailyFeeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Transaction_AddLiquidity0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddLiquidityRequest
@@ -405,6 +427,7 @@ type TransactionHTTPClient interface {
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
+	GetDailyFee(ctx context.Context, req *GetDailyFeeRequest, opts ...http.CallOption) (rsp *GetDailyFeeReply, err error)
 	GetLpByOrderId(ctx context.Context, req *GetLpByOrderIdRequest, opts ...http.CallOption) (rsp *GetLpByOrderIdReply, err error)
 	GetReserves(ctx context.Context, req *GetReservesRequest, opts ...http.CallOption) (rsp *GetReservesReply, err error)
 	GetUserLp(ctx context.Context, req *GetUserLpRequest, opts ...http.CallOption) (rsp *GetUserLpReply, err error)
@@ -507,6 +530,19 @@ func (c *TransactionHTTPClientImpl) GetBuyByOrderId(ctx context.Context, in *Get
 	pattern := "/api/get_buy"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetBuyByOrderId))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetDailyFee(ctx context.Context, in *GetDailyFeeRequest, opts ...http.CallOption) (*GetDailyFeeReply, error) {
+	var out GetDailyFeeReply
+	pattern := "/api/get_daily_fee"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetDailyFee))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

@@ -167,6 +167,29 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/get_daily_fee:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetDailyFee
+            parameters:
+                - name: ts
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetDailyFeeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/get_lp:
         get:
             tags:
@@ -459,6 +482,11 @@ components:
                 usdtArray:
                     type: string
                 catArray:
+                    type: string
+        GetDailyFeeReply:
+            type: object
+            properties:
+                ammount:
                     type: string
         GetLpByOrderIdReply:
             type: object
