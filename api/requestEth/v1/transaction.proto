@@ -127,6 +127,7 @@ message GetAllRequest {
 message GetAllReply {
   string buyArrayLength = 1;
   string reqLpArrayLength = 2;
+  string withdrawArrayLength = 3;
 }
 
 message GetArrayRequest {

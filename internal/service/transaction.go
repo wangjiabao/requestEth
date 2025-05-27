@@ -446,6 +446,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 
 	tmpOne := "-1"
 	tmpTwo := "-1"
+	tmpThree := "-1"
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
 		if err != nil {
@@ -453,7 +454,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("NewPair error:", err)
@@ -481,14 +482,25 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 			tmpTwo = two.String()
 		}
 
-		if "-1" != tmpOne && "-1" != tmpTwo {
+		if "-1" == tmpThree {
+			three, errThree := instance.GetReqWithdrawArrayLength(&bind.CallOpts{})
+			if errThree != nil {
+				fmt.Println("GetAll error:", err)
+				continue
+			}
+
+			tmpThree = three.String()
+		}
+
+		if "-1" != tmpOne && "-1" != tmpTwo && "-1" != tmpThree {
 			break
 		}
 	}
 
 	return &pb.GetAllReply{
-		ReqLpArrayLength: tmpOne,
-		BuyArrayLength:   tmpTwo,
+		ReqLpArrayLength:    tmpOne,
+		BuyArrayLength:      tmpTwo,
+		WithdrawArrayLength: tmpThree,
 	}, nil
 }
 
@@ -510,7 +522,7 @@ func (s *TransactionService) GetBuyByOrderId(ctx context.Context, req *pb.GetBuy
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetBuyByOrderId error:", err)
@@ -570,7 +582,7 @@ func (s *TransactionService) GetLpByOrderId(ctx context.Context, req *pb.GetLpBy
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetLpByOrderId error:", err)
@@ -641,7 +653,7 @@ func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpReq
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetUserLp error:", err)
@@ -698,7 +710,7 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetArray error:", err)
@@ -710,6 +722,22 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 		end, _ := new(big.Int).SetString(req.End, 10)
 		if "buy" == req.ReqType {
 			tmp, errOne := instance.GetBuyArray(&bind.CallOpts{}, start, end)
+			if errOne != nil {
+				fmt.Println("GetArray error:", err)
+				continue
+			}
+
+			if nil != tmp && 0 < len(tmp) {
+				for _, vTmp := range tmp {
+					res = append(res, &pb.GetArrayReply_List{
+						OrderId: vTmp.String(),
+					})
+				}
+
+				break
+			}
+		} else if "withdraw" == req.ReqType {
+			tmp, errOne := instance.GetReqWithdrawArray(&bind.CallOpts{}, start, end)
 			if errOne != nil {
 				fmt.Println("GetArray error:", err)
 				continue
@@ -765,7 +793,7 @@ func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquid
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("AddLiquidity error:", err)
@@ -791,14 +819,13 @@ func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquid
 
 		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
 		AmountUsdt, _ := new(big.Int).SetString(req.SendBody.AmountUsdt, 10)
-		AmountAicat, _ := new(big.Int).SetString(req.SendBody.AmountAicat, 10)
 		user := common.HexToAddress(req.SendBody.User)
 
 		tx, err = instance.AddLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
 			GasLimit: 0,
-		}, orderId, user, AmountUsdt, AmountAicat)
+		}, orderId, user, AmountUsdt)
 		if err != nil {
 			fmt.Println("AddLiquidity error:", err)
 			continue
@@ -837,7 +864,7 @@ func (s *TransactionService) RemoveLiquidity(ctx context.Context, req *pb.Remove
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("RemoveLiquidity error:", err)
@@ -908,7 +935,7 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 			continue
 		}
 		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
-		tokenAddress := common.HexToAddress("0x970c4f15cc299458f47EbB83f17d1C4dAf0fb167")
+		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("BuyAICAT error:", err)

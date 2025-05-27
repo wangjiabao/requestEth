@@ -439,6 +439,8 @@ components:
                     type: string
                 reqLpArrayLength:
                     type: string
+                withdrawArrayLength:
+                    type: string
         GetArrayReply:
             type: object
             properties:
