@@ -903,6 +903,7 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
 		amount, _ := new(big.Int).SetString(req.SendBody.UsdtAmount, 10)
 
+		fmt.Println(orderId, amount)
 		tx, err = instance.BuyAICAT(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
