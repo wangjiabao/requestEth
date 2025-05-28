@@ -454,7 +454,7 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("NewPair error:", err)
@@ -522,7 +522,7 @@ func (s *TransactionService) GetBuyByOrderId(ctx context.Context, req *pb.GetBuy
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetBuyByOrderId error:", err)
@@ -582,7 +582,7 @@ func (s *TransactionService) GetLpByOrderId(ctx context.Context, req *pb.GetLpBy
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetLpByOrderId error:", err)
@@ -652,7 +652,7 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetArray error:", err)
@@ -735,7 +735,7 @@ func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquid
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("AddLiquidity error:", err)
@@ -806,7 +806,7 @@ func (s *TransactionService) RemoveLiquidity(ctx context.Context, req *pb.Remove
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("RemoveLiquidity error:", err)
@@ -877,7 +877,7 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 			continue
 		}
 		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("BuyAICAT error:", err)
@@ -948,7 +948,7 @@ func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpReq
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0xd970621595470F9550D45A0e309D40f9B69b650B")
+		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetUserLp error:", err)
