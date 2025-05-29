@@ -33,17 +33,38 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "amountUsdt",
 				"type": "uint256"
 			}
 		],
 		"name": "addLiquidity",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountUsdt",
+				"type": "uint256"
+			}
+		],
+		"name": "addLiquidityAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountbnb",
+				"type": "uint256"
+			}
+		],
+		"name": "addLiquidityAdminByBnb",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -92,17 +113,38 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "liquidityAmount",
 				"type": "uint256"
 			}
 		],
 		"name": "removeLiquidity",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "liquidityAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "removeLiquidityAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "liquidityAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "removeLiquidityAdminForBnb",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -217,6 +259,19 @@
 		],
 		"name": "RoleRevoked",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "setAccountDo",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
@@ -573,63 +628,12 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "lpAmount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "lpAmountTotal",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			}
 		],
 		"name": "lpArray",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "lpBnbArray",
 		"outputs": [
 			{
 				"internalType": "uint256",

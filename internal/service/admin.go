@@ -30,7 +30,7 @@ var (
 
 // AdminMetaData contains all meta data concerning the Admin contract.
 var AdminMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"usdtAmount\",\"type\":\"uint256\"}],\"name\":\"buyAICAT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"liquidityAmount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setBuyArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setReqLpArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setReqWithdrawArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawETH\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"},{\"inputs\":[],\"name\":\"accountDo\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aicat\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"buyArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"catArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"}],\"name\":\"estimateAddLiquidityAicat\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"estimatedBnb\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"estimatedAicat\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getBuyArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBuyArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getReqLpArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReqLpArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getReqWithdrawArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReqWithdrawArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lpAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lpAmountTotal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpBnbArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpCatArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpUsdtArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"reqLpArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"uniswapV2Router\",\"outputs\":[{\"internalType\":\"contractIUniswapV2Router02\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"usdt\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"usdtArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"wbnb\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"withdrawArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"}],\"name\":\"addLiquidityAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amountbnb\",\"type\":\"uint256\"}],\"name\":\"addLiquidityAdminByBnb\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"usdtAmount\",\"type\":\"uint256\"}],\"name\":\"buyAICAT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidityAmount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidityAmount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidityAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidityAmount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidityAdminForBnb\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"setAccountDo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setBuyArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setReqLpArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"setReqWithdrawArray\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawETH\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"},{\"inputs\":[],\"name\":\"accountDo\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aicat\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"buyArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"catArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amountUsdt\",\"type\":\"uint256\"}],\"name\":\"estimateAddLiquidityAicat\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"estimatedBnb\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"estimatedAicat\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getBuyArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBuyArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getReqLpArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReqLpArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getReqWithdrawArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReqWithdrawArrayLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpCatArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lpUsdtArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"reqLpArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"uniswapV2Router\",\"outputs\":[{\"internalType\":\"contractIUniswapV2Router02\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"usdt\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"usdtArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"wbnb\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"withdrawArray\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // AdminABI is the input ABI used to generate the binding from.
@@ -689,68 +689,6 @@ func (_Admin *AdminCallerSession) HasRole(role [32]byte, account common.Address)
 	return _Admin.Contract.HasRole(&_Admin.CallOpts, role, account)
 }
 
-// LpAmount is a free data retrieval call binding the contract method 0x6fc9d181.
-//
-// Solidity: function lpAmount(address ) view returns(uint256)
-func (_Admin *AdminCaller) LpAmount(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "lpAmount", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// LpAmount is a free data retrieval call binding the contract method 0x6fc9d181.
-//
-// Solidity: function lpAmount(address ) view returns(uint256)
-func (_Admin *AdminSession) LpAmount(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.LpAmount(&_Admin.CallOpts, arg0)
-}
-
-// LpAmount is a free data retrieval call binding the contract method 0x6fc9d181.
-//
-// Solidity: function lpAmount(address ) view returns(uint256)
-func (_Admin *AdminCallerSession) LpAmount(arg0 common.Address) (*big.Int, error) {
-	return _Admin.Contract.LpAmount(&_Admin.CallOpts, arg0)
-}
-
-// LpAmountTotal is a free data retrieval call binding the contract method 0xaa1bc6b5.
-//
-// Solidity: function lpAmountTotal() view returns(uint256)
-func (_Admin *AdminCaller) LpAmountTotal(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "lpAmountTotal")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// LpAmountTotal is a free data retrieval call binding the contract method 0xaa1bc6b5.
-//
-// Solidity: function lpAmountTotal() view returns(uint256)
-func (_Admin *AdminSession) LpAmountTotal() (*big.Int, error) {
-	return _Admin.Contract.LpAmountTotal(&_Admin.CallOpts)
-}
-
-// LpAmountTotal is a free data retrieval call binding the contract method 0xaa1bc6b5.
-//
-// Solidity: function lpAmountTotal() view returns(uint256)
-func (_Admin *AdminCallerSession) LpAmountTotal() (*big.Int, error) {
-	return _Admin.Contract.LpAmountTotal(&_Admin.CallOpts)
-}
-
 // LpArray is a free data retrieval call binding the contract method 0x3a9072a9.
 //
 // Solidity: function lpArray(uint256 ) view returns(uint256)
@@ -780,37 +718,6 @@ func (_Admin *AdminSession) LpArray(arg0 *big.Int) (*big.Int, error) {
 // Solidity: function lpArray(uint256 ) view returns(uint256)
 func (_Admin *AdminCallerSession) LpArray(arg0 *big.Int) (*big.Int, error) {
 	return _Admin.Contract.LpArray(&_Admin.CallOpts, arg0)
-}
-
-// LpBnbArray is a free data retrieval call binding the contract method 0xba5eff7b.
-//
-// Solidity: function lpBnbArray(uint256 ) view returns(uint256)
-func (_Admin *AdminCaller) LpBnbArray(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _Admin.contract.Call(opts, &out, "lpBnbArray", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// LpBnbArray is a free data retrieval call binding the contract method 0xba5eff7b.
-//
-// Solidity: function lpBnbArray(uint256 ) view returns(uint256)
-func (_Admin *AdminSession) LpBnbArray(arg0 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.LpBnbArray(&_Admin.CallOpts, arg0)
-}
-
-// LpBnbArray is a free data retrieval call binding the contract method 0xba5eff7b.
-//
-// Solidity: function lpBnbArray(uint256 ) view returns(uint256)
-func (_Admin *AdminCallerSession) LpBnbArray(arg0 *big.Int) (*big.Int, error) {
-	return _Admin.Contract.LpBnbArray(&_Admin.CallOpts, arg0)
 }
 
 // LpCatArray is a free data retrieval call binding the contract method 0x572e7abd.
@@ -1123,25 +1030,67 @@ func (_Admin *AdminCallerSession) WithdrawArray(arg0 *big.Int) (*big.Int, error)
 	return _Admin.Contract.WithdrawArray(&_Admin.CallOpts, arg0)
 }
 
-// AddLiquidity is a paid mutator transaction binding the contract method 0x9aa5d462.
+// AddLiquidity is a paid mutator transaction binding the contract method 0x9cd441da.
 //
-// Solidity: function addLiquidity(uint256 orderId, address user, uint256 amountUsdt) returns()
-func (_Admin *AdminTransactor) AddLiquidity(opts *bind.TransactOpts, orderId *big.Int, user common.Address, amountUsdt *big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "addLiquidity", orderId, user, amountUsdt)
+// Solidity: function addLiquidity(uint256 orderId, uint256 amountUsdt) returns()
+func (_Admin *AdminTransactor) AddLiquidity(opts *bind.TransactOpts, orderId *big.Int, amountUsdt *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "addLiquidity", orderId, amountUsdt)
 }
 
-// AddLiquidity is a paid mutator transaction binding the contract method 0x9aa5d462.
+// AddLiquidity is a paid mutator transaction binding the contract method 0x9cd441da.
 //
-// Solidity: function addLiquidity(uint256 orderId, address user, uint256 amountUsdt) returns()
-func (_Admin *AdminSession) AddLiquidity(orderId *big.Int, user common.Address, amountUsdt *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, orderId, user, amountUsdt)
+// Solidity: function addLiquidity(uint256 orderId, uint256 amountUsdt) returns()
+func (_Admin *AdminSession) AddLiquidity(orderId *big.Int, amountUsdt *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, orderId, amountUsdt)
 }
 
-// AddLiquidity is a paid mutator transaction binding the contract method 0x9aa5d462.
+// AddLiquidity is a paid mutator transaction binding the contract method 0x9cd441da.
 //
-// Solidity: function addLiquidity(uint256 orderId, address user, uint256 amountUsdt) returns()
-func (_Admin *AdminTransactorSession) AddLiquidity(orderId *big.Int, user common.Address, amountUsdt *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, orderId, user, amountUsdt)
+// Solidity: function addLiquidity(uint256 orderId, uint256 amountUsdt) returns()
+func (_Admin *AdminTransactorSession) AddLiquidity(orderId *big.Int, amountUsdt *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidity(&_Admin.TransactOpts, orderId, amountUsdt)
+}
+
+// AddLiquidityAdmin is a paid mutator transaction binding the contract method 0x73c680b2.
+//
+// Solidity: function addLiquidityAdmin(uint256 amountUsdt) returns()
+func (_Admin *AdminTransactor) AddLiquidityAdmin(opts *bind.TransactOpts, amountUsdt *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "addLiquidityAdmin", amountUsdt)
+}
+
+// AddLiquidityAdmin is a paid mutator transaction binding the contract method 0x73c680b2.
+//
+// Solidity: function addLiquidityAdmin(uint256 amountUsdt) returns()
+func (_Admin *AdminSession) AddLiquidityAdmin(amountUsdt *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidityAdmin(&_Admin.TransactOpts, amountUsdt)
+}
+
+// AddLiquidityAdmin is a paid mutator transaction binding the contract method 0x73c680b2.
+//
+// Solidity: function addLiquidityAdmin(uint256 amountUsdt) returns()
+func (_Admin *AdminTransactorSession) AddLiquidityAdmin(amountUsdt *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidityAdmin(&_Admin.TransactOpts, amountUsdt)
+}
+
+// AddLiquidityAdminByBnb is a paid mutator transaction binding the contract method 0x257a27a5.
+//
+// Solidity: function addLiquidityAdminByBnb(uint256 amountbnb) returns()
+func (_Admin *AdminTransactor) AddLiquidityAdminByBnb(opts *bind.TransactOpts, amountbnb *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "addLiquidityAdminByBnb", amountbnb)
+}
+
+// AddLiquidityAdminByBnb is a paid mutator transaction binding the contract method 0x257a27a5.
+//
+// Solidity: function addLiquidityAdminByBnb(uint256 amountbnb) returns()
+func (_Admin *AdminSession) AddLiquidityAdminByBnb(amountbnb *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidityAdminByBnb(&_Admin.TransactOpts, amountbnb)
+}
+
+// AddLiquidityAdminByBnb is a paid mutator transaction binding the contract method 0x257a27a5.
+//
+// Solidity: function addLiquidityAdminByBnb(uint256 amountbnb) returns()
+func (_Admin *AdminTransactorSession) AddLiquidityAdminByBnb(amountbnb *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.AddLiquidityAdminByBnb(&_Admin.TransactOpts, amountbnb)
 }
 
 // BuyAICAT is a paid mutator transaction binding the contract method 0x3c3b0ecf.
@@ -1186,25 +1135,67 @@ func (_Admin *AdminTransactorSession) GrantRole(role [32]byte, account common.Ad
 	return _Admin.Contract.GrantRole(&_Admin.TransactOpts, role, account)
 }
 
-// RemoveLiquidity is a paid mutator transaction binding the contract method 0xc4ccdeea.
+// RemoveLiquidity is a paid mutator transaction binding the contract method 0x9d7de6b3.
 //
-// Solidity: function removeLiquidity(uint256 orderId, address user, uint256 liquidityAmount) returns()
-func (_Admin *AdminTransactor) RemoveLiquidity(opts *bind.TransactOpts, orderId *big.Int, user common.Address, liquidityAmount *big.Int) (*types.Transaction, error) {
-	return _Admin.contract.Transact(opts, "removeLiquidity", orderId, user, liquidityAmount)
+// Solidity: function removeLiquidity(uint256 orderId, uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactor) RemoveLiquidity(opts *bind.TransactOpts, orderId *big.Int, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "removeLiquidity", orderId, liquidityAmount)
 }
 
-// RemoveLiquidity is a paid mutator transaction binding the contract method 0xc4ccdeea.
+// RemoveLiquidity is a paid mutator transaction binding the contract method 0x9d7de6b3.
 //
-// Solidity: function removeLiquidity(uint256 orderId, address user, uint256 liquidityAmount) returns()
-func (_Admin *AdminSession) RemoveLiquidity(orderId *big.Int, user common.Address, liquidityAmount *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, orderId, user, liquidityAmount)
+// Solidity: function removeLiquidity(uint256 orderId, uint256 liquidityAmount) returns()
+func (_Admin *AdminSession) RemoveLiquidity(orderId *big.Int, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, orderId, liquidityAmount)
 }
 
-// RemoveLiquidity is a paid mutator transaction binding the contract method 0xc4ccdeea.
+// RemoveLiquidity is a paid mutator transaction binding the contract method 0x9d7de6b3.
 //
-// Solidity: function removeLiquidity(uint256 orderId, address user, uint256 liquidityAmount) returns()
-func (_Admin *AdminTransactorSession) RemoveLiquidity(orderId *big.Int, user common.Address, liquidityAmount *big.Int) (*types.Transaction, error) {
-	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, orderId, user, liquidityAmount)
+// Solidity: function removeLiquidity(uint256 orderId, uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactorSession) RemoveLiquidity(orderId *big.Int, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidity(&_Admin.TransactOpts, orderId, liquidityAmount)
+}
+
+// RemoveLiquidityAdmin is a paid mutator transaction binding the contract method 0x1d1636ad.
+//
+// Solidity: function removeLiquidityAdmin(uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactor) RemoveLiquidityAdmin(opts *bind.TransactOpts, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "removeLiquidityAdmin", liquidityAmount)
+}
+
+// RemoveLiquidityAdmin is a paid mutator transaction binding the contract method 0x1d1636ad.
+//
+// Solidity: function removeLiquidityAdmin(uint256 liquidityAmount) returns()
+func (_Admin *AdminSession) RemoveLiquidityAdmin(liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidityAdmin(&_Admin.TransactOpts, liquidityAmount)
+}
+
+// RemoveLiquidityAdmin is a paid mutator transaction binding the contract method 0x1d1636ad.
+//
+// Solidity: function removeLiquidityAdmin(uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactorSession) RemoveLiquidityAdmin(liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidityAdmin(&_Admin.TransactOpts, liquidityAmount)
+}
+
+// RemoveLiquidityAdminForBnb is a paid mutator transaction binding the contract method 0x28b226ac.
+//
+// Solidity: function removeLiquidityAdminForBnb(uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactor) RemoveLiquidityAdminForBnb(opts *bind.TransactOpts, liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "removeLiquidityAdminForBnb", liquidityAmount)
+}
+
+// RemoveLiquidityAdminForBnb is a paid mutator transaction binding the contract method 0x28b226ac.
+//
+// Solidity: function removeLiquidityAdminForBnb(uint256 liquidityAmount) returns()
+func (_Admin *AdminSession) RemoveLiquidityAdminForBnb(liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidityAdminForBnb(&_Admin.TransactOpts, liquidityAmount)
+}
+
+// RemoveLiquidityAdminForBnb is a paid mutator transaction binding the contract method 0x28b226ac.
+//
+// Solidity: function removeLiquidityAdminForBnb(uint256 liquidityAmount) returns()
+func (_Admin *AdminTransactorSession) RemoveLiquidityAdminForBnb(liquidityAmount *big.Int) (*types.Transaction, error) {
+	return _Admin.Contract.RemoveLiquidityAdminForBnb(&_Admin.TransactOpts, liquidityAmount)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
@@ -1247,6 +1238,27 @@ func (_Admin *AdminSession) RevokeRole(role [32]byte, account common.Address) (*
 // Solidity: function revokeRole(bytes32 role, address account) returns()
 func (_Admin *AdminTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
 	return _Admin.Contract.RevokeRole(&_Admin.TransactOpts, role, account)
+}
+
+// SetAccountDo is a paid mutator transaction binding the contract method 0xe6fe0a66.
+//
+// Solidity: function setAccountDo(address account) returns()
+func (_Admin *AdminTransactor) SetAccountDo(opts *bind.TransactOpts, account common.Address) (*types.Transaction, error) {
+	return _Admin.contract.Transact(opts, "setAccountDo", account)
+}
+
+// SetAccountDo is a paid mutator transaction binding the contract method 0xe6fe0a66.
+//
+// Solidity: function setAccountDo(address account) returns()
+func (_Admin *AdminSession) SetAccountDo(account common.Address) (*types.Transaction, error) {
+	return _Admin.Contract.SetAccountDo(&_Admin.TransactOpts, account)
+}
+
+// SetAccountDo is a paid mutator transaction binding the contract method 0xe6fe0a66.
+//
+// Solidity: function setAccountDo(address account) returns()
+func (_Admin *AdminTransactorSession) SetAccountDo(account common.Address) (*types.Transaction, error) {
+	return _Admin.Contract.SetAccountDo(&_Admin.TransactOpts, account)
 }
 
 // SetBuyArray is a paid mutator transaction binding the contract method 0x26a31e97.

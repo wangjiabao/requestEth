@@ -761,13 +761,12 @@ func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquid
 
 		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
 		AmountUsdt, _ := new(big.Int).SetString(req.SendBody.AmountUsdt, 10)
-		user := common.HexToAddress(req.SendBody.User)
 
 		tx, err = instance.AddLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
 			GasLimit: 0,
-		}, orderId, user, AmountUsdt)
+		}, orderId, AmountUsdt)
 		if err != nil {
 			fmt.Println("AddLiquidity error:", err)
 			continue
@@ -831,13 +830,12 @@ func (s *TransactionService) RemoveLiquidity(ctx context.Context, req *pb.Remove
 
 		orderId, _ := new(big.Int).SetString(req.SendBody.OrderId, 10)
 		lp, _ := new(big.Int).SetString(req.SendBody.LiquidityAmount, 10)
-		user := common.HexToAddress(req.SendBody.User)
 
 		tx, err = instance.RemoveLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
 			GasLimit: 0,
-		}, orderId, user, lp)
+		}, orderId, lp)
 		if err != nil {
 			fmt.Println("RemoveLiquidity error:", err)
 			continue
@@ -931,56 +929,56 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 }
 
 func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpRequest) (*pb.GetUserLpReply, error) {
-	urls := []string{
-		"https://bsc-dataseed4.binance.org/",
-		"https://binance.llamarpc.com/",
-		"https://bscrpc.com/",
-		"https://bsc-pokt.nodies.app/",
-		"https://data-seed-prebsc-1-s3.binance.org:8545/",
-	}
+	//urls := []string{
+	//	"https://bsc-dataseed4.binance.org/",
+	//	"https://binance.llamarpc.com/",
+	//	"https://bscrpc.com/",
+	//	"https://bsc-pokt.nodies.app/",
+	//	"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	//}
 
 	tmpOne := "-1"
 	tmpTwo := "-1"
-	for _, urlTmp := range urls {
-		client, err := ethclient.Dial(urlTmp)
-		if err != nil {
-			fmt.Println("client error:", err)
-			continue
-		}
-
-		tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
-		instance, err := NewAdmin(tokenAddress, client)
-		if err != nil {
-			fmt.Println("GetUserLp error:", err)
-			continue
-		}
-
-		// 获取储备量
-		if "-1" == tmpOne {
-			address := common.HexToAddress(req.Address)
-			one, errOne := instance.LpAmount(&bind.CallOpts{}, address)
-			if errOne != nil {
-				fmt.Println("GetUserLp error:", err)
-				continue
-			}
-
-			tmpOne = one.String()
-		}
-
-		if "-1" == tmpTwo {
-			two, errTwo := instance.LpAmountTotal(&bind.CallOpts{})
-			if errTwo != nil {
-				fmt.Println("GetUserLp error:", err)
-				continue
-			}
-
-			tmpTwo = two.String()
-		}
-
-		if "-1" != tmpOne && "-1" != tmpTwo {
-			break
-		}
-	}
+	//for _, urlTmp := range urls {
+	//	client, err := ethclient.Dial(urlTmp)
+	//	if err != nil {
+	//		fmt.Println("client error:", err)
+	//		continue
+	//	}
+	//
+	//	tokenAddress := common.HexToAddress("0x732F75F7dbc9bF182b4137e18B9a8Fb52c13AF0e")
+	//	instance, err := NewAdmin(tokenAddress, client)
+	//	if err != nil {
+	//		fmt.Println("GetUserLp error:", err)
+	//		continue
+	//	}
+	//
+	//	// 获取储备量
+	//	if "-1" == tmpOne {
+	//		address := common.HexToAddress(req.Address)
+	//		one, errOne := instance.LpAmount(&bind.CallOpts{}, address)
+	//		if errOne != nil {
+	//			fmt.Println("GetUserLp error:", err)
+	//			continue
+	//		}
+	//
+	//		tmpOne = one.String()
+	//	}
+	//
+	//	if "-1" == tmpTwo {
+	//		two, errTwo := instance.LpAmountTotal(&bind.CallOpts{})
+	//		if errTwo != nil {
+	//			fmt.Println("GetUserLp error:", err)
+	//			continue
+	//		}
+	//
+	//		tmpTwo = two.String()
+	//	}
+	//
+	//	if "-1" != tmpOne && "-1" != tmpTwo {
+	//		break
+	//	}
+	//}
 
 	return &pb.GetUserLpReply{
 		LpAmount:      tmpOne,

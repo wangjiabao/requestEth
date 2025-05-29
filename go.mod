@@ -1,8 +1,6 @@
 module requestEth
 
-go 1.23
-
-toolchain go1.23.7
+go 1.23.7
 
 require (
 	github.com/go-kratos/kratos/v2 v2.8.4
