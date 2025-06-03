@@ -665,7 +665,7 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 		if "buy" == req.ReqType {
 			tmp, errOne := instance.GetBuyArray(&bind.CallOpts{}, start, end)
 			if errOne != nil {
-				fmt.Println("GetArray error:", err)
+				//fmt.Println("GetArray error:", err)
 				continue
 			}
 
@@ -681,7 +681,7 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 		} else if "withdraw" == req.ReqType {
 			tmp, errOne := instance.GetReqWithdrawArray(&bind.CallOpts{}, start, end)
 			if errOne != nil {
-				fmt.Println("GetArray error:", err)
+				//fmt.Println("GetArray error:", err)
 				continue
 			}
 
@@ -697,7 +697,7 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 		} else {
 			tmp, errOne := instance.GetReqLpArray(&bind.CallOpts{}, start, end)
 			if errOne != nil {
-				fmt.Println("GetArray error:", err)
+				//fmt.Println("GetArray error:", err)
 				continue
 			}
 
