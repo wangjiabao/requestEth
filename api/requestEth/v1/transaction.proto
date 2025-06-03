@@ -116,6 +116,12 @@ service Transaction {
       body: "send_body"
     };
   }
+
+  rpc AddWhite (AddWhiteRequest) returns (AddWhiteReply) {
+    option (google.api.http) = {
+      get: "/api/add_white"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -224,6 +230,13 @@ message BuyAICATRequest {
 }
 
 message BuyAICATReply {
+  string res = 1;
+}
+
+message AddWhiteRequest {
+}
+
+message AddWhiteReply {
   string res = 1;
 }
 

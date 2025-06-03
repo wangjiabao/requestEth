@@ -1029,3 +1029,102 @@ func (s *TransactionService) GetDailyFee(ctx context.Context, req *pb.GetDailyFe
 
 	return &pb.GetDailyFeeReply{Ammount: tmpOne}, nil
 }
+
+func (s *TransactionService) AddWhite(ctx context.Context, req *pb.AddWhiteRequest) (*pb.AddWhiteReply, error) {
+	//f, err := excelize.OpenFile("../../abi/a.xlsx")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer f.Close()
+	//
+	//// 指定读取的工作表
+	//sheets := []string{"工作表 1 - 25.31白地址", "要设置的白名单"}
+	//addressSet := make(map[string]struct{})
+	//
+	//for _, sheet := range sheets {
+	//	rows, err := f.GetRows(sheet)
+	//	if err != nil {
+	//		log.Printf("读取工作表 %s 出错: %v\n", sheet, err)
+	//		continue
+	//	}
+	//	for i, row := range rows {
+	//		for j, col := range row {
+	//			if col != "" && len(col) == 42 && col[:2] == "0x" {
+	//				addressSet[col] = struct{}{}
+	//			}
+	//			// 额外提取第一列和第一行
+	//			if i == 0 || j == 0 {
+	//				if col != "" && len(col) == 42 && col[:2] == "0x" {
+	//					addressSet[col] = struct{}{}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	//
+	//// 打印成 Go 的字面量数组形式
+	//fmt.Println("var whitelist = []string{")
+	//for addr := range addressSet {
+	//	fmt.Printf("\t\"%s\",\n", addr)
+	//}
+	//fmt.Println("}")
+
+	//urls := []string{
+	//	"https://bsc-dataseed4.binance.org/",
+	//	"https://binance.llamarpc.com/",
+	//	"https://bscrpc.com/",
+	//	"https://bsc-pokt.nodies.app/",
+	//	"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	//}
+	//for _, urlTmp := range urls {
+	//	client, err := ethclient.Dial(urlTmp)
+	//	if err != nil {
+	//		fmt.Println("client error:", err)
+	//		continue
+	//	}
+	//
+	//	tokenAddress := common.HexToAddress("0xdA08bA041b901cd6F4744C924b6A111A2F57904e")
+	//	instance, err := NewCat(tokenAddress, client)
+	//	if err != nil {
+	//		fmt.Println("GetDailyFee error:", err)
+	//		continue
+	//	}
+	//
+	//	var tx *types.Transaction
+	//	var authUser *bind.TransactOpts
+	//
+	//	var privateKey *ecdsa.PrivateKey
+	//	privateKey, err = crypto.HexToECDSA("")
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		continue
+	//	}
+	//
+	//	authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		continue
+	//	}
+	//
+	//	users := make([]common.Address, 0)
+	//	for _, v := range whitelist {
+	//		users = append(users, common.HexToAddress(v))
+	//	}
+	//
+	//	tx, err = instance.SetWhiteMap(&bind.TransactOpts{
+	//		From:     authUser.From,
+	//		Signer:   authUser.Signer,
+	//		GasLimit: 0,
+	//	}, users, true)
+	//	if err != nil {
+	//		fmt.Println("BuyAICAT error:", err)
+	//		continue
+	//	}
+	//
+	//	if 0 >= len(tx.Hash().Hex()) {
+	//		return &pb.AddWhiteReply{Res: tx.Hash().Hex()}, nil
+	//	}
+	//}
+
+	return &pb.AddWhiteReply{}, nil
+}

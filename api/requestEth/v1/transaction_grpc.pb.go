@@ -36,6 +36,7 @@ const (
 	Transaction_AddLiquidity_FullMethodName       = "/api.requestEth.v1.Transaction/AddLiquidity"
 	Transaction_RemoveLiquidity_FullMethodName    = "/api.requestEth.v1.Transaction/RemoveLiquidity"
 	Transaction_BuyAICAT_FullMethodName           = "/api.requestEth.v1.Transaction/BuyAICAT"
+	Transaction_AddWhite_FullMethodName           = "/api.requestEth.v1.Transaction/AddWhite"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -59,6 +60,7 @@ type TransactionClient interface {
 	AddLiquidity(ctx context.Context, in *AddLiquidityRequest, opts ...grpc.CallOption) (*AddLiquidityReply, error)
 	RemoveLiquidity(ctx context.Context, in *RemoveLiquidityRequest, opts ...grpc.CallOption) (*RemoveLiquidityReply, error)
 	BuyAICAT(ctx context.Context, in *BuyAICATRequest, opts ...grpc.CallOption) (*BuyAICATReply, error)
+	AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error)
 }
 
 type transactionClient struct {
@@ -222,6 +224,15 @@ func (c *transactionClient) BuyAICAT(ctx context.Context, in *BuyAICATRequest, o
 	return out, nil
 }
 
+func (c *transactionClient) AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error) {
+	out := new(AddWhiteReply)
+	err := c.cc.Invoke(ctx, Transaction_AddWhite_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -243,6 +254,7 @@ type TransactionServer interface {
 	AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error)
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
 	BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error)
+	AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -300,6 +312,9 @@ func (UnimplementedTransactionServer) RemoveLiquidity(context.Context, *RemoveLi
 }
 func (UnimplementedTransactionServer) BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BuyAICAT not implemented")
+}
+func (UnimplementedTransactionServer) AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddWhite not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -620,6 +635,24 @@ func _Transaction_BuyAICAT_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_AddWhite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddWhiteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).AddWhite(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_AddWhite_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).AddWhite(ctx, req.(*AddWhiteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -694,6 +727,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BuyAICAT",
 			Handler:    _Transaction_BuyAICAT_Handler,
+		},
+		{
+			MethodName: "AddWhite",
+			Handler:    _Transaction_AddWhite_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
