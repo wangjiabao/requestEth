@@ -904,7 +904,7 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 		tx, err = instance.BuyAICAT(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
-			GasLimit: 0,
+			GasLimit: 2000000, // 固定 200万 gas limit
 		}, orderId, amount)
 		if err != nil {
 			fmt.Println("BuyAICAT error:", err)
