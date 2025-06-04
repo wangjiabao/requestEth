@@ -765,7 +765,7 @@ func (s *TransactionService) AddLiquidity(ctx context.Context, req *pb.AddLiquid
 		tx, err = instance.AddLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
-			GasLimit: 0,
+			GasLimit: 2000000, // 固定 200万 gas limit
 		}, orderId, AmountUsdt)
 		if err != nil {
 			fmt.Println("AddLiquidity error:", err)
@@ -834,7 +834,7 @@ func (s *TransactionService) RemoveLiquidity(ctx context.Context, req *pb.Remove
 		tx, err = instance.RemoveLiquidity(&bind.TransactOpts{
 			From:     authUser.From,
 			Signer:   authUser.Signer,
-			GasLimit: 0,
+			GasLimit: 2000000, // 固定 200万 gas limit
 		}, orderId, lp)
 		if err != nil {
 			fmt.Println("RemoveLiquidity error:", err)
