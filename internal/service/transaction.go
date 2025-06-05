@@ -928,6 +928,78 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 	}, nil
 }
 
+func (s *TransactionService) WithdrawAICAT(ctx context.Context, req *pb.WithdrawAICATRequest) (*pb.WithdrawAICATReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	hashContent := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
+		tokenAddress := common.HexToAddress("0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7")
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("WithdrawAICAT error:", err)
+			continue
+		}
+
+		var tx *types.Transaction
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		address := common.HexToAddress(req.SendBody.Address)
+		//token := common.HexToAddress(req.SendBody.Token)
+		token := common.HexToAddress("0xdA08bA041b901cd6F4744C924b6A111A2F57904e")
+		amount, _ := new(big.Int).SetString(req.SendBody.Amount, 10)
+
+		tx, err = instance.Withdraw(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 2000000, // 固定 200万 gas limit
+		}, address, token, amount)
+		if err != nil {
+			fmt.Println("WithdrawAICAT error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.WithdrawAICATReply{
+				Res: hashContent,
+			}, nil
+		}
+
+		return &pb.WithdrawAICATReply{
+			Res: tx.Hash().Hex(),
+		}, nil
+
+	}
+
+	return &pb.WithdrawAICATReply{
+		Res: hashContent,
+	}, nil
+}
+
 func (s *TransactionService) GetUserLp(ctx context.Context, req *pb.GetUserLpRequest) (*pb.GetUserLpReply, error) {
 	//urls := []string{
 	//	"https://bsc-dataseed4.binance.org/",

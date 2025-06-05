@@ -117,6 +117,13 @@ service Transaction {
     };
   }
 
+  rpc WithdrawAICAT (WithdrawAICATRequest) returns (WithdrawAICATReply) {
+    option (google.api.http) = {
+      post: "/api/withdraw"
+      body: "send_body"
+    };
+  }
+
   rpc AddWhite (AddWhiteRequest) returns (AddWhiteReply) {
     option (google.api.http) = {
       get: "/api/add_white"
@@ -230,6 +237,20 @@ message BuyAICATRequest {
 }
 
 message BuyAICATReply {
+  string res = 1;
+}
+
+message WithdrawAICATRequest {
+  message SendBody{
+    string token = 1;
+    string amount = 2;
+    string address = 3;
+  }
+
+  SendBody send_body = 1;
+}
+
+message WithdrawAICATReply {
   string res = 1;
 }
 

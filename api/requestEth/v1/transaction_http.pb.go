@@ -37,6 +37,7 @@ const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/S
 const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
 const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
+const OperationTransactionWithdrawAICAT = "/api.requestEth.v1.Transaction/WithdrawAICAT"
 
 type TransactionHTTPServer interface {
 	AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error)
@@ -57,6 +58,7 @@ type TransactionHTTPServer interface {
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
+	WithdrawAICAT(context.Context, *WithdrawAICATRequest) (*WithdrawAICATReply, error)
 }
 
 func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
@@ -78,6 +80,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.POST("/api/add_liquidity", _Transaction_AddLiquidity0_HTTP_Handler(srv))
 	r.POST("/api/remove_liquidity", _Transaction_RemoveLiquidity0_HTTP_Handler(srv))
 	r.POST("/api/buy", _Transaction_BuyAICAT0_HTTP_Handler(srv))
+	r.POST("/api/withdraw", _Transaction_WithdrawAICAT0_HTTP_Handler(srv))
 	r.GET("/api/add_white", _Transaction_AddWhite0_HTTP_Handler(srv))
 }
 
@@ -422,6 +425,28 @@ func _Transaction_BuyAICAT0_HTTP_Handler(srv TransactionHTTPServer) func(ctx htt
 	}
 }
 
+func _Transaction_WithdrawAICAT0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in WithdrawAICATRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionWithdrawAICAT)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.WithdrawAICAT(ctx, req.(*WithdrawAICATRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*WithdrawAICATReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Transaction_AddWhite0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddWhiteRequest
@@ -460,6 +485,7 @@ type TransactionHTTPClient interface {
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
 	VerifySig(ctx context.Context, req *VerifySigRequest, opts ...http.CallOption) (rsp *VerifySigReply, err error)
+	WithdrawAICAT(ctx context.Context, req *WithdrawAICATRequest, opts ...http.CallOption) (rsp *WithdrawAICATReply, err error)
 }
 
 type TransactionHTTPClientImpl struct {
@@ -698,6 +724,19 @@ func (c *TransactionHTTPClientImpl) VerifySig(ctx context.Context, in *VerifySig
 	opts = append(opts, http.Operation(OperationTransactionVerifySig))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) WithdrawAICAT(ctx context.Context, in *WithdrawAICATRequest, opts ...http.CallOption) (*WithdrawAICATReply, error) {
+	var out WithdrawAICATReply
+	pattern := "/api/withdraw"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionWithdrawAICAT))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -36,6 +36,7 @@ const (
 	Transaction_AddLiquidity_FullMethodName       = "/api.requestEth.v1.Transaction/AddLiquidity"
 	Transaction_RemoveLiquidity_FullMethodName    = "/api.requestEth.v1.Transaction/RemoveLiquidity"
 	Transaction_BuyAICAT_FullMethodName           = "/api.requestEth.v1.Transaction/BuyAICAT"
+	Transaction_WithdrawAICAT_FullMethodName      = "/api.requestEth.v1.Transaction/WithdrawAICAT"
 	Transaction_AddWhite_FullMethodName           = "/api.requestEth.v1.Transaction/AddWhite"
 )
 
@@ -60,6 +61,7 @@ type TransactionClient interface {
 	AddLiquidity(ctx context.Context, in *AddLiquidityRequest, opts ...grpc.CallOption) (*AddLiquidityReply, error)
 	RemoveLiquidity(ctx context.Context, in *RemoveLiquidityRequest, opts ...grpc.CallOption) (*RemoveLiquidityReply, error)
 	BuyAICAT(ctx context.Context, in *BuyAICATRequest, opts ...grpc.CallOption) (*BuyAICATReply, error)
+	WithdrawAICAT(ctx context.Context, in *WithdrawAICATRequest, opts ...grpc.CallOption) (*WithdrawAICATReply, error)
 	AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error)
 }
 
@@ -224,6 +226,15 @@ func (c *transactionClient) BuyAICAT(ctx context.Context, in *BuyAICATRequest, o
 	return out, nil
 }
 
+func (c *transactionClient) WithdrawAICAT(ctx context.Context, in *WithdrawAICATRequest, opts ...grpc.CallOption) (*WithdrawAICATReply, error) {
+	out := new(WithdrawAICATReply)
+	err := c.cc.Invoke(ctx, Transaction_WithdrawAICAT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transactionClient) AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error) {
 	out := new(AddWhiteReply)
 	err := c.cc.Invoke(ctx, Transaction_AddWhite_FullMethodName, in, out, opts...)
@@ -254,6 +265,7 @@ type TransactionServer interface {
 	AddLiquidity(context.Context, *AddLiquidityRequest) (*AddLiquidityReply, error)
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
 	BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error)
+	WithdrawAICAT(context.Context, *WithdrawAICATRequest) (*WithdrawAICATReply, error)
 	AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
@@ -312,6 +324,9 @@ func (UnimplementedTransactionServer) RemoveLiquidity(context.Context, *RemoveLi
 }
 func (UnimplementedTransactionServer) BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BuyAICAT not implemented")
+}
+func (UnimplementedTransactionServer) WithdrawAICAT(context.Context, *WithdrawAICATRequest) (*WithdrawAICATReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithdrawAICAT not implemented")
 }
 func (UnimplementedTransactionServer) AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddWhite not implemented")
@@ -635,6 +650,24 @@ func _Transaction_BuyAICAT_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_WithdrawAICAT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WithdrawAICATRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).WithdrawAICAT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_WithdrawAICAT_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).WithdrawAICAT(ctx, req.(*WithdrawAICATRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Transaction_AddWhite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddWhiteRequest)
 	if err := dec(in); err != nil {
@@ -727,6 +760,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BuyAICAT",
 			Handler:    _Transaction_BuyAICAT_Handler,
+		},
+		{
+			MethodName: "WithdrawAICAT",
+			Handler:    _Transaction_WithdrawAICAT_Handler,
 		},
 		{
 			MethodName: "AddWhite",
