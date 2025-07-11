@@ -1200,3 +1200,112 @@ func (s *TransactionService) AddWhite(ctx context.Context, req *pb.AddWhiteReque
 
 	return &pb.AddWhiteReply{}, nil
 }
+
+func (s *TransactionService) SendAICAT(ctx context.Context, req *pb.SendAICATRequest) (*pb.SendAICATReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	hashContent := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
+		tokenAddress := common.HexToAddress("0x4984BE11B25b22615f20B96d997AD64fbC7a28D3")
+		//tokenAddress := common.HexToAddress("0x3e69BFA958d87AC9431496c22EbDFB522abBE68B")
+		instance, err := NewAdminNew(tokenAddress, client)
+		if err != nil {
+			fmt.Println("BuyAICAT error:", err)
+			continue
+		}
+
+		var tx *types.Transaction
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		tx, err = instance.SendToDead(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 2000000, // 固定 200万 gas limit
+		})
+		if err != nil {
+			fmt.Println("BuyAICAT error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.SendAICATReply{
+				Res: hashContent,
+			}, nil
+		}
+
+		return &pb.SendAICATReply{
+			Res: tx.Hash().Hex(),
+		}, nil
+
+	}
+
+	return &pb.SendAICATReply{
+		Res: hashContent,
+	}, nil
+}
+
+func (s *TransactionService) GetBuyAICATByOrderId(ctx context.Context, req *pb.GetBuyAICATByOrderIdRequest) (*pb.GetBuyAICATByOrderIdReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x4984BE11B25b22615f20B96d997AD64fbC7a28D3")
+		//tokenAddress := common.HexToAddress("0x3e69BFA958d87AC9431496c22EbDFB522abBE68B")
+		instance, err := NewAdminNew(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetLpByOrderId error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			start, _ := new(big.Int).SetString(req.OrderId, 10)
+			one, errOne := instance.ReqOrderIdArray(&bind.CallOpts{}, start)
+			if errOne != nil {
+				fmt.Println("GetLpByOrderId error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+	}
+
+	return &pb.GetBuyAICATByOrderIdReply{Amount: tmpOne}, nil
+}

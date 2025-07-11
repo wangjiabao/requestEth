@@ -26,12 +26,14 @@ const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalanc
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
 const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
 const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
+const OperationTransactionGetBuyAICATByOrderId = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
 const OperationTransactionGetBuyByOrderId = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
 const OperationTransactionGetDailyFee = "/api.requestEth.v1.Transaction/GetDailyFee"
 const OperationTransactionGetLpByOrderId = "/api.requestEth.v1.Transaction/GetLpByOrderId"
 const OperationTransactionGetReserves = "/api.requestEth.v1.Transaction/GetReserves"
 const OperationTransactionGetUserLp = "/api.requestEth.v1.Transaction/GetUserLp"
 const OperationTransactionRemoveLiquidity = "/api.requestEth.v1.Transaction/RemoveLiquidity"
+const OperationTransactionSendAICAT = "/api.requestEth.v1.Transaction/SendAICAT"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
 const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
@@ -47,12 +49,14 @@ type TransactionHTTPServer interface {
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
+	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
 	GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error)
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
 	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
+	SendAICAT(context.Context, *SendAICATRequest) (*SendAICATReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
@@ -81,6 +85,8 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.POST("/api/remove_liquidity", _Transaction_RemoveLiquidity0_HTTP_Handler(srv))
 	r.POST("/api/buy", _Transaction_BuyAICAT0_HTTP_Handler(srv))
 	r.POST("/api/withdraw", _Transaction_WithdrawAICAT0_HTTP_Handler(srv))
+	r.POST("/api/send_aicat", _Transaction_SendAICAT0_HTTP_Handler(srv))
+	r.GET("/api/get_buy_aicat_by_order_id", _Transaction_GetBuyAICATByOrderId0_HTTP_Handler(srv))
 	r.GET("/api/add_white", _Transaction_AddWhite0_HTTP_Handler(srv))
 }
 
@@ -447,6 +453,47 @@ func _Transaction_WithdrawAICAT0_HTTP_Handler(srv TransactionHTTPServer) func(ct
 	}
 }
 
+func _Transaction_SendAICAT0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SendAICATRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionSendAICAT)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SendAICAT(ctx, req.(*SendAICATRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SendAICATReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetBuyAICATByOrderId0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBuyAICATByOrderIdRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBuyAICATByOrderId)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBuyAICATByOrderId(ctx, req.(*GetBuyAICATByOrderIdRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBuyAICATByOrderIdReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Transaction_AddWhite0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddWhiteRequest
@@ -474,12 +521,14 @@ type TransactionHTTPClient interface {
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
+	GetBuyAICATByOrderId(ctx context.Context, req *GetBuyAICATByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyAICATByOrderIdReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
 	GetDailyFee(ctx context.Context, req *GetDailyFeeRequest, opts ...http.CallOption) (rsp *GetDailyFeeReply, err error)
 	GetLpByOrderId(ctx context.Context, req *GetLpByOrderIdRequest, opts ...http.CallOption) (rsp *GetLpByOrderIdReply, err error)
 	GetReserves(ctx context.Context, req *GetReservesRequest, opts ...http.CallOption) (rsp *GetReservesReply, err error)
 	GetUserLp(ctx context.Context, req *GetUserLpRequest, opts ...http.CallOption) (rsp *GetUserLpReply, err error)
 	RemoveLiquidity(ctx context.Context, req *RemoveLiquidityRequest, opts ...http.CallOption) (rsp *RemoveLiquidityReply, err error)
+	SendAICAT(ctx context.Context, req *SendAICATRequest, opts ...http.CallOption) (rsp *SendAICATReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
@@ -587,6 +636,19 @@ func (c *TransactionHTTPClientImpl) GetArray(ctx context.Context, in *GetArrayRe
 	return &out, err
 }
 
+func (c *TransactionHTTPClientImpl) GetBuyAICATByOrderId(ctx context.Context, in *GetBuyAICATByOrderIdRequest, opts ...http.CallOption) (*GetBuyAICATByOrderIdReply, error) {
+	var out GetBuyAICATByOrderIdReply
+	pattern := "/api/get_buy_aicat_by_order_id"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBuyAICATByOrderId))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *TransactionHTTPClientImpl) GetBuyByOrderId(ctx context.Context, in *GetBuyByOrderIdRequest, opts ...http.CallOption) (*GetBuyByOrderIdReply, error) {
 	var out GetBuyByOrderIdReply
 	pattern := "/api/get_buy"
@@ -657,6 +719,19 @@ func (c *TransactionHTTPClientImpl) RemoveLiquidity(ctx context.Context, in *Rem
 	pattern := "/api/remove_liquidity"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionRemoveLiquidity))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) SendAICAT(ctx context.Context, in *SendAICATRequest, opts ...http.CallOption) (*SendAICATReply, error) {
+	var out SendAICATReply
+	pattern := "/api/send_aicat"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionSendAICAT))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {

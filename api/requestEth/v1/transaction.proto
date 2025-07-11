@@ -124,6 +124,19 @@ service Transaction {
     };
   }
 
+  rpc SendAICAT (SendAICATRequest) returns (SendAICATReply) {
+    option (google.api.http) = {
+      post: "/api/send_aicat"
+      body: "send_body"
+    };
+  }
+
+  rpc GetBuyAICATByOrderId (GetBuyAICATByOrderIdRequest) returns (GetBuyAICATByOrderIdReply) {
+    option (google.api.http) = {
+      get: "/api/get_buy_aicat_by_order_id"
+    };
+  }
+
   rpc AddWhite (AddWhiteRequest) returns (AddWhiteReply) {
     option (google.api.http) = {
       get: "/api/add_white"
@@ -252,6 +265,25 @@ message WithdrawAICATRequest {
 
 message WithdrawAICATReply {
   string res = 1;
+}
+
+message SendAICATRequest {
+  message SendBody{
+  }
+
+  SendBody send_body = 1;
+}
+
+message SendAICATReply {
+  string res = 1;
+}
+
+message GetBuyAICATByOrderIdRequest {
+  string orderId = 1;
+}
+
+message GetBuyAICATByOrderIdReply {
+  string amount = 3;
 }
 
 message AddWhiteRequest {

@@ -19,25 +19,27 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Transaction_SendTransaction_FullMethodName    = "/api.requestEth.v1.Transaction/SendTransaction"
-	Transaction_SendTransactionEth_FullMethodName = "/api.requestEth.v1.Transaction/SendTransactionEth"
-	Transaction_Transaction_FullMethodName        = "/api.requestEth.v1.Transaction/Transaction"
-	Transaction_EthBalance_FullMethodName         = "/api.requestEth.v1.Transaction/EthBalance"
-	Transaction_GenerateKey_FullMethodName        = "/api.requestEth.v1.Transaction/GenerateKey"
-	Transaction_TokenBalance_FullMethodName       = "/api.requestEth.v1.Transaction/TokenBalance"
-	Transaction_VerifySig_FullMethodName          = "/api.requestEth.v1.Transaction/VerifySig"
-	Transaction_GetReserves_FullMethodName        = "/api.requestEth.v1.Transaction/GetReserves"
-	Transaction_GetAll_FullMethodName             = "/api.requestEth.v1.Transaction/GetAll"
-	Transaction_GetArray_FullMethodName           = "/api.requestEth.v1.Transaction/GetArray"
-	Transaction_GetLpByOrderId_FullMethodName     = "/api.requestEth.v1.Transaction/GetLpByOrderId"
-	Transaction_GetBuyByOrderId_FullMethodName    = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
-	Transaction_GetUserLp_FullMethodName          = "/api.requestEth.v1.Transaction/GetUserLp"
-	Transaction_GetDailyFee_FullMethodName        = "/api.requestEth.v1.Transaction/GetDailyFee"
-	Transaction_AddLiquidity_FullMethodName       = "/api.requestEth.v1.Transaction/AddLiquidity"
-	Transaction_RemoveLiquidity_FullMethodName    = "/api.requestEth.v1.Transaction/RemoveLiquidity"
-	Transaction_BuyAICAT_FullMethodName           = "/api.requestEth.v1.Transaction/BuyAICAT"
-	Transaction_WithdrawAICAT_FullMethodName      = "/api.requestEth.v1.Transaction/WithdrawAICAT"
-	Transaction_AddWhite_FullMethodName           = "/api.requestEth.v1.Transaction/AddWhite"
+	Transaction_SendTransaction_FullMethodName      = "/api.requestEth.v1.Transaction/SendTransaction"
+	Transaction_SendTransactionEth_FullMethodName   = "/api.requestEth.v1.Transaction/SendTransactionEth"
+	Transaction_Transaction_FullMethodName          = "/api.requestEth.v1.Transaction/Transaction"
+	Transaction_EthBalance_FullMethodName           = "/api.requestEth.v1.Transaction/EthBalance"
+	Transaction_GenerateKey_FullMethodName          = "/api.requestEth.v1.Transaction/GenerateKey"
+	Transaction_TokenBalance_FullMethodName         = "/api.requestEth.v1.Transaction/TokenBalance"
+	Transaction_VerifySig_FullMethodName            = "/api.requestEth.v1.Transaction/VerifySig"
+	Transaction_GetReserves_FullMethodName          = "/api.requestEth.v1.Transaction/GetReserves"
+	Transaction_GetAll_FullMethodName               = "/api.requestEth.v1.Transaction/GetAll"
+	Transaction_GetArray_FullMethodName             = "/api.requestEth.v1.Transaction/GetArray"
+	Transaction_GetLpByOrderId_FullMethodName       = "/api.requestEth.v1.Transaction/GetLpByOrderId"
+	Transaction_GetBuyByOrderId_FullMethodName      = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
+	Transaction_GetUserLp_FullMethodName            = "/api.requestEth.v1.Transaction/GetUserLp"
+	Transaction_GetDailyFee_FullMethodName          = "/api.requestEth.v1.Transaction/GetDailyFee"
+	Transaction_AddLiquidity_FullMethodName         = "/api.requestEth.v1.Transaction/AddLiquidity"
+	Transaction_RemoveLiquidity_FullMethodName      = "/api.requestEth.v1.Transaction/RemoveLiquidity"
+	Transaction_BuyAICAT_FullMethodName             = "/api.requestEth.v1.Transaction/BuyAICAT"
+	Transaction_WithdrawAICAT_FullMethodName        = "/api.requestEth.v1.Transaction/WithdrawAICAT"
+	Transaction_SendAICAT_FullMethodName            = "/api.requestEth.v1.Transaction/SendAICAT"
+	Transaction_GetBuyAICATByOrderId_FullMethodName = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
+	Transaction_AddWhite_FullMethodName             = "/api.requestEth.v1.Transaction/AddWhite"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -62,6 +64,8 @@ type TransactionClient interface {
 	RemoveLiquidity(ctx context.Context, in *RemoveLiquidityRequest, opts ...grpc.CallOption) (*RemoveLiquidityReply, error)
 	BuyAICAT(ctx context.Context, in *BuyAICATRequest, opts ...grpc.CallOption) (*BuyAICATReply, error)
 	WithdrawAICAT(ctx context.Context, in *WithdrawAICATRequest, opts ...grpc.CallOption) (*WithdrawAICATReply, error)
+	SendAICAT(ctx context.Context, in *SendAICATRequest, opts ...grpc.CallOption) (*SendAICATReply, error)
+	GetBuyAICATByOrderId(ctx context.Context, in *GetBuyAICATByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyAICATByOrderIdReply, error)
 	AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error)
 }
 
@@ -235,6 +239,24 @@ func (c *transactionClient) WithdrawAICAT(ctx context.Context, in *WithdrawAICAT
 	return out, nil
 }
 
+func (c *transactionClient) SendAICAT(ctx context.Context, in *SendAICATRequest, opts ...grpc.CallOption) (*SendAICATReply, error) {
+	out := new(SendAICATReply)
+	err := c.cc.Invoke(ctx, Transaction_SendAICAT_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetBuyAICATByOrderId(ctx context.Context, in *GetBuyAICATByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyAICATByOrderIdReply, error) {
+	out := new(GetBuyAICATByOrderIdReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBuyAICATByOrderId_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transactionClient) AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error) {
 	out := new(AddWhiteReply)
 	err := c.cc.Invoke(ctx, Transaction_AddWhite_FullMethodName, in, out, opts...)
@@ -266,6 +288,8 @@ type TransactionServer interface {
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
 	BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error)
 	WithdrawAICAT(context.Context, *WithdrawAICATRequest) (*WithdrawAICATReply, error)
+	SendAICAT(context.Context, *SendAICATRequest) (*SendAICATReply, error)
+	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
 	AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
@@ -327,6 +351,12 @@ func (UnimplementedTransactionServer) BuyAICAT(context.Context, *BuyAICATRequest
 }
 func (UnimplementedTransactionServer) WithdrawAICAT(context.Context, *WithdrawAICATRequest) (*WithdrawAICATReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WithdrawAICAT not implemented")
+}
+func (UnimplementedTransactionServer) SendAICAT(context.Context, *SendAICATRequest) (*SendAICATReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendAICAT not implemented")
+}
+func (UnimplementedTransactionServer) GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuyAICATByOrderId not implemented")
 }
 func (UnimplementedTransactionServer) AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddWhite not implemented")
@@ -668,6 +698,42 @@ func _Transaction_WithdrawAICAT_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_SendAICAT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendAICATRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).SendAICAT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_SendAICAT_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).SendAICAT(ctx, req.(*SendAICATRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetBuyAICATByOrderId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuyAICATByOrderIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBuyAICATByOrderId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBuyAICATByOrderId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBuyAICATByOrderId(ctx, req.(*GetBuyAICATByOrderIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Transaction_AddWhite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddWhiteRequest)
 	if err := dec(in); err != nil {
@@ -764,6 +830,14 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "WithdrawAICAT",
 			Handler:    _Transaction_WithdrawAICAT_Handler,
+		},
+		{
+			MethodName: "SendAICAT",
+			Handler:    _Transaction_SendAICAT_Handler,
+		},
+		{
+			MethodName: "GetBuyAICATByOrderId",
+			Handler:    _Transaction_GetBuyAICATByOrderId_Handler,
 		},
 		{
 			MethodName: "AddWhite",
