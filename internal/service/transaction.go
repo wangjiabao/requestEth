@@ -1219,7 +1219,7 @@ func (s *TransactionService) SendAICAT(ctx context.Context, req *pb.SendAICATReq
 		}
 		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
 		tokenAddress := common.HexToAddress("0x4984BE11B25b22615f20B96d997AD64fbC7a28D3")
-		//tokenAddress := common.HexToAddress("0x3e69BFA958d87AC9431496c22EbDFB522abBE68B")
+		//tokenAddress := common.HexToAddress("0x58B6F82Ce0f1a948dDD58824b16b878a0Bcd3259")
 		instance, err := NewAdminNew(tokenAddress, client)
 		if err != nil {
 			fmt.Println("BuyAICAT error:", err)
@@ -1287,7 +1287,7 @@ func (s *TransactionService) GetBuyAICATByOrderId(ctx context.Context, req *pb.G
 		}
 
 		tokenAddress := common.HexToAddress("0x4984BE11B25b22615f20B96d997AD64fbC7a28D3")
-		//tokenAddress := common.HexToAddress("0x3e69BFA958d87AC9431496c22EbDFB522abBE68B")
+		//tokenAddress := common.HexToAddress("0x58B6F82Ce0f1a948dDD58824b16b878a0Bcd3259")
 		instance, err := NewAdminNew(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetLpByOrderId error:", err)
