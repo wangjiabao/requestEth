@@ -504,6 +504,56 @@ func (s *TransactionService) GetAll(ctx context.Context, req *pb.GetAllRequest) 
 	}, nil
 }
 
+func (s *TransactionService) GetAllTwo(ctx context.Context, req *pb.GetAllTwoRequest) (*pb.GetAllTwoReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpTwo := "-1"
+	if 20 >= len(req.Contract) {
+		return &pb.GetAllTwoReply{
+			BuyArrayLength: tmpTwo,
+		}, nil
+	}
+
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress(req.Contract)
+		instance, err := NewAdmin(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		if "-1" == tmpTwo {
+			two, errTwo := instance.GetBuyArrayLength(&bind.CallOpts{})
+			if errTwo != nil {
+				fmt.Println("GetAll error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		if "-1" != tmpTwo {
+			break
+		}
+	}
+
+	return &pb.GetAllTwoReply{
+		BuyArrayLength: tmpTwo,
+	}, nil
+}
+
 func (s *TransactionService) GetBuyByOrderId(ctx context.Context, req *pb.GetBuyByOrderIdRequest) (*pb.GetBuyByOrderIdReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
@@ -511,6 +561,11 @@ func (s *TransactionService) GetBuyByOrderId(ctx context.Context, req *pb.GetBuy
 		"https://bscrpc.com/",
 		"https://bsc-pokt.nodies.app/",
 		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	contractAddress := "0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7"
+	if 20 < len(req.Contract) {
+		contractAddress = req.Contract
 	}
 
 	tmpOne := "-1"
@@ -522,7 +577,7 @@ func (s *TransactionService) GetBuyByOrderId(ctx context.Context, req *pb.GetBuy
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7")
+		tokenAddress := common.HexToAddress(contractAddress)
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetBuyByOrderId error:", err)
@@ -652,7 +707,12 @@ func (s *TransactionService) GetArray(ctx context.Context, req *pb.GetArrayReque
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7")
+		contractAddress := "0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7"
+		if 20 < len(req.Contract) {
+			contractAddress = req.Contract
+		}
+
+		tokenAddress := common.HexToAddress(contractAddress)
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetArray error:", err)
@@ -867,6 +927,11 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 		"https://data-seed-prebsc-1-s3.binance.org:8545/",
 	}
 
+	contract := "0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7"
+	if 20 < len(req.SendBody.Contract) {
+		contract = req.SendBody.Contract
+	}
+
 	hashContent := "-1"
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
@@ -875,7 +940,7 @@ func (s *TransactionService) BuyAICAT(ctx context.Context, req *pb.BuyAICATReque
 			continue
 		}
 		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
-		tokenAddress := common.HexToAddress("0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7")
+		tokenAddress := common.HexToAddress(contract)
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("BuyAICAT error:", err)
@@ -937,6 +1002,11 @@ func (s *TransactionService) WithdrawAICAT(ctx context.Context, req *pb.Withdraw
 		"https://data-seed-prebsc-1-s3.binance.org:8545/",
 	}
 
+	contract := "0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7"
+	if 20 < len(req.SendBody.Contract) {
+		contract = req.SendBody.Contract
+	}
+
 	hashContent := "-1"
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
@@ -944,8 +1014,9 @@ func (s *TransactionService) WithdrawAICAT(ctx context.Context, req *pb.Withdraw
 			fmt.Println("client error:", err)
 			continue
 		}
+
 		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
-		tokenAddress := common.HexToAddress("0x18Ac4F491F4A365B5a66F5c4e44C2b311e516bC7")
+		tokenAddress := common.HexToAddress(contract)
 		instance, err := NewAdmin(tokenAddress, client)
 		if err != nil {
 			fmt.Println("WithdrawAICAT error:", err)

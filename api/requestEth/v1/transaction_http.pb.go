@@ -25,6 +25,7 @@ const OperationTransactionBuyAICAT = "/api.requestEth.v1.Transaction/BuyAICAT"
 const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
 const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
+const OperationTransactionGetAllTwo = "/api.requestEth.v1.Transaction/GetAllTwo"
 const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
 const OperationTransactionGetBuyAICATByOrderId = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
 const OperationTransactionGetBuyByOrderId = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
@@ -48,6 +49,7 @@ type TransactionHTTPServer interface {
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
+	GetAllTwo(context.Context, *GetAllTwoRequest) (*GetAllTwoReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
 	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
@@ -76,6 +78,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/verify_sig", _Transaction_VerifySig0_HTTP_Handler(srv))
 	r.GET("/api/get_reserves", _Transaction_GetReserves0_HTTP_Handler(srv))
 	r.GET("/api/get_all", _Transaction_GetAll0_HTTP_Handler(srv))
+	r.GET("/api/get_all_two", _Transaction_GetAllTwo0_HTTP_Handler(srv))
 	r.GET("/api/get_array", _Transaction_GetArray0_HTTP_Handler(srv))
 	r.GET("/api/get_lp", _Transaction_GetLpByOrderId0_HTTP_Handler(srv))
 	r.GET("/api/get_buy", _Transaction_GetBuyByOrderId0_HTTP_Handler(srv))
@@ -266,6 +269,25 @@ func _Transaction_GetAll0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.
 			return err
 		}
 		reply := out.(*GetAllReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetAllTwo0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetAllTwoRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetAllTwo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAllTwo(ctx, req.(*GetAllTwoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAllTwoReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -520,6 +542,7 @@ type TransactionHTTPClient interface {
 	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
+	GetAllTwo(ctx context.Context, req *GetAllTwoRequest, opts ...http.CallOption) (rsp *GetAllTwoReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
 	GetBuyAICATByOrderId(ctx context.Context, req *GetBuyAICATByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyAICATByOrderIdReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
@@ -615,6 +638,19 @@ func (c *TransactionHTTPClientImpl) GetAll(ctx context.Context, in *GetAllReques
 	pattern := "/api/get_all"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetAll))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetAllTwo(ctx context.Context, in *GetAllTwoRequest, opts ...http.CallOption) (*GetAllTwoReply, error) {
+	var out GetAllTwoReply
+	pattern := "/api/get_all_two"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetAllTwo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

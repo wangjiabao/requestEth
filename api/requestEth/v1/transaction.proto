@@ -66,6 +66,12 @@ service Transaction {
     };
   }
 
+  rpc GetAllTwo (GetAllTwoRequest) returns (GetAllTwoReply) {
+    option (google.api.http) = {
+      get: "/api/get_all_two"
+    };
+  }
+
   rpc GetArray (GetArrayRequest) returns (GetArrayReply) {
     option (google.api.http) = {
       get: "/api/get_array"
@@ -162,8 +168,17 @@ message GetAllReply {
   string withdrawArrayLength = 3;
 }
 
+message GetAllTwoRequest {
+  string contract = 1;
+}
+
+message GetAllTwoReply {
+  string buyArrayLength = 1;
+}
+
 message GetArrayRequest {
   string reqType = 1;
+  string contract = 4;
   string start = 2;
   string end = 3;
 }
@@ -177,6 +192,7 @@ message GetArrayReply {
 
 message GetBuyByOrderIdRequest {
   string orderId = 1;
+  string contract = 2;
 }
 
 message GetBuyByOrderIdReply {
@@ -244,6 +260,7 @@ message BuyAICATRequest {
   message SendBody{
     string orderId = 1;
     string usdtAmount = 2;
+    string contract = 3;
   }
 
   SendBody send_body = 1;
@@ -258,6 +275,7 @@ message WithdrawAICATRequest {
     string token = 1;
     string amount = 2;
     string address = 3;
+    string contract = 4;
   }
 
   SendBody send_body = 1;

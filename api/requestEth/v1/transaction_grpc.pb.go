@@ -28,6 +28,7 @@ const (
 	Transaction_VerifySig_FullMethodName            = "/api.requestEth.v1.Transaction/VerifySig"
 	Transaction_GetReserves_FullMethodName          = "/api.requestEth.v1.Transaction/GetReserves"
 	Transaction_GetAll_FullMethodName               = "/api.requestEth.v1.Transaction/GetAll"
+	Transaction_GetAllTwo_FullMethodName            = "/api.requestEth.v1.Transaction/GetAllTwo"
 	Transaction_GetArray_FullMethodName             = "/api.requestEth.v1.Transaction/GetArray"
 	Transaction_GetLpByOrderId_FullMethodName       = "/api.requestEth.v1.Transaction/GetLpByOrderId"
 	Transaction_GetBuyByOrderId_FullMethodName      = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
@@ -55,6 +56,7 @@ type TransactionClient interface {
 	VerifySig(ctx context.Context, in *VerifySigRequest, opts ...grpc.CallOption) (*VerifySigReply, error)
 	GetReserves(ctx context.Context, in *GetReservesRequest, opts ...grpc.CallOption) (*GetReservesReply, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllReply, error)
+	GetAllTwo(ctx context.Context, in *GetAllTwoRequest, opts ...grpc.CallOption) (*GetAllTwoReply, error)
 	GetArray(ctx context.Context, in *GetArrayRequest, opts ...grpc.CallOption) (*GetArrayReply, error)
 	GetLpByOrderId(ctx context.Context, in *GetLpByOrderIdRequest, opts ...grpc.CallOption) (*GetLpByOrderIdReply, error)
 	GetBuyByOrderId(ctx context.Context, in *GetBuyByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyByOrderIdReply, error)
@@ -152,6 +154,15 @@ func (c *transactionClient) GetReserves(ctx context.Context, in *GetReservesRequ
 func (c *transactionClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllReply, error) {
 	out := new(GetAllReply)
 	err := c.cc.Invoke(ctx, Transaction_GetAll_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetAllTwo(ctx context.Context, in *GetAllTwoRequest, opts ...grpc.CallOption) (*GetAllTwoReply, error) {
+	out := new(GetAllTwoReply)
+	err := c.cc.Invoke(ctx, Transaction_GetAllTwo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -279,6 +290,7 @@ type TransactionServer interface {
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
+	GetAllTwo(context.Context, *GetAllTwoRequest) (*GetAllTwoReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
@@ -324,6 +336,9 @@ func (UnimplementedTransactionServer) GetReserves(context.Context, *GetReservesR
 }
 func (UnimplementedTransactionServer) GetAll(context.Context, *GetAllRequest) (*GetAllReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedTransactionServer) GetAllTwo(context.Context, *GetAllTwoRequest) (*GetAllTwoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllTwo not implemented")
 }
 func (UnimplementedTransactionServer) GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArray not implemented")
@@ -532,6 +547,24 @@ func _Transaction_GetAll_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TransactionServer).GetAll(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetAllTwo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllTwoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetAllTwo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetAllTwo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetAllTwo(ctx, req.(*GetAllTwoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -794,6 +827,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAll",
 			Handler:    _Transaction_GetAll_Handler,
+		},
+		{
+			MethodName: "GetAllTwo",
+			Handler:    _Transaction_GetAllTwo_Handler,
 		},
 		{
 			MethodName: "GetArray",
