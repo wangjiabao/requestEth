@@ -68,7 +68,7 @@ type TransactionHTTPServer interface {
 	SendAICAT(context.Context, *SendAICATRequest) (*SendAICATReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
-	SetReward(context.Context, *SetRewardRequest) (*SendAICATReply, error)
+	SetReward(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
@@ -621,7 +621,7 @@ func _Transaction_SetReward0_HTTP_Handler(srv TransactionHTTPServer) func(ctx ht
 		if err != nil {
 			return err
 		}
-		reply := out.(*SendAICATReply)
+		reply := out.(*SetRewardReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -648,7 +648,7 @@ type TransactionHTTPClient interface {
 	SendAICAT(ctx context.Context, req *SendAICATRequest, opts ...http.CallOption) (rsp *SendAICATReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
-	SetReward(ctx context.Context, req *SetRewardRequest, opts ...http.CallOption) (rsp *SendAICATReply, err error)
+	SetReward(ctx context.Context, req *SetRewardRequest, opts ...http.CallOption) (rsp *SetRewardReply, err error)
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
 	VerifySig(ctx context.Context, req *VerifySigRequest, opts ...http.CallOption) (rsp *VerifySigReply, err error)
@@ -936,8 +936,8 @@ func (c *TransactionHTTPClientImpl) SendTransactionEth(ctx context.Context, in *
 	return &out, err
 }
 
-func (c *TransactionHTTPClientImpl) SetReward(ctx context.Context, in *SetRewardRequest, opts ...http.CallOption) (*SendAICATReply, error) {
-	var out SendAICATReply
+func (c *TransactionHTTPClientImpl) SetReward(ctx context.Context, in *SetRewardRequest, opts ...http.CallOption) (*SetRewardReply, error) {
+	var out SetRewardReply
 	pattern := "/api/set_reward"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionSetReward))

@@ -468,7 +468,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/SendAICATReply'
+                                $ref: '#/components/schemas/SetRewardReply'
                 default:
                     description: Default error response
                     content:
@@ -858,6 +858,11 @@ components:
                 token:
                     type: string
                 amount:
+                    type: string
+        SetRewardReply:
+            type: object
+            properties:
+                res:
                     type: string
         SetRewardRequest_SendBody:
             type: object

@@ -76,7 +76,7 @@ type TransactionClient interface {
 	GetBoxAllLength(ctx context.Context, in *GetBoxAllRequest, opts ...grpc.CallOption) (*GetBoxAllReply, error)
 	GetBoxNew(ctx context.Context, in *GetBoxNewRequest, opts ...grpc.CallOption) (*GetBoxNewReply, error)
 	GetBoxOpen(ctx context.Context, in *GetBoxOpenRequest, opts ...grpc.CallOption) (*GetBoxOpenReply, error)
-	SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SendAICATReply, error)
+	SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SetRewardReply, error)
 }
 
 type transactionClient struct {
@@ -312,8 +312,8 @@ func (c *transactionClient) GetBoxOpen(ctx context.Context, in *GetBoxOpenReques
 	return out, nil
 }
 
-func (c *transactionClient) SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SendAICATReply, error) {
-	out := new(SendAICATReply)
+func (c *transactionClient) SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SetRewardReply, error) {
+	out := new(SetRewardReply)
 	err := c.cc.Invoke(ctx, Transaction_SetReward_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -350,7 +350,7 @@ type TransactionServer interface {
 	GetBoxAllLength(context.Context, *GetBoxAllRequest) (*GetBoxAllReply, error)
 	GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error)
 	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
-	SetReward(context.Context, *SetRewardRequest) (*SendAICATReply, error)
+	SetReward(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -433,7 +433,7 @@ func (UnimplementedTransactionServer) GetBoxNew(context.Context, *GetBoxNewReque
 func (UnimplementedTransactionServer) GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBoxOpen not implemented")
 }
-func (UnimplementedTransactionServer) SetReward(context.Context, *SetRewardRequest) (*SendAICATReply, error) {
+func (UnimplementedTransactionServer) SetReward(context.Context, *SetRewardRequest) (*SetRewardReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetReward not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
