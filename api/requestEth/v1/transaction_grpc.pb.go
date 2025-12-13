@@ -41,6 +41,10 @@ const (
 	Transaction_SendAICAT_FullMethodName            = "/api.requestEth.v1.Transaction/SendAICAT"
 	Transaction_GetBuyAICATByOrderId_FullMethodName = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
 	Transaction_AddWhite_FullMethodName             = "/api.requestEth.v1.Transaction/AddWhite"
+	Transaction_GetBoxAllLength_FullMethodName      = "/api.requestEth.v1.Transaction/GetBoxAllLength"
+	Transaction_GetBoxNew_FullMethodName            = "/api.requestEth.v1.Transaction/GetBoxNew"
+	Transaction_GetBoxOpen_FullMethodName           = "/api.requestEth.v1.Transaction/GetBoxOpen"
+	Transaction_SetReward_FullMethodName            = "/api.requestEth.v1.Transaction/SetReward"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -69,6 +73,10 @@ type TransactionClient interface {
 	SendAICAT(ctx context.Context, in *SendAICATRequest, opts ...grpc.CallOption) (*SendAICATReply, error)
 	GetBuyAICATByOrderId(ctx context.Context, in *GetBuyAICATByOrderIdRequest, opts ...grpc.CallOption) (*GetBuyAICATByOrderIdReply, error)
 	AddWhite(ctx context.Context, in *AddWhiteRequest, opts ...grpc.CallOption) (*AddWhiteReply, error)
+	GetBoxAllLength(ctx context.Context, in *GetBoxAllRequest, opts ...grpc.CallOption) (*GetBoxAllReply, error)
+	GetBoxNew(ctx context.Context, in *GetBoxNewRequest, opts ...grpc.CallOption) (*GetBoxNewReply, error)
+	GetBoxOpen(ctx context.Context, in *GetBoxOpenRequest, opts ...grpc.CallOption) (*GetBoxOpenReply, error)
+	SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SendAICATReply, error)
 }
 
 type transactionClient struct {
@@ -277,6 +285,42 @@ func (c *transactionClient) AddWhite(ctx context.Context, in *AddWhiteRequest, o
 	return out, nil
 }
 
+func (c *transactionClient) GetBoxAllLength(ctx context.Context, in *GetBoxAllRequest, opts ...grpc.CallOption) (*GetBoxAllReply, error) {
+	out := new(GetBoxAllReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBoxAllLength_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetBoxNew(ctx context.Context, in *GetBoxNewRequest, opts ...grpc.CallOption) (*GetBoxNewReply, error) {
+	out := new(GetBoxNewReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBoxNew_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetBoxOpen(ctx context.Context, in *GetBoxOpenRequest, opts ...grpc.CallOption) (*GetBoxOpenReply, error) {
+	out := new(GetBoxOpenReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBoxOpen_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SendAICATReply, error) {
+	out := new(SendAICATReply)
+	err := c.cc.Invoke(ctx, Transaction_SetReward_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -303,6 +347,10 @@ type TransactionServer interface {
 	SendAICAT(context.Context, *SendAICATRequest) (*SendAICATReply, error)
 	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
 	AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error)
+	GetBoxAllLength(context.Context, *GetBoxAllRequest) (*GetBoxAllReply, error)
+	GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error)
+	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
+	SetReward(context.Context, *SetRewardRequest) (*SendAICATReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -375,6 +423,18 @@ func (UnimplementedTransactionServer) GetBuyAICATByOrderId(context.Context, *Get
 }
 func (UnimplementedTransactionServer) AddWhite(context.Context, *AddWhiteRequest) (*AddWhiteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddWhite not implemented")
+}
+func (UnimplementedTransactionServer) GetBoxAllLength(context.Context, *GetBoxAllRequest) (*GetBoxAllReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBoxAllLength not implemented")
+}
+func (UnimplementedTransactionServer) GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBoxNew not implemented")
+}
+func (UnimplementedTransactionServer) GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBoxOpen not implemented")
+}
+func (UnimplementedTransactionServer) SetReward(context.Context, *SetRewardRequest) (*SendAICATReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetReward not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -785,6 +845,78 @@ func _Transaction_AddWhite_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetBoxAllLength_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBoxAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBoxAllLength(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBoxAllLength_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBoxAllLength(ctx, req.(*GetBoxAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetBoxNew_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBoxNewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBoxNew(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBoxNew_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBoxNew(ctx, req.(*GetBoxNewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetBoxOpen_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBoxOpenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBoxOpen(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBoxOpen_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBoxOpen(ctx, req.(*GetBoxOpenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_SetReward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRewardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).SetReward(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_SetReward_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).SetReward(ctx, req.(*SetRewardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -879,6 +1011,22 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddWhite",
 			Handler:    _Transaction_AddWhite_Handler,
+		},
+		{
+			MethodName: "GetBoxAllLength",
+			Handler:    _Transaction_GetBoxAllLength_Handler,
+		},
+		{
+			MethodName: "GetBoxNew",
+			Handler:    _Transaction_GetBoxNew_Handler,
+		},
+		{
+			MethodName: "GetBoxOpen",
+			Handler:    _Transaction_GetBoxOpen_Handler,
+		},
+		{
+			MethodName: "SetReward",
+			Handler:    _Transaction_SetReward_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

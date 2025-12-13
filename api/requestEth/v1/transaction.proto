@@ -148,6 +148,31 @@ service Transaction {
       get: "/api/add_white"
     };
   }
+
+  rpc GetBoxAllLength (GetBoxAllRequest) returns (GetBoxAllReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_all"
+    };
+  }
+
+  rpc GetBoxNew (GetBoxNewRequest) returns (GetBoxNewReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_new"
+    };
+  }
+
+  rpc GetBoxOpen (GetBoxOpenRequest) returns (GetBoxOpenReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_open"
+    };
+  }
+
+  rpc SetReward (SetRewardRequest) returns (SendAICATReply) {
+    option (google.api.http) = {
+      post: "/api/send_aicat"
+      body: "send_body"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -189,6 +214,50 @@ message GetArrayReply {
     string orderId = 1;
   }
 }
+
+message GetBoxAllRequest {
+
+}
+
+message GetBoxAllReply {
+  string newLength = 1;
+  string openLength = 2;
+}
+
+message GetBoxNewRequest {
+  string start = 2;
+  string end = 3;
+}
+
+message GetBoxNewReply {
+  repeated List list = 1;
+  message List {
+    string tokenId = 1;
+    string price = 2;
+    uint64 openedAt = 3;
+    uint64 mintAt = 4;
+    string reward = 5;
+    uint64 rewardAt = 6;
+  }
+}
+
+message GetBoxOpenRequest {
+  string start = 2;
+  string end = 3;
+}
+
+message GetBoxOpenReply {
+  repeated List list = 1;
+  message List {
+    string tokenId = 1;
+    string price = 2;
+    uint64 openedAt = 3;
+    uint64 mintAt = 4;
+    string reward = 5;
+    uint64 rewardAt = 6;
+  }
+}
+
 
 message GetBuyByOrderIdRequest {
   string orderId = 1;
@@ -295,6 +364,20 @@ message SendAICATRequest {
 message SendAICATReply {
   string res = 1;
 }
+
+message SetRewardRequest {
+  message SendBody{
+    string tokenId = 1;
+    string reward = 2;
+  }
+
+  SendBody send_body = 1;
+}
+
+message SetRewardReply {
+  string res = 1;
+}
+
 
 message GetBuyAICATByOrderIdRequest {
   string orderId = 1;

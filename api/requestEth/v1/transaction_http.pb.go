@@ -27,6 +27,9 @@ const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/Generate
 const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
 const OperationTransactionGetAllTwo = "/api.requestEth.v1.Transaction/GetAllTwo"
 const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
+const OperationTransactionGetBoxAllLength = "/api.requestEth.v1.Transaction/GetBoxAllLength"
+const OperationTransactionGetBoxNew = "/api.requestEth.v1.Transaction/GetBoxNew"
+const OperationTransactionGetBoxOpen = "/api.requestEth.v1.Transaction/GetBoxOpen"
 const OperationTransactionGetBuyAICATByOrderId = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
 const OperationTransactionGetBuyByOrderId = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
 const OperationTransactionGetDailyFee = "/api.requestEth.v1.Transaction/GetDailyFee"
@@ -37,6 +40,7 @@ const OperationTransactionRemoveLiquidity = "/api.requestEth.v1.Transaction/Remo
 const OperationTransactionSendAICAT = "/api.requestEth.v1.Transaction/SendAICAT"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
+const OperationTransactionSetReward = "/api.requestEth.v1.Transaction/SetReward"
 const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
 const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
@@ -51,6 +55,9 @@ type TransactionHTTPServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
 	GetAllTwo(context.Context, *GetAllTwoRequest) (*GetAllTwoReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
+	GetBoxAllLength(context.Context, *GetBoxAllRequest) (*GetBoxAllReply, error)
+	GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error)
+	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
 	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
 	GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error)
@@ -61,6 +68,7 @@ type TransactionHTTPServer interface {
 	SendAICAT(context.Context, *SendAICATRequest) (*SendAICATReply, error)
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
+	SetReward(context.Context, *SetRewardRequest) (*SendAICATReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
@@ -91,6 +99,10 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.POST("/api/send_aicat", _Transaction_SendAICAT0_HTTP_Handler(srv))
 	r.GET("/api/get_buy_aicat_by_order_id", _Transaction_GetBuyAICATByOrderId0_HTTP_Handler(srv))
 	r.GET("/api/add_white", _Transaction_AddWhite0_HTTP_Handler(srv))
+	r.GET("/api/get_box_all", _Transaction_GetBoxAllLength0_HTTP_Handler(srv))
+	r.GET("/api/get_box_new", _Transaction_GetBoxNew0_HTTP_Handler(srv))
+	r.GET("/api/get_box_open", _Transaction_GetBoxOpen0_HTTP_Handler(srv))
+	r.POST("/api/send_aicat", _Transaction_SetReward0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -535,6 +547,85 @@ func _Transaction_AddWhite0_HTTP_Handler(srv TransactionHTTPServer) func(ctx htt
 	}
 }
 
+func _Transaction_GetBoxAllLength0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBoxAllRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBoxAllLength)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBoxAllLength(ctx, req.(*GetBoxAllRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBoxAllReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetBoxNew0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBoxNewRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBoxNew)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBoxNew(ctx, req.(*GetBoxNewRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBoxNewReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetBoxOpen0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBoxOpenRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBoxOpen)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBoxOpen(ctx, req.(*GetBoxOpenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBoxOpenReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_SetReward0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SetRewardRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionSetReward)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SetReward(ctx, req.(*SetRewardRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SendAICATReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
@@ -544,6 +635,9 @@ type TransactionHTTPClient interface {
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
 	GetAllTwo(ctx context.Context, req *GetAllTwoRequest, opts ...http.CallOption) (rsp *GetAllTwoReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
+	GetBoxAllLength(ctx context.Context, req *GetBoxAllRequest, opts ...http.CallOption) (rsp *GetBoxAllReply, err error)
+	GetBoxNew(ctx context.Context, req *GetBoxNewRequest, opts ...http.CallOption) (rsp *GetBoxNewReply, err error)
+	GetBoxOpen(ctx context.Context, req *GetBoxOpenRequest, opts ...http.CallOption) (rsp *GetBoxOpenReply, err error)
 	GetBuyAICATByOrderId(ctx context.Context, req *GetBuyAICATByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyAICATByOrderIdReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
 	GetDailyFee(ctx context.Context, req *GetDailyFeeRequest, opts ...http.CallOption) (rsp *GetDailyFeeReply, err error)
@@ -554,6 +648,7 @@ type TransactionHTTPClient interface {
 	SendAICAT(ctx context.Context, req *SendAICATRequest, opts ...http.CallOption) (rsp *SendAICATReply, err error)
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
+	SetReward(ctx context.Context, req *SetRewardRequest, opts ...http.CallOption) (rsp *SendAICATReply, err error)
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
 	VerifySig(ctx context.Context, req *VerifySigRequest, opts ...http.CallOption) (rsp *VerifySigReply, err error)
@@ -664,6 +759,45 @@ func (c *TransactionHTTPClientImpl) GetArray(ctx context.Context, in *GetArrayRe
 	pattern := "/api/get_array"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetArray))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetBoxAllLength(ctx context.Context, in *GetBoxAllRequest, opts ...http.CallOption) (*GetBoxAllReply, error) {
+	var out GetBoxAllReply
+	pattern := "/api/get_box_all"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBoxAllLength))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetBoxNew(ctx context.Context, in *GetBoxNewRequest, opts ...http.CallOption) (*GetBoxNewReply, error) {
+	var out GetBoxNewReply
+	pattern := "/api/get_box_new"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBoxNew))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetBoxOpen(ctx context.Context, in *GetBoxOpenRequest, opts ...http.CallOption) (*GetBoxOpenReply, error) {
+	var out GetBoxOpenReply
+	pattern := "/api/get_box_open"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBoxOpen))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -794,6 +928,19 @@ func (c *TransactionHTTPClientImpl) SendTransactionEth(ctx context.Context, in *
 	pattern := "/api/transaction_eth"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionSendTransactionEth))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) SetReward(ctx context.Context, in *SetRewardRequest, opts ...http.CallOption) (*SendAICATReply, error) {
+	var out SendAICATReply
+	pattern := "/api/send_aicat"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionSetReward))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {

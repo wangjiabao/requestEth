@@ -189,6 +189,78 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/get_box_all:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBoxAllLength
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBoxAllReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_box_new:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBoxNew
+            parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: string
+                - name: end
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBoxNewReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_box_open:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBoxOpen
+            parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: string
+                - name: end
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBoxOpenReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/get_buy:
         get:
             tags:
@@ -359,12 +431,12 @@ paths:
         post:
             tags:
                 - Transaction
-            operationId: Transaction_SendAICAT
+            operationId: Transaction_SetReward
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/SendAICATRequest_SendBody'
+                            $ref: '#/components/schemas/SetRewardRequest_SendBody'
                 required: true
             responses:
                 "200":
@@ -608,6 +680,57 @@ components:
             properties:
                 orderId:
                     type: string
+        GetBoxAllReply:
+            type: object
+            properties:
+                newLength:
+                    type: string
+                openLength:
+                    type: string
+        GetBoxNewReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetBoxNewReply_List'
+        GetBoxNewReply_List:
+            type: object
+            properties:
+                tokenId:
+                    type: string
+                price:
+                    type: string
+                openedAt:
+                    type: string
+                mintAt:
+                    type: string
+                reward:
+                    type: string
+                rewardAt:
+                    type: string
+        GetBoxOpenReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetBoxOpenReply_List'
+        GetBoxOpenReply_List:
+            type: object
+            properties:
+                tokenId:
+                    type: string
+                price:
+                    type: string
+                openedAt:
+                    type: string
+                mintAt:
+                    type: string
+                reward:
+                    type: string
+                rewardAt:
+                    type: string
         GetBuyAICATByOrderIdReply:
             type: object
             properties:
@@ -711,6 +834,13 @@ components:
                 token:
                     type: string
                 amount:
+                    type: string
+        SetRewardRequest_SendBody:
+            type: object
+            properties:
+                tokenId:
+                    type: string
+                reward:
                     type: string
         Status:
             type: object

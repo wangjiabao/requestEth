@@ -1380,3 +1380,243 @@ func (s *TransactionService) GetBuyAICATByOrderId(ctx context.Context, req *pb.G
 
 	return &pb.GetBuyAICATByOrderIdReply{Amount: tmpOne}, nil
 }
+
+func (s *TransactionService) GetBoxAllLength(ctx context.Context, req *pb.GetBoxAllRequest) (*pb.GetBoxAllReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	tmpOne := "-1"
+	tmpTwo := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd")
+		instance, err := NewNft(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetBoxAll error:", err)
+			continue
+		}
+
+		// 获取储备量
+		if "-1" == tmpOne {
+			one, errOne := instance.OpenActionTokenIdsLength(&bind.CallOpts{})
+			if errOne != nil {
+				fmt.Println("GetBoxAll error:", err)
+				continue
+			}
+
+			tmpOne = one.String()
+		}
+
+		if "-1" == tmpTwo {
+			two, errTwo := instance.MintedTokenIdsLength(&bind.CallOpts{})
+			if errTwo != nil {
+				fmt.Println("GetBoxAll error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		if "-1" != tmpOne && "-1" != tmpTwo {
+			break
+		}
+	}
+
+	return &pb.GetBoxAllReply{
+		NewLength:  tmpTwo,
+		OpenLength: tmpOne,
+	}, nil
+}
+
+func (s *TransactionService) GetBoxNew(ctx context.Context, req *pb.GetBoxNewRequest) (*pb.GetBoxNewReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	res := make([]*pb.GetBoxNewReply_List, 0)
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		contractAddress := "0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd"
+
+		tokenAddress := common.HexToAddress(contractAddress)
+		instance, err := NewNft(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetBoxNew error:", err)
+			continue
+		}
+
+		// 获取认购盲盒记录
+		start, _ := new(big.Int).SetString(req.Start, 10)
+		end, _ := new(big.Int).SetString(req.End, 10)
+		tmp, errOne := instance.GetMintedByPage(&bind.CallOpts{}, start, end)
+		if errOne != nil {
+			//fmt.Println("GetArray error:", err)
+			continue
+		}
+
+		if len(tmp.Infos) != len(tmp.TokenIds) {
+
+		}
+
+		for k, vTmp := range tmp.TokenIds {
+			res = append(res, &pb.GetBoxNewReply_List{
+				TokenId:  vTmp.String(),
+				Price:    tmp.Infos[k].UsdtPaid.String(),
+				OpenedAt: tmp.Infos[k].OpenedAt,
+				MintAt:   tmp.Infos[k].MintedAt,
+				Reward:   tmp.Infos[k].Reward.String(),
+				RewardAt: tmp.Infos[k].RewardSetAt,
+			})
+		}
+	}
+
+	return &pb.GetBoxNewReply{
+		List: res,
+	}, nil
+}
+
+func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenRequest) (*pb.GetBoxOpenReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	res := make([]*pb.GetBoxOpenReply_List, 0)
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		contractAddress := "0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd"
+
+		tokenAddress := common.HexToAddress(contractAddress)
+		instance, err := NewNft(tokenAddress, client)
+		if err != nil {
+			fmt.Println("GetBoxNew error:", err)
+			continue
+		}
+
+		// 获取认购盲盒记录
+		start, _ := new(big.Int).SetString(req.Start, 10)
+		end, _ := new(big.Int).SetString(req.End, 10)
+		tmp, errOne := instance.GetOpenedByPage(&bind.CallOpts{}, start, end)
+		if errOne != nil {
+			//fmt.Println("GetArray error:", err)
+			continue
+		}
+
+		if len(tmp.Infos) != len(tmp.TokenIds) {
+
+		}
+
+		for k, vTmp := range tmp.TokenIds {
+			res = append(res, &pb.GetBoxOpenReply_List{
+				TokenId:  vTmp.String(),
+				Price:    tmp.Infos[k].UsdtPaid.String(),
+				OpenedAt: tmp.Infos[k].OpenedAt,
+				MintAt:   tmp.Infos[k].MintedAt,
+				Reward:   tmp.Infos[k].Reward.String(),
+				RewardAt: tmp.Infos[k].RewardSetAt,
+			})
+		}
+	}
+
+	return &pb.GetBoxOpenReply{
+		List: res,
+	}, nil
+}
+
+func (s *TransactionService) SetReward(ctx context.Context, req *pb.SetRewardRequest) (*pb.SetRewardReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	contract := "0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd"
+	hashContent := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
+		tokenAddress := common.HexToAddress(contract)
+		instance, err := NewNft(tokenAddress, client)
+		if err != nil {
+			fmt.Println("SetReward error:", err)
+			continue
+		}
+
+		var tx *types.Transaction
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		orderId, _ := new(big.Int).SetString(req.SendBody.TokenId, 10)
+		amount, _ := new(big.Int).SetString(req.SendBody.Reward, 10)
+
+		tx, err = instance.SetRewardOnce(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 2000000, // 固定 200万 gas limit
+		}, orderId, amount)
+		if err != nil {
+			fmt.Println("SetReward error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.SetRewardReply{
+				Res: hashContent,
+			}, nil
+		}
+
+		return &pb.SetRewardReply{
+			Res: tx.Hash().Hex(),
+		}, nil
+
+	}
+
+	return &pb.SetRewardReply{
+		Res: hashContent,
+	}, nil
+}
