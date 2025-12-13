@@ -102,7 +102,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_box_all", _Transaction_GetBoxAllLength0_HTTP_Handler(srv))
 	r.GET("/api/get_box_new", _Transaction_GetBoxNew0_HTTP_Handler(srv))
 	r.GET("/api/get_box_open", _Transaction_GetBoxOpen0_HTTP_Handler(srv))
-	r.POST("/api/send_aicat", _Transaction_SetReward0_HTTP_Handler(srv))
+	r.POST("/api/set_reward", _Transaction_SetReward0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -938,7 +938,7 @@ func (c *TransactionHTTPClientImpl) SendTransactionEth(ctx context.Context, in *
 
 func (c *TransactionHTTPClientImpl) SetReward(ctx context.Context, in *SetRewardRequest, opts ...http.CallOption) (*SendAICATReply, error) {
 	var out SendAICATReply
-	pattern := "/api/send_aicat"
+	pattern := "/api/set_reward"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionSetReward))
 	opts = append(opts, http.PathTemplate(pattern))

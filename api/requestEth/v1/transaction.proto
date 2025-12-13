@@ -169,7 +169,7 @@ service Transaction {
 
   rpc SetReward (SetRewardRequest) returns (SendAICATReply) {
     option (google.api.http) = {
-      post: "/api/send_aicat"
+      post: "/api/set_reward"
       body: "send_body"
     };
   }
