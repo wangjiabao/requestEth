@@ -1474,7 +1474,7 @@ func (s *TransactionService) GetBoxNew(ctx context.Context, req *pb.GetBoxNewReq
 		}
 
 		if len(tmp.Infos) != len(tmp.TokenIds) {
-
+			break
 		}
 
 		for k, vTmp := range tmp.TokenIds {
@@ -1487,6 +1487,8 @@ func (s *TransactionService) GetBoxNew(ctx context.Context, req *pb.GetBoxNewReq
 				RewardAt: tmp.Infos[k].RewardSetAt,
 			})
 		}
+
+		break
 	}
 
 	return &pb.GetBoxNewReply{
@@ -1530,7 +1532,7 @@ func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenR
 		}
 
 		if len(tmp.Infos) != len(tmp.TokenIds) {
-
+			break
 		}
 
 		for k, vTmp := range tmp.TokenIds {
@@ -1543,6 +1545,8 @@ func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenR
 				RewardAt: tmp.Infos[k].RewardSetAt,
 			})
 		}
+
+		break
 	}
 
 	return &pb.GetBoxOpenReply{
