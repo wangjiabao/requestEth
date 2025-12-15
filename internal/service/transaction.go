@@ -1399,7 +1399,7 @@ func (s *TransactionService) GetBoxAllLength(ctx context.Context, req *pb.GetBox
 			continue
 		}
 
-		tokenAddress := common.HexToAddress("0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd")
+		tokenAddress := common.HexToAddress("0x4f675199C6a324af6eFB9CA8fd40b7c72D6A7244")
 		instance, err := NewNft(tokenAddress, client)
 		if err != nil {
 			fmt.Println("GetBoxAll error:", err)
@@ -1455,7 +1455,7 @@ func (s *TransactionService) GetBoxNew(ctx context.Context, req *pb.GetBoxNewReq
 			continue
 		}
 
-		contractAddress := "0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd"
+		contractAddress := "0x4f675199C6a324af6eFB9CA8fd40b7c72D6A7244"
 
 		tokenAddress := common.HexToAddress(contractAddress)
 		instance, err := NewNft(tokenAddress, client)
@@ -1513,7 +1513,7 @@ func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenR
 			continue
 		}
 
-		contractAddress := "0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd"
+		contractAddress := "0x4f675199C6a324af6eFB9CA8fd40b7c72D6A7244"
 
 		tokenAddress := common.HexToAddress(contractAddress)
 		instance, err := NewNft(tokenAddress, client)
@@ -1563,7 +1563,7 @@ func (s *TransactionService) SetReward(ctx context.Context, req *pb.SetRewardReq
 		"https://data-seed-prebsc-1-s3.binance.org:8545/",
 	}
 
-	contract := "0x290feBA6d39cA8ad4A77d40B6a1Cea0878E313Dd"
+	contract := "0x4f675199C6a324af6eFB9CA8fd40b7c72D6A7244"
 	hashContent := "-1"
 	for _, urlTmp := range urls {
 		client, err := ethclient.Dial(urlTmp)
