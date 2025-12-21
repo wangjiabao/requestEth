@@ -36,11 +36,12 @@ type BlindBoxNFTBoxInfo struct {
 	OpenedAt    uint64
 	Reward      *big.Int
 	RewardSetAt uint64
+	TokenId     *big.Int
 }
 
 // NftMetaData contains all meta data concerning the Nft contract.
 var NftMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name_\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol_\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"usdt_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"aToken_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"accountA_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"globalSlotStepCost_\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721EnumerableForbiddenBatchMint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"ERC721IncorrectOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ERC721InsufficientApproval\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"approver\",\"type\":\"address\"}],\"name\":\"ERC721InvalidApprover\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"ERC721InvalidOperator\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"ERC721InvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"}],\"name\":\"ERC721InvalidReceiver\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"ERC721InvalidSender\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ERC721NonexistentToken\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"ERC721OutOfBoundsIndex\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReentrancyGuardReentrantCall\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"SafeERC20FailedOperation\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldToken\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newToken\",\"type\":\"address\"}],\"name\":\"ATokenChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldAccountA\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newAccountA\",\"type\":\"address\"}],\"name\":\"AccountAChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ERC20Withdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rateTwo\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"baseTwo\",\"type\":\"uint256\"}],\"name\":\"FeeConfigBChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"base\",\"type\":\"uint256\"}],\"name\":\"FeeConfigUSDTChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"pool\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token0B\",\"type\":\"address\"}],\"name\":\"FeeQuotePoolChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldCost\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newCost\",\"type\":\"uint256\"}],\"name\":\"GlobalSlotStepCostChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"Listed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"}],\"name\":\"Minted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"Opened\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"priceUSDT\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"feePaidInB\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeUSDT\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeB\",\"type\":\"uint256\"}],\"name\":\"Purchased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"RewardSetOnce\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"stepCostLocked\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalCost\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newExtraSlots\",\"type\":\"uint256\"}],\"name\":\"SlotsPurchased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPrice\",\"type\":\"uint256\"}],\"name\":\"TierPriceChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Unlisted\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ACCOUNT_A_FEE_BPS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASE_DAILY_OPENS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BPS_DENOMINATOR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DAY_SHIFT_SECONDS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DECIMALS_18\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MONTHLY_RATE_E18\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MONTH_SECONDS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aToken\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"accountA\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"boxInfo\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"buyOpenSlots\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFeeB\",\"type\":\"uint256\"}],\"name\":\"buyPayFeeInB\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"buyPayFeeInUSDT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"extraSlots\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeBase\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeBaseTwo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeQuotePool\",\"outputs\":[{\"internalType\":\"contractIToken0Token1AmmQuote\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeRateTwo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeTokenB\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getListedTokenIds\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"out\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getMintedByPage\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getOpenedByPage\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getOwnerTokensByPage\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"globalSlotStepCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"list\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listedTokenIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"listedTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listings\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"listedAt\",\"type\":\"uint64\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"}],\"name\":\"mint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"}],\"name\":\"mintBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8[]\",\"name\":\"tiers\",\"type\":\"uint8[]\"}],\"name\":\"mintBatchWithTiers\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"mintedTokenIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mintedTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"open\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"openActionTokenIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"openActionTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"openBox\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"openUsageNow\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"dayIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"used\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"remaining\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"previewSlotCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"step\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount1InUSDT\",\"type\":\"uint256\"}],\"name\":\"quoteFeeInB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"out0NetB\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"secondaryBuyPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newAToken\",\"type\":\"address\"}],\"name\":\"setAToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newAccountA\",\"type\":\"address\"}],\"name\":\"setAccountA\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rateTwo\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseTwo\",\"type\":\"uint256\"}],\"name\":\"setFeeConfigB\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"base\",\"type\":\"uint256\"}],\"name\":\"setFeeConfigUSDT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"pool\",\"type\":\"address\"}],\"name\":\"setFeeQuotePool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newCost\",\"type\":\"uint256\"}],\"name\":\"setGlobalSlotStepCost\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"reward_\",\"type\":\"int256\"}],\"name\":\"setRewardOnce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"newPrice\",\"type\":\"uint256\"}],\"name\":\"setTierPrice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"slotStepForUser\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"tierPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"tokensOfOwner\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"unlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"usdt\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"userSlotStepCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burnAfterReward\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"}],\"name\":\"burnAfterRewardBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"buyOpenSlots\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFeeB\",\"type\":\"uint256\"}],\"name\":\"buyPayFeeInB\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"buyPayFeeInUSDT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"burnAmount\",\"type\":\"uint256\"}],\"name\":\"holdingAdd\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"list\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"}],\"name\":\"mint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"}],\"name\":\"mintBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"openBox\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newAccountA\",\"type\":\"address\"}],\"name\":\"setAccountA\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newAToken\",\"type\":\"address\"}],\"name\":\"setAToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rateTwo\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseTwo\",\"type\":\"uint256\"}],\"name\":\"setFeeConfigB\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"base\",\"type\":\"uint256\"}],\"name\":\"setFeeConfigUSDT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"pool\",\"type\":\"address\"}],\"name\":\"setFeeQuotePool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newCost\",\"type\":\"uint256\"}],\"name\":\"setGlobalSlotStepCost\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"feeWei\",\"type\":\"uint256\"}],\"name\":\"setOpenFeeBNB\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"feeWei\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"}],\"name\":\"setOpenFeeConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"}],\"name\":\"setOpenFeeReceiver\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name_\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol_\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"usdt_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"aToken_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"accountA_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"globalSlotStepCost_\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"staking_\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721EnumerableForbiddenBatchMint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"ERC721IncorrectOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ERC721InsufficientApproval\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"approver\",\"type\":\"address\"}],\"name\":\"ERC721InvalidApprover\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"ERC721InvalidOperator\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"ERC721InvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"}],\"name\":\"ERC721InvalidReceiver\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"ERC721InvalidSender\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ERC721NonexistentToken\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"ERC721OutOfBoundsIndex\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReentrancyGuardReentrantCall\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"SafeERC20FailedOperation\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldToken\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newToken\",\"type\":\"address\"}],\"name\":\"ATokenChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldAccountA\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newAccountA\",\"type\":\"address\"}],\"name\":\"AccountAChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"Burned\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ERC20Withdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rateTwo\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"baseTwo\",\"type\":\"uint256\"}],\"name\":\"FeeConfigBChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rate\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"base\",\"type\":\"uint256\"}],\"name\":\"FeeConfigUSDTChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"pool\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token0B\",\"type\":\"address\"}],\"name\":\"FeeQuotePoolChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldCost\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newCost\",\"type\":\"uint256\"}],\"name\":\"GlobalSlotStepCostChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"Listed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"}],\"name\":\"Minted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"openFeeBNB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"openFeeReceiver\",\"type\":\"address\"}],\"name\":\"OpenFeeConfigChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bnbPaid\",\"type\":\"uint256\"}],\"name\":\"Opened\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bpsDenominator\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"accountAFeeBps\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"monthlyRateDefaultE18\",\"type\":\"uint256\"}],\"name\":\"ParamsChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"burnAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"valueAddedUsdt\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPieceHoldingValue\",\"type\":\"uint256\"}],\"name\":\"PieceHoldingAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldPiece\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newPiece\",\"type\":\"address\"}],\"name\":\"PieceTokenChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldValueUsdtE18\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newValueUsdtE18\",\"type\":\"uint256\"}],\"name\":\"PieceValueChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"priceUSDT\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"feePaidInB\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeUSDT\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeB\",\"type\":\"uint256\"}],\"name\":\"Purchased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"profitNotified\",\"type\":\"uint256\"}],\"name\":\"RewardSetOnce\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"denom\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"aFeeBps\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"monthlyRateDefault\",\"type\":\"uint256\"}],\"name\":\"setParams\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newPiece\",\"type\":\"address\"}],\"name\":\"setPieceToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newValueUsdtE18\",\"type\":\"uint256\"}],\"name\":\"setPieceValueUsdtE18\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"reward_\",\"type\":\"int256\"}],\"name\":\"setRewardOnce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newStaking\",\"type\":\"address\"}],\"name\":\"setStakingContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"newPrice\",\"type\":\"uint256\"}],\"name\":\"setTierPrice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"stepCostLocked\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalCost\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newExtraSlots\",\"type\":\"uint256\"}],\"name\":\"SlotsPurchased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldStaking\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newStaking\",\"type\":\"address\"}],\"name\":\"StakingContractChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPrice\",\"type\":\"uint256\"}],\"name\":\"TierPriceChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"unlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Unlisted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"accountA\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"accountAFeeBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aToken\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASE_DAILY_OPENS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"boxInfo\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bpsDenominator\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DAY_SHIFT_SECONDS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DECIMALS_18\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"extraSlots\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeBase\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeBaseTwo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeQuotePool\",\"outputs\":[{\"internalType\":\"contractIToken0Token1AmmQuote\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeRateTwo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeTokenB\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getListedByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getMintedByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getMyOpenedBoxesByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getMyUnopenedBoxesByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"GetOpenedByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getOwnerTokensByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getSellerSoldByPage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"tier\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"usdtPaid\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"mintedAt\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"openedAt\",\"type\":\"uint64\"},{\"internalType\":\"int256\",\"name\":\"reward\",\"type\":\"int256\"},{\"internalType\":\"uint64\",\"name\":\"rewardSetAt\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"internalType\":\"structBlindBoxNFT.BoxInfo[]\",\"name\":\"infos\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"globalSlotStepCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"holdingBreakdownOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"unopenedSum\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pieceSum\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"total\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"holdingValueOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listedTokenIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"listedTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listings\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"listedAt\",\"type\":\"uint64\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"mintedTokenIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mintedTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MONTH_SECONDS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"monthlyRateDefaultE18\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"myOpenedBoxesLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"myUnopenedBoxesLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"open\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"openActionTokenIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OpenActionTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"openFeeBNB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"openFeeReceiver\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"openUsageNow\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"dayIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"used\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"remaining\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"pieceHoldingOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pieceToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pieceValueUsdtE18\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"previewSlotCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"step\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount1InUSDT\",\"type\":\"uint256\"}],\"name\":\"quoteFeeInB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"out0NetB\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"secondaryBuyPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"}],\"name\":\"sellerSoldTokenIdsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"slotStepForUser\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stakingContract\",\"outputs\":[{\"internalType\":\"contractIUmbrellaStakeDividend\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"tierPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenMonthlyRateE18\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"usdt\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"userSlotStepCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // NftABI is the input ABI used to generate the binding from.
@@ -189,37 +190,6 @@ func (_Nft *NftTransactorRaw) Transact(opts *bind.TransactOpts, method string, p
 	return _Nft.Contract.contract.Transact(opts, method, params...)
 }
 
-// ACCOUNTAFEEBPS is a free data retrieval call binding the contract method 0x01665648.
-//
-// Solidity: function ACCOUNT_A_FEE_BPS() view returns(uint256)
-func (_Nft *NftCaller) ACCOUNTAFEEBPS(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "ACCOUNT_A_FEE_BPS")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// ACCOUNTAFEEBPS is a free data retrieval call binding the contract method 0x01665648.
-//
-// Solidity: function ACCOUNT_A_FEE_BPS() view returns(uint256)
-func (_Nft *NftSession) ACCOUNTAFEEBPS() (*big.Int, error) {
-	return _Nft.Contract.ACCOUNTAFEEBPS(&_Nft.CallOpts)
-}
-
-// ACCOUNTAFEEBPS is a free data retrieval call binding the contract method 0x01665648.
-//
-// Solidity: function ACCOUNT_A_FEE_BPS() view returns(uint256)
-func (_Nft *NftCallerSession) ACCOUNTAFEEBPS() (*big.Int, error) {
-	return _Nft.Contract.ACCOUNTAFEEBPS(&_Nft.CallOpts)
-}
-
 // ADMINROLE is a free data retrieval call binding the contract method 0x75b238fc.
 //
 // Solidity: function ADMIN_ROLE() view returns(bytes32)
@@ -280,37 +250,6 @@ func (_Nft *NftSession) BASEDAILYOPENS() (*big.Int, error) {
 // Solidity: function BASE_DAILY_OPENS() view returns(uint256)
 func (_Nft *NftCallerSession) BASEDAILYOPENS() (*big.Int, error) {
 	return _Nft.Contract.BASEDAILYOPENS(&_Nft.CallOpts)
-}
-
-// BPSDENOMINATOR is a free data retrieval call binding the contract method 0xe1a45218.
-//
-// Solidity: function BPS_DENOMINATOR() view returns(uint256)
-func (_Nft *NftCaller) BPSDENOMINATOR(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "BPS_DENOMINATOR")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// BPSDENOMINATOR is a free data retrieval call binding the contract method 0xe1a45218.
-//
-// Solidity: function BPS_DENOMINATOR() view returns(uint256)
-func (_Nft *NftSession) BPSDENOMINATOR() (*big.Int, error) {
-	return _Nft.Contract.BPSDENOMINATOR(&_Nft.CallOpts)
-}
-
-// BPSDENOMINATOR is a free data retrieval call binding the contract method 0xe1a45218.
-//
-// Solidity: function BPS_DENOMINATOR() view returns(uint256)
-func (_Nft *NftCallerSession) BPSDENOMINATOR() (*big.Int, error) {
-	return _Nft.Contract.BPSDENOMINATOR(&_Nft.CallOpts)
 }
 
 // DAYSHIFTSECONDS is a free data retrieval call binding the contract method 0x2d184b2b.
@@ -406,35 +345,35 @@ func (_Nft *NftCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
 	return _Nft.Contract.DEFAULTADMINROLE(&_Nft.CallOpts)
 }
 
-// MONTHLYRATEE18 is a free data retrieval call binding the contract method 0xa97e62bb.
+// GetOpenedByPage is a free data retrieval call binding the contract method 0x4cdcb01c.
 //
-// Solidity: function MONTHLY_RATE_E18() view returns(uint256)
-func (_Nft *NftCaller) MONTHLYRATEE18(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function GetOpenedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetOpenedByPage(opts *bind.CallOpts, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "MONTHLY_RATE_E18")
+	err := _Nft.contract.Call(opts, &out, "GetOpenedByPage", start, count)
 
 	if err != nil {
-		return *new(*big.Int), err
+		return *new([]BlindBoxNFTBoxInfo), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
 
 	return out0, err
 
 }
 
-// MONTHLYRATEE18 is a free data retrieval call binding the contract method 0xa97e62bb.
+// GetOpenedByPage is a free data retrieval call binding the contract method 0x4cdcb01c.
 //
-// Solidity: function MONTHLY_RATE_E18() view returns(uint256)
-func (_Nft *NftSession) MONTHLYRATEE18() (*big.Int, error) {
-	return _Nft.Contract.MONTHLYRATEE18(&_Nft.CallOpts)
+// Solidity: function GetOpenedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetOpenedByPage(start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetOpenedByPage(&_Nft.CallOpts, start, count)
 }
 
-// MONTHLYRATEE18 is a free data retrieval call binding the contract method 0xa97e62bb.
+// GetOpenedByPage is a free data retrieval call binding the contract method 0x4cdcb01c.
 //
-// Solidity: function MONTHLY_RATE_E18() view returns(uint256)
-func (_Nft *NftCallerSession) MONTHLYRATEE18() (*big.Int, error) {
-	return _Nft.Contract.MONTHLYRATEE18(&_Nft.CallOpts)
+// Solidity: function GetOpenedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetOpenedByPage(start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetOpenedByPage(&_Nft.CallOpts, start, count)
 }
 
 // MONTHSECONDS is a free data retrieval call binding the contract method 0xf4a814fd.
@@ -466,6 +405,37 @@ func (_Nft *NftSession) MONTHSECONDS() (*big.Int, error) {
 // Solidity: function MONTH_SECONDS() view returns(uint256)
 func (_Nft *NftCallerSession) MONTHSECONDS() (*big.Int, error) {
 	return _Nft.Contract.MONTHSECONDS(&_Nft.CallOpts)
+}
+
+// OpenActionTokenIdsLength is a free data retrieval call binding the contract method 0x099f6192.
+//
+// Solidity: function OpenActionTokenIdsLength() view returns(uint256)
+func (_Nft *NftCaller) OpenActionTokenIdsLength(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "OpenActionTokenIdsLength")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// OpenActionTokenIdsLength is a free data retrieval call binding the contract method 0x099f6192.
+//
+// Solidity: function OpenActionTokenIdsLength() view returns(uint256)
+func (_Nft *NftSession) OpenActionTokenIdsLength() (*big.Int, error) {
+	return _Nft.Contract.OpenActionTokenIdsLength(&_Nft.CallOpts)
+}
+
+// OpenActionTokenIdsLength is a free data retrieval call binding the contract method 0x099f6192.
+//
+// Solidity: function OpenActionTokenIdsLength() view returns(uint256)
+func (_Nft *NftCallerSession) OpenActionTokenIdsLength() (*big.Int, error) {
+	return _Nft.Contract.OpenActionTokenIdsLength(&_Nft.CallOpts)
 }
 
 // AToken is a free data retrieval call binding the contract method 0xa0c1f15e.
@@ -530,6 +500,37 @@ func (_Nft *NftCallerSession) AccountA() (common.Address, error) {
 	return _Nft.Contract.AccountA(&_Nft.CallOpts)
 }
 
+// AccountAFeeBps is a free data retrieval call binding the contract method 0x06bb1d2d.
+//
+// Solidity: function accountAFeeBps() view returns(uint256)
+func (_Nft *NftCaller) AccountAFeeBps(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "accountAFeeBps")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// AccountAFeeBps is a free data retrieval call binding the contract method 0x06bb1d2d.
+//
+// Solidity: function accountAFeeBps() view returns(uint256)
+func (_Nft *NftSession) AccountAFeeBps() (*big.Int, error) {
+	return _Nft.Contract.AccountAFeeBps(&_Nft.CallOpts)
+}
+
+// AccountAFeeBps is a free data retrieval call binding the contract method 0x06bb1d2d.
+//
+// Solidity: function accountAFeeBps() view returns(uint256)
+func (_Nft *NftCallerSession) AccountAFeeBps() (*big.Int, error) {
+	return _Nft.Contract.AccountAFeeBps(&_Nft.CallOpts)
+}
+
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
 // Solidity: function balanceOf(address owner) view returns(uint256)
@@ -563,7 +564,7 @@ func (_Nft *NftCallerSession) BalanceOf(owner common.Address) (*big.Int, error) 
 
 // BoxInfo is a free data retrieval call binding the contract method 0x260d68fa.
 //
-// Solidity: function boxInfo(uint256 ) view returns(uint8 tier, uint256 usdtPaid, uint64 mintedAt, uint64 openedAt, int256 reward, uint64 rewardSetAt)
+// Solidity: function boxInfo(uint256 ) view returns(uint8 tier, uint256 usdtPaid, uint64 mintedAt, uint64 openedAt, int256 reward, uint64 rewardSetAt, uint256 tokenId)
 func (_Nft *NftCaller) BoxInfo(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	Tier        uint8
 	UsdtPaid    *big.Int
@@ -571,6 +572,7 @@ func (_Nft *NftCaller) BoxInfo(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	OpenedAt    uint64
 	Reward      *big.Int
 	RewardSetAt uint64
+	TokenId     *big.Int
 }, error) {
 	var out []interface{}
 	err := _Nft.contract.Call(opts, &out, "boxInfo", arg0)
@@ -582,6 +584,7 @@ func (_Nft *NftCaller) BoxInfo(opts *bind.CallOpts, arg0 *big.Int) (struct {
 		OpenedAt    uint64
 		Reward      *big.Int
 		RewardSetAt uint64
+		TokenId     *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
@@ -593,6 +596,7 @@ func (_Nft *NftCaller) BoxInfo(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	outstruct.OpenedAt = *abi.ConvertType(out[3], new(uint64)).(*uint64)
 	outstruct.Reward = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
 	outstruct.RewardSetAt = *abi.ConvertType(out[5], new(uint64)).(*uint64)
+	outstruct.TokenId = *abi.ConvertType(out[6], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
@@ -600,7 +604,7 @@ func (_Nft *NftCaller) BoxInfo(opts *bind.CallOpts, arg0 *big.Int) (struct {
 
 // BoxInfo is a free data retrieval call binding the contract method 0x260d68fa.
 //
-// Solidity: function boxInfo(uint256 ) view returns(uint8 tier, uint256 usdtPaid, uint64 mintedAt, uint64 openedAt, int256 reward, uint64 rewardSetAt)
+// Solidity: function boxInfo(uint256 ) view returns(uint8 tier, uint256 usdtPaid, uint64 mintedAt, uint64 openedAt, int256 reward, uint64 rewardSetAt, uint256 tokenId)
 func (_Nft *NftSession) BoxInfo(arg0 *big.Int) (struct {
 	Tier        uint8
 	UsdtPaid    *big.Int
@@ -608,13 +612,14 @@ func (_Nft *NftSession) BoxInfo(arg0 *big.Int) (struct {
 	OpenedAt    uint64
 	Reward      *big.Int
 	RewardSetAt uint64
+	TokenId     *big.Int
 }, error) {
 	return _Nft.Contract.BoxInfo(&_Nft.CallOpts, arg0)
 }
 
 // BoxInfo is a free data retrieval call binding the contract method 0x260d68fa.
 //
-// Solidity: function boxInfo(uint256 ) view returns(uint8 tier, uint256 usdtPaid, uint64 mintedAt, uint64 openedAt, int256 reward, uint64 rewardSetAt)
+// Solidity: function boxInfo(uint256 ) view returns(uint8 tier, uint256 usdtPaid, uint64 mintedAt, uint64 openedAt, int256 reward, uint64 rewardSetAt, uint256 tokenId)
 func (_Nft *NftCallerSession) BoxInfo(arg0 *big.Int) (struct {
 	Tier        uint8
 	UsdtPaid    *big.Int
@@ -622,8 +627,40 @@ func (_Nft *NftCallerSession) BoxInfo(arg0 *big.Int) (struct {
 	OpenedAt    uint64
 	Reward      *big.Int
 	RewardSetAt uint64
+	TokenId     *big.Int
 }, error) {
 	return _Nft.Contract.BoxInfo(&_Nft.CallOpts, arg0)
+}
+
+// BpsDenominator is a free data retrieval call binding the contract method 0xf60632a0.
+//
+// Solidity: function bpsDenominator() view returns(uint256)
+func (_Nft *NftCaller) BpsDenominator(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "bpsDenominator")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// BpsDenominator is a free data retrieval call binding the contract method 0xf60632a0.
+//
+// Solidity: function bpsDenominator() view returns(uint256)
+func (_Nft *NftSession) BpsDenominator() (*big.Int, error) {
+	return _Nft.Contract.BpsDenominator(&_Nft.CallOpts)
+}
+
+// BpsDenominator is a free data retrieval call binding the contract method 0xf60632a0.
+//
+// Solidity: function bpsDenominator() view returns(uint256)
+func (_Nft *NftCallerSession) BpsDenominator() (*big.Int, error) {
+	return _Nft.Contract.BpsDenominator(&_Nft.CallOpts)
 }
 
 // ExtraSlots is a free data retrieval call binding the contract method 0x1bee6dd5.
@@ -874,169 +911,158 @@ func (_Nft *NftCallerSession) GetApproved(tokenId *big.Int) (common.Address, err
 	return _Nft.Contract.GetApproved(&_Nft.CallOpts, tokenId)
 }
 
-// GetListedTokenIds is a free data retrieval call binding the contract method 0x94a5ce77.
+// GetListedByPage is a free data retrieval call binding the contract method 0x2d331eda.
 //
-// Solidity: function getListedTokenIds(uint256 start, uint256 count) view returns(uint256[] out)
-func (_Nft *NftCaller) GetListedTokenIds(opts *bind.CallOpts, start *big.Int, count *big.Int) ([]*big.Int, error) {
+// Solidity: function getListedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetListedByPage(opts *bind.CallOpts, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "getListedTokenIds", start, count)
+	err := _Nft.contract.Call(opts, &out, "getListedByPage", start, count)
 
 	if err != nil {
-		return *new([]*big.Int), err
+		return *new([]BlindBoxNFTBoxInfo), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
 
 	return out0, err
 
 }
 
-// GetListedTokenIds is a free data retrieval call binding the contract method 0x94a5ce77.
+// GetListedByPage is a free data retrieval call binding the contract method 0x2d331eda.
 //
-// Solidity: function getListedTokenIds(uint256 start, uint256 count) view returns(uint256[] out)
-func (_Nft *NftSession) GetListedTokenIds(start *big.Int, count *big.Int) ([]*big.Int, error) {
-	return _Nft.Contract.GetListedTokenIds(&_Nft.CallOpts, start, count)
+// Solidity: function getListedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetListedByPage(start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetListedByPage(&_Nft.CallOpts, start, count)
 }
 
-// GetListedTokenIds is a free data retrieval call binding the contract method 0x94a5ce77.
+// GetListedByPage is a free data retrieval call binding the contract method 0x2d331eda.
 //
-// Solidity: function getListedTokenIds(uint256 start, uint256 count) view returns(uint256[] out)
-func (_Nft *NftCallerSession) GetListedTokenIds(start *big.Int, count *big.Int) ([]*big.Int, error) {
-	return _Nft.Contract.GetListedTokenIds(&_Nft.CallOpts, start, count)
+// Solidity: function getListedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetListedByPage(start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetListedByPage(&_Nft.CallOpts, start, count)
 }
 
 // GetMintedByPage is a free data retrieval call binding the contract method 0x4b93d9e6.
 //
-// Solidity: function getMintedByPage(uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftCaller) GetMintedByPage(opts *bind.CallOpts, start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getMintedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetMintedByPage(opts *bind.CallOpts, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	var out []interface{}
 	err := _Nft.contract.Call(opts, &out, "getMintedByPage", start, count)
 
-	outstruct := new(struct {
-		TokenIds []*big.Int
-		Infos    []BlindBoxNFTBoxInfo
-	})
 	if err != nil {
-		return *outstruct, err
+		return *new([]BlindBoxNFTBoxInfo), err
 	}
 
-	outstruct.TokenIds = *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
-	outstruct.Infos = *abi.ConvertType(out[1], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
 
-	return *outstruct, err
+	return out0, err
 
 }
 
 // GetMintedByPage is a free data retrieval call binding the contract method 0x4b93d9e6.
 //
-// Solidity: function getMintedByPage(uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftSession) GetMintedByPage(start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getMintedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetMintedByPage(start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	return _Nft.Contract.GetMintedByPage(&_Nft.CallOpts, start, count)
 }
 
 // GetMintedByPage is a free data retrieval call binding the contract method 0x4b93d9e6.
 //
-// Solidity: function getMintedByPage(uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftCallerSession) GetMintedByPage(start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getMintedByPage(uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetMintedByPage(start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	return _Nft.Contract.GetMintedByPage(&_Nft.CallOpts, start, count)
 }
 
-// GetOpenedByPage is a free data retrieval call binding the contract method 0x075de52c.
+// GetMyOpenedBoxesByPage is a free data retrieval call binding the contract method 0xa8bffdc2.
 //
-// Solidity: function getOpenedByPage(uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftCaller) GetOpenedByPage(opts *bind.CallOpts, start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getMyOpenedBoxesByPage(address user, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetMyOpenedBoxesByPage(opts *bind.CallOpts, user common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "getOpenedByPage", start, count)
+	err := _Nft.contract.Call(opts, &out, "getMyOpenedBoxesByPage", user, start, count)
 
-	outstruct := new(struct {
-		TokenIds []*big.Int
-		Infos    []BlindBoxNFTBoxInfo
-	})
 	if err != nil {
-		return *outstruct, err
+		return *new([]BlindBoxNFTBoxInfo), err
 	}
 
-	outstruct.TokenIds = *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
-	outstruct.Infos = *abi.ConvertType(out[1], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
 
-	return *outstruct, err
+	return out0, err
 
 }
 
-// GetOpenedByPage is a free data retrieval call binding the contract method 0x075de52c.
+// GetMyOpenedBoxesByPage is a free data retrieval call binding the contract method 0xa8bffdc2.
 //
-// Solidity: function getOpenedByPage(uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftSession) GetOpenedByPage(start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
-	return _Nft.Contract.GetOpenedByPage(&_Nft.CallOpts, start, count)
+// Solidity: function getMyOpenedBoxesByPage(address user, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetMyOpenedBoxesByPage(user common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetMyOpenedBoxesByPage(&_Nft.CallOpts, user, start, count)
 }
 
-// GetOpenedByPage is a free data retrieval call binding the contract method 0x075de52c.
+// GetMyOpenedBoxesByPage is a free data retrieval call binding the contract method 0xa8bffdc2.
 //
-// Solidity: function getOpenedByPage(uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftCallerSession) GetOpenedByPage(start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
-	return _Nft.Contract.GetOpenedByPage(&_Nft.CallOpts, start, count)
+// Solidity: function getMyOpenedBoxesByPage(address user, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetMyOpenedBoxesByPage(user common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetMyOpenedBoxesByPage(&_Nft.CallOpts, user, start, count)
+}
+
+// GetMyUnopenedBoxesByPage is a free data retrieval call binding the contract method 0xd3ac2471.
+//
+// Solidity: function getMyUnopenedBoxesByPage(address user, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetMyUnopenedBoxesByPage(opts *bind.CallOpts, user common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "getMyUnopenedBoxesByPage", user, start, count)
+
+	if err != nil {
+		return *new([]BlindBoxNFTBoxInfo), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
+
+	return out0, err
+
+}
+
+// GetMyUnopenedBoxesByPage is a free data retrieval call binding the contract method 0xd3ac2471.
+//
+// Solidity: function getMyUnopenedBoxesByPage(address user, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetMyUnopenedBoxesByPage(user common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetMyUnopenedBoxesByPage(&_Nft.CallOpts, user, start, count)
+}
+
+// GetMyUnopenedBoxesByPage is a free data retrieval call binding the contract method 0xd3ac2471.
+//
+// Solidity: function getMyUnopenedBoxesByPage(address user, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetMyUnopenedBoxesByPage(user common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetMyUnopenedBoxesByPage(&_Nft.CallOpts, user, start, count)
 }
 
 // GetOwnerTokensByPage is a free data retrieval call binding the contract method 0x185b5de0.
 //
-// Solidity: function getOwnerTokensByPage(address owner, uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftCaller) GetOwnerTokensByPage(opts *bind.CallOpts, owner common.Address, start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getOwnerTokensByPage(address owner, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetOwnerTokensByPage(opts *bind.CallOpts, owner common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	var out []interface{}
 	err := _Nft.contract.Call(opts, &out, "getOwnerTokensByPage", owner, start, count)
 
-	outstruct := new(struct {
-		TokenIds []*big.Int
-		Infos    []BlindBoxNFTBoxInfo
-	})
 	if err != nil {
-		return *outstruct, err
+		return *new([]BlindBoxNFTBoxInfo), err
 	}
 
-	outstruct.TokenIds = *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
-	outstruct.Infos = *abi.ConvertType(out[1], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
 
-	return *outstruct, err
+	return out0, err
 
 }
 
 // GetOwnerTokensByPage is a free data retrieval call binding the contract method 0x185b5de0.
 //
-// Solidity: function getOwnerTokensByPage(address owner, uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftSession) GetOwnerTokensByPage(owner common.Address, start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getOwnerTokensByPage(address owner, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetOwnerTokensByPage(owner common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	return _Nft.Contract.GetOwnerTokensByPage(&_Nft.CallOpts, owner, start, count)
 }
 
 // GetOwnerTokensByPage is a free data retrieval call binding the contract method 0x185b5de0.
 //
-// Solidity: function getOwnerTokensByPage(address owner, uint256 start, uint256 count) view returns(uint256[] tokenIds, (uint8,uint256,uint64,uint64,int256,uint64)[] infos)
-func (_Nft *NftCallerSession) GetOwnerTokensByPage(owner common.Address, start *big.Int, count *big.Int) (struct {
-	TokenIds []*big.Int
-	Infos    []BlindBoxNFTBoxInfo
-}, error) {
+// Solidity: function getOwnerTokensByPage(address owner, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetOwnerTokensByPage(owner common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
 	return _Nft.Contract.GetOwnerTokensByPage(&_Nft.CallOpts, owner, start, count)
 }
 
@@ -1069,6 +1095,37 @@ func (_Nft *NftSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
 func (_Nft *NftCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
 	return _Nft.Contract.GetRoleAdmin(&_Nft.CallOpts, role)
+}
+
+// GetSellerSoldByPage is a free data retrieval call binding the contract method 0x029ae463.
+//
+// Solidity: function getSellerSoldByPage(address seller, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCaller) GetSellerSoldByPage(opts *bind.CallOpts, seller common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "getSellerSoldByPage", seller, start, count)
+
+	if err != nil {
+		return *new([]BlindBoxNFTBoxInfo), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]BlindBoxNFTBoxInfo)).(*[]BlindBoxNFTBoxInfo)
+
+	return out0, err
+
+}
+
+// GetSellerSoldByPage is a free data retrieval call binding the contract method 0x029ae463.
+//
+// Solidity: function getSellerSoldByPage(address seller, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftSession) GetSellerSoldByPage(seller common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetSellerSoldByPage(&_Nft.CallOpts, seller, start, count)
+}
+
+// GetSellerSoldByPage is a free data retrieval call binding the contract method 0x029ae463.
+//
+// Solidity: function getSellerSoldByPage(address seller, uint256 start, uint256 count) view returns((uint8,uint256,uint64,uint64,int256,uint64,uint256)[] infos)
+func (_Nft *NftCallerSession) GetSellerSoldByPage(seller common.Address, start *big.Int, count *big.Int) ([]BlindBoxNFTBoxInfo, error) {
+	return _Nft.Contract.GetSellerSoldByPage(&_Nft.CallOpts, seller, start, count)
 }
 
 // GlobalSlotStepCost is a free data retrieval call binding the contract method 0xb49ff99c.
@@ -1131,6 +1188,87 @@ func (_Nft *NftSession) HasRole(role [32]byte, account common.Address) (bool, er
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
 func (_Nft *NftCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
 	return _Nft.Contract.HasRole(&_Nft.CallOpts, role, account)
+}
+
+// HoldingBreakdownOf is a free data retrieval call binding the contract method 0x27d74167.
+//
+// Solidity: function holdingBreakdownOf(address user) view returns(uint256 unopenedSum, uint256 pieceSum, uint256 total)
+func (_Nft *NftCaller) HoldingBreakdownOf(opts *bind.CallOpts, user common.Address) (struct {
+	UnopenedSum *big.Int
+	PieceSum    *big.Int
+	Total       *big.Int
+}, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "holdingBreakdownOf", user)
+
+	outstruct := new(struct {
+		UnopenedSum *big.Int
+		PieceSum    *big.Int
+		Total       *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.UnopenedSum = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.PieceSum = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.Total = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// HoldingBreakdownOf is a free data retrieval call binding the contract method 0x27d74167.
+//
+// Solidity: function holdingBreakdownOf(address user) view returns(uint256 unopenedSum, uint256 pieceSum, uint256 total)
+func (_Nft *NftSession) HoldingBreakdownOf(user common.Address) (struct {
+	UnopenedSum *big.Int
+	PieceSum    *big.Int
+	Total       *big.Int
+}, error) {
+	return _Nft.Contract.HoldingBreakdownOf(&_Nft.CallOpts, user)
+}
+
+// HoldingBreakdownOf is a free data retrieval call binding the contract method 0x27d74167.
+//
+// Solidity: function holdingBreakdownOf(address user) view returns(uint256 unopenedSum, uint256 pieceSum, uint256 total)
+func (_Nft *NftCallerSession) HoldingBreakdownOf(user common.Address) (struct {
+	UnopenedSum *big.Int
+	PieceSum    *big.Int
+	Total       *big.Int
+}, error) {
+	return _Nft.Contract.HoldingBreakdownOf(&_Nft.CallOpts, user)
+}
+
+// HoldingValueOf is a free data retrieval call binding the contract method 0xe579aca3.
+//
+// Solidity: function holdingValueOf(address user) view returns(uint256)
+func (_Nft *NftCaller) HoldingValueOf(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "holdingValueOf", user)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// HoldingValueOf is a free data retrieval call binding the contract method 0xe579aca3.
+//
+// Solidity: function holdingValueOf(address user) view returns(uint256)
+func (_Nft *NftSession) HoldingValueOf(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.HoldingValueOf(&_Nft.CallOpts, user)
+}
+
+// HoldingValueOf is a free data retrieval call binding the contract method 0xe579aca3.
+//
+// Solidity: function holdingValueOf(address user) view returns(uint256)
+func (_Nft *NftCallerSession) HoldingValueOf(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.HoldingValueOf(&_Nft.CallOpts, user)
 }
 
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
@@ -1338,6 +1476,99 @@ func (_Nft *NftCallerSession) MintedTokenIdsLength() (*big.Int, error) {
 	return _Nft.Contract.MintedTokenIdsLength(&_Nft.CallOpts)
 }
 
+// MonthlyRateDefaultE18 is a free data retrieval call binding the contract method 0x14cd11bd.
+//
+// Solidity: function monthlyRateDefaultE18() view returns(uint256)
+func (_Nft *NftCaller) MonthlyRateDefaultE18(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "monthlyRateDefaultE18")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MonthlyRateDefaultE18 is a free data retrieval call binding the contract method 0x14cd11bd.
+//
+// Solidity: function monthlyRateDefaultE18() view returns(uint256)
+func (_Nft *NftSession) MonthlyRateDefaultE18() (*big.Int, error) {
+	return _Nft.Contract.MonthlyRateDefaultE18(&_Nft.CallOpts)
+}
+
+// MonthlyRateDefaultE18 is a free data retrieval call binding the contract method 0x14cd11bd.
+//
+// Solidity: function monthlyRateDefaultE18() view returns(uint256)
+func (_Nft *NftCallerSession) MonthlyRateDefaultE18() (*big.Int, error) {
+	return _Nft.Contract.MonthlyRateDefaultE18(&_Nft.CallOpts)
+}
+
+// MyOpenedBoxesLength is a free data retrieval call binding the contract method 0xc2f5b597.
+//
+// Solidity: function myOpenedBoxesLength(address user) view returns(uint256)
+func (_Nft *NftCaller) MyOpenedBoxesLength(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "myOpenedBoxesLength", user)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MyOpenedBoxesLength is a free data retrieval call binding the contract method 0xc2f5b597.
+//
+// Solidity: function myOpenedBoxesLength(address user) view returns(uint256)
+func (_Nft *NftSession) MyOpenedBoxesLength(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.MyOpenedBoxesLength(&_Nft.CallOpts, user)
+}
+
+// MyOpenedBoxesLength is a free data retrieval call binding the contract method 0xc2f5b597.
+//
+// Solidity: function myOpenedBoxesLength(address user) view returns(uint256)
+func (_Nft *NftCallerSession) MyOpenedBoxesLength(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.MyOpenedBoxesLength(&_Nft.CallOpts, user)
+}
+
+// MyUnopenedBoxesLength is a free data retrieval call binding the contract method 0x72fb5ee6.
+//
+// Solidity: function myUnopenedBoxesLength(address user) view returns(uint256)
+func (_Nft *NftCaller) MyUnopenedBoxesLength(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "myUnopenedBoxesLength", user)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MyUnopenedBoxesLength is a free data retrieval call binding the contract method 0x72fb5ee6.
+//
+// Solidity: function myUnopenedBoxesLength(address user) view returns(uint256)
+func (_Nft *NftSession) MyUnopenedBoxesLength(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.MyUnopenedBoxesLength(&_Nft.CallOpts, user)
+}
+
+// MyUnopenedBoxesLength is a free data retrieval call binding the contract method 0x72fb5ee6.
+//
+// Solidity: function myUnopenedBoxesLength(address user) view returns(uint256)
+func (_Nft *NftCallerSession) MyUnopenedBoxesLength(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.MyUnopenedBoxesLength(&_Nft.CallOpts, user)
+}
+
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
@@ -1431,12 +1662,12 @@ func (_Nft *NftCallerSession) OpenActionTokenIds(arg0 *big.Int) (*big.Int, error
 	return _Nft.Contract.OpenActionTokenIds(&_Nft.CallOpts, arg0)
 }
 
-// OpenActionTokenIdsLength is a free data retrieval call binding the contract method 0x2254472a.
+// OpenFeeBNB is a free data retrieval call binding the contract method 0xcaae60b5.
 //
-// Solidity: function openActionTokenIdsLength() view returns(uint256)
-func (_Nft *NftCaller) OpenActionTokenIdsLength(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function openFeeBNB() view returns(uint256)
+func (_Nft *NftCaller) OpenFeeBNB(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "openActionTokenIdsLength")
+	err := _Nft.contract.Call(opts, &out, "openFeeBNB")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -1448,18 +1679,49 @@ func (_Nft *NftCaller) OpenActionTokenIdsLength(opts *bind.CallOpts) (*big.Int, 
 
 }
 
-// OpenActionTokenIdsLength is a free data retrieval call binding the contract method 0x2254472a.
+// OpenFeeBNB is a free data retrieval call binding the contract method 0xcaae60b5.
 //
-// Solidity: function openActionTokenIdsLength() view returns(uint256)
-func (_Nft *NftSession) OpenActionTokenIdsLength() (*big.Int, error) {
-	return _Nft.Contract.OpenActionTokenIdsLength(&_Nft.CallOpts)
+// Solidity: function openFeeBNB() view returns(uint256)
+func (_Nft *NftSession) OpenFeeBNB() (*big.Int, error) {
+	return _Nft.Contract.OpenFeeBNB(&_Nft.CallOpts)
 }
 
-// OpenActionTokenIdsLength is a free data retrieval call binding the contract method 0x2254472a.
+// OpenFeeBNB is a free data retrieval call binding the contract method 0xcaae60b5.
 //
-// Solidity: function openActionTokenIdsLength() view returns(uint256)
-func (_Nft *NftCallerSession) OpenActionTokenIdsLength() (*big.Int, error) {
-	return _Nft.Contract.OpenActionTokenIdsLength(&_Nft.CallOpts)
+// Solidity: function openFeeBNB() view returns(uint256)
+func (_Nft *NftCallerSession) OpenFeeBNB() (*big.Int, error) {
+	return _Nft.Contract.OpenFeeBNB(&_Nft.CallOpts)
+}
+
+// OpenFeeReceiver is a free data retrieval call binding the contract method 0xa3494545.
+//
+// Solidity: function openFeeReceiver() view returns(address)
+func (_Nft *NftCaller) OpenFeeReceiver(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "openFeeReceiver")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// OpenFeeReceiver is a free data retrieval call binding the contract method 0xa3494545.
+//
+// Solidity: function openFeeReceiver() view returns(address)
+func (_Nft *NftSession) OpenFeeReceiver() (common.Address, error) {
+	return _Nft.Contract.OpenFeeReceiver(&_Nft.CallOpts)
+}
+
+// OpenFeeReceiver is a free data retrieval call binding the contract method 0xa3494545.
+//
+// Solidity: function openFeeReceiver() view returns(address)
+func (_Nft *NftCallerSession) OpenFeeReceiver() (common.Address, error) {
+	return _Nft.Contract.OpenFeeReceiver(&_Nft.CallOpts)
 }
 
 // OpenUsageNow is a free data retrieval call binding the contract method 0x9401f811.
@@ -1546,6 +1808,99 @@ func (_Nft *NftSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
 // Solidity: function ownerOf(uint256 tokenId) view returns(address)
 func (_Nft *NftCallerSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
 	return _Nft.Contract.OwnerOf(&_Nft.CallOpts, tokenId)
+}
+
+// PieceHoldingOf is a free data retrieval call binding the contract method 0xf3613b2c.
+//
+// Solidity: function pieceHoldingOf(address user) view returns(uint256)
+func (_Nft *NftCaller) PieceHoldingOf(opts *bind.CallOpts, user common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "pieceHoldingOf", user)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// PieceHoldingOf is a free data retrieval call binding the contract method 0xf3613b2c.
+//
+// Solidity: function pieceHoldingOf(address user) view returns(uint256)
+func (_Nft *NftSession) PieceHoldingOf(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.PieceHoldingOf(&_Nft.CallOpts, user)
+}
+
+// PieceHoldingOf is a free data retrieval call binding the contract method 0xf3613b2c.
+//
+// Solidity: function pieceHoldingOf(address user) view returns(uint256)
+func (_Nft *NftCallerSession) PieceHoldingOf(user common.Address) (*big.Int, error) {
+	return _Nft.Contract.PieceHoldingOf(&_Nft.CallOpts, user)
+}
+
+// PieceToken is a free data retrieval call binding the contract method 0x55d41692.
+//
+// Solidity: function pieceToken() view returns(address)
+func (_Nft *NftCaller) PieceToken(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "pieceToken")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// PieceToken is a free data retrieval call binding the contract method 0x55d41692.
+//
+// Solidity: function pieceToken() view returns(address)
+func (_Nft *NftSession) PieceToken() (common.Address, error) {
+	return _Nft.Contract.PieceToken(&_Nft.CallOpts)
+}
+
+// PieceToken is a free data retrieval call binding the contract method 0x55d41692.
+//
+// Solidity: function pieceToken() view returns(address)
+func (_Nft *NftCallerSession) PieceToken() (common.Address, error) {
+	return _Nft.Contract.PieceToken(&_Nft.CallOpts)
+}
+
+// PieceValueUsdtE18 is a free data retrieval call binding the contract method 0x84c08e4b.
+//
+// Solidity: function pieceValueUsdtE18() view returns(uint256)
+func (_Nft *NftCaller) PieceValueUsdtE18(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "pieceValueUsdtE18")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// PieceValueUsdtE18 is a free data retrieval call binding the contract method 0x84c08e4b.
+//
+// Solidity: function pieceValueUsdtE18() view returns(uint256)
+func (_Nft *NftSession) PieceValueUsdtE18() (*big.Int, error) {
+	return _Nft.Contract.PieceValueUsdtE18(&_Nft.CallOpts)
+}
+
+// PieceValueUsdtE18 is a free data retrieval call binding the contract method 0x84c08e4b.
+//
+// Solidity: function pieceValueUsdtE18() view returns(uint256)
+func (_Nft *NftCallerSession) PieceValueUsdtE18() (*big.Int, error) {
+	return _Nft.Contract.PieceValueUsdtE18(&_Nft.CallOpts)
 }
 
 // PreviewSlotCost is a free data retrieval call binding the contract method 0xc7abcf9d.
@@ -1655,6 +2010,37 @@ func (_Nft *NftCallerSession) SecondaryBuyPrice(tokenId *big.Int) (*big.Int, err
 	return _Nft.Contract.SecondaryBuyPrice(&_Nft.CallOpts, tokenId)
 }
 
+// SellerSoldTokenIdsLength is a free data retrieval call binding the contract method 0x4dbfd62b.
+//
+// Solidity: function sellerSoldTokenIdsLength(address seller) view returns(uint256)
+func (_Nft *NftCaller) SellerSoldTokenIdsLength(opts *bind.CallOpts, seller common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "sellerSoldTokenIdsLength", seller)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// SellerSoldTokenIdsLength is a free data retrieval call binding the contract method 0x4dbfd62b.
+//
+// Solidity: function sellerSoldTokenIdsLength(address seller) view returns(uint256)
+func (_Nft *NftSession) SellerSoldTokenIdsLength(seller common.Address) (*big.Int, error) {
+	return _Nft.Contract.SellerSoldTokenIdsLength(&_Nft.CallOpts, seller)
+}
+
+// SellerSoldTokenIdsLength is a free data retrieval call binding the contract method 0x4dbfd62b.
+//
+// Solidity: function sellerSoldTokenIdsLength(address seller) view returns(uint256)
+func (_Nft *NftCallerSession) SellerSoldTokenIdsLength(seller common.Address) (*big.Int, error) {
+	return _Nft.Contract.SellerSoldTokenIdsLength(&_Nft.CallOpts, seller)
+}
+
 // SlotStepForUser is a free data retrieval call binding the contract method 0x29dd4d4f.
 //
 // Solidity: function slotStepForUser(address user) view returns(uint256)
@@ -1684,6 +2070,37 @@ func (_Nft *NftSession) SlotStepForUser(user common.Address) (*big.Int, error) {
 // Solidity: function slotStepForUser(address user) view returns(uint256)
 func (_Nft *NftCallerSession) SlotStepForUser(user common.Address) (*big.Int, error) {
 	return _Nft.Contract.SlotStepForUser(&_Nft.CallOpts, user)
+}
+
+// StakingContract is a free data retrieval call binding the contract method 0xee99205c.
+//
+// Solidity: function stakingContract() view returns(address)
+func (_Nft *NftCaller) StakingContract(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "stakingContract")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// StakingContract is a free data retrieval call binding the contract method 0xee99205c.
+//
+// Solidity: function stakingContract() view returns(address)
+func (_Nft *NftSession) StakingContract() (common.Address, error) {
+	return _Nft.Contract.StakingContract(&_Nft.CallOpts)
+}
+
+// StakingContract is a free data retrieval call binding the contract method 0xee99205c.
+//
+// Solidity: function stakingContract() view returns(address)
+func (_Nft *NftCallerSession) StakingContract() (common.Address, error) {
+	return _Nft.Contract.StakingContract(&_Nft.CallOpts)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
@@ -1810,6 +2227,37 @@ func (_Nft *NftCallerSession) TokenByIndex(index *big.Int) (*big.Int, error) {
 	return _Nft.Contract.TokenByIndex(&_Nft.CallOpts, index)
 }
 
+// TokenMonthlyRateE18 is a free data retrieval call binding the contract method 0xba32dff1.
+//
+// Solidity: function tokenMonthlyRateE18(uint256 ) view returns(uint256)
+func (_Nft *NftCaller) TokenMonthlyRateE18(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _Nft.contract.Call(opts, &out, "tokenMonthlyRateE18", arg0)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// TokenMonthlyRateE18 is a free data retrieval call binding the contract method 0xba32dff1.
+//
+// Solidity: function tokenMonthlyRateE18(uint256 ) view returns(uint256)
+func (_Nft *NftSession) TokenMonthlyRateE18(arg0 *big.Int) (*big.Int, error) {
+	return _Nft.Contract.TokenMonthlyRateE18(&_Nft.CallOpts, arg0)
+}
+
+// TokenMonthlyRateE18 is a free data retrieval call binding the contract method 0xba32dff1.
+//
+// Solidity: function tokenMonthlyRateE18(uint256 ) view returns(uint256)
+func (_Nft *NftCallerSession) TokenMonthlyRateE18(arg0 *big.Int) (*big.Int, error) {
+	return _Nft.Contract.TokenMonthlyRateE18(&_Nft.CallOpts, arg0)
+}
+
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
 // Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
@@ -1870,37 +2318,6 @@ func (_Nft *NftSession) TokenURI(tokenId *big.Int) (string, error) {
 // Solidity: function tokenURI(uint256 tokenId) view returns(string)
 func (_Nft *NftCallerSession) TokenURI(tokenId *big.Int) (string, error) {
 	return _Nft.Contract.TokenURI(&_Nft.CallOpts, tokenId)
-}
-
-// TokensOfOwner is a free data retrieval call binding the contract method 0x8462151c.
-//
-// Solidity: function tokensOfOwner(address owner) view returns(uint256[] ids)
-func (_Nft *NftCaller) TokensOfOwner(opts *bind.CallOpts, owner common.Address) ([]*big.Int, error) {
-	var out []interface{}
-	err := _Nft.contract.Call(opts, &out, "tokensOfOwner", owner)
-
-	if err != nil {
-		return *new([]*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
-
-	return out0, err
-
-}
-
-// TokensOfOwner is a free data retrieval call binding the contract method 0x8462151c.
-//
-// Solidity: function tokensOfOwner(address owner) view returns(uint256[] ids)
-func (_Nft *NftSession) TokensOfOwner(owner common.Address) ([]*big.Int, error) {
-	return _Nft.Contract.TokensOfOwner(&_Nft.CallOpts, owner)
-}
-
-// TokensOfOwner is a free data retrieval call binding the contract method 0x8462151c.
-//
-// Solidity: function tokensOfOwner(address owner) view returns(uint256[] ids)
-func (_Nft *NftCallerSession) TokensOfOwner(owner common.Address) ([]*big.Int, error) {
-	return _Nft.Contract.TokensOfOwner(&_Nft.CallOpts, owner)
 }
 
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
@@ -2017,6 +2434,48 @@ func (_Nft *NftTransactorSession) Approve(to common.Address, tokenId *big.Int) (
 	return _Nft.Contract.Approve(&_Nft.TransactOpts, to, tokenId)
 }
 
+// BurnAfterReward is a paid mutator transaction binding the contract method 0xf8b85ec3.
+//
+// Solidity: function burnAfterReward(uint256 tokenId) returns()
+func (_Nft *NftTransactor) BurnAfterReward(opts *bind.TransactOpts, tokenId *big.Int) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "burnAfterReward", tokenId)
+}
+
+// BurnAfterReward is a paid mutator transaction binding the contract method 0xf8b85ec3.
+//
+// Solidity: function burnAfterReward(uint256 tokenId) returns()
+func (_Nft *NftSession) BurnAfterReward(tokenId *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.BurnAfterReward(&_Nft.TransactOpts, tokenId)
+}
+
+// BurnAfterReward is a paid mutator transaction binding the contract method 0xf8b85ec3.
+//
+// Solidity: function burnAfterReward(uint256 tokenId) returns()
+func (_Nft *NftTransactorSession) BurnAfterReward(tokenId *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.BurnAfterReward(&_Nft.TransactOpts, tokenId)
+}
+
+// BurnAfterRewardBatch is a paid mutator transaction binding the contract method 0x4cbecef0.
+//
+// Solidity: function burnAfterRewardBatch(uint256[] tokenIds) returns()
+func (_Nft *NftTransactor) BurnAfterRewardBatch(opts *bind.TransactOpts, tokenIds []*big.Int) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "burnAfterRewardBatch", tokenIds)
+}
+
+// BurnAfterRewardBatch is a paid mutator transaction binding the contract method 0x4cbecef0.
+//
+// Solidity: function burnAfterRewardBatch(uint256[] tokenIds) returns()
+func (_Nft *NftSession) BurnAfterRewardBatch(tokenIds []*big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.BurnAfterRewardBatch(&_Nft.TransactOpts, tokenIds)
+}
+
+// BurnAfterRewardBatch is a paid mutator transaction binding the contract method 0x4cbecef0.
+//
+// Solidity: function burnAfterRewardBatch(uint256[] tokenIds) returns()
+func (_Nft *NftTransactorSession) BurnAfterRewardBatch(tokenIds []*big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.BurnAfterRewardBatch(&_Nft.TransactOpts, tokenIds)
+}
+
 // BuyOpenSlots is a paid mutator transaction binding the contract method 0xfd73eb41.
 //
 // Solidity: function buyOpenSlots(uint256 count) returns()
@@ -2101,6 +2560,27 @@ func (_Nft *NftTransactorSession) GrantRole(role [32]byte, account common.Addres
 	return _Nft.Contract.GrantRole(&_Nft.TransactOpts, role, account)
 }
 
+// HoldingAdd is a paid mutator transaction binding the contract method 0xbea1d461.
+//
+// Solidity: function holdingAdd(address user, uint256 burnAmount) returns()
+func (_Nft *NftTransactor) HoldingAdd(opts *bind.TransactOpts, user common.Address, burnAmount *big.Int) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "holdingAdd", user, burnAmount)
+}
+
+// HoldingAdd is a paid mutator transaction binding the contract method 0xbea1d461.
+//
+// Solidity: function holdingAdd(address user, uint256 burnAmount) returns()
+func (_Nft *NftSession) HoldingAdd(user common.Address, burnAmount *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.HoldingAdd(&_Nft.TransactOpts, user, burnAmount)
+}
+
+// HoldingAdd is a paid mutator transaction binding the contract method 0xbea1d461.
+//
+// Solidity: function holdingAdd(address user, uint256 burnAmount) returns()
+func (_Nft *NftTransactorSession) HoldingAdd(user common.Address, burnAmount *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.HoldingAdd(&_Nft.TransactOpts, user, burnAmount)
+}
+
 // List is a paid mutator transaction binding the contract method 0x80c9419e.
 //
 // Solidity: function list(uint256 tokenId) returns()
@@ -2164,44 +2644,23 @@ func (_Nft *NftTransactorSession) MintBatch(tier uint8, quantity *big.Int) (*typ
 	return _Nft.Contract.MintBatch(&_Nft.TransactOpts, tier, quantity)
 }
 
-// MintBatchWithTiers is a paid mutator transaction binding the contract method 0xc2e12a39.
-//
-// Solidity: function mintBatchWithTiers(uint8[] tiers) returns(uint256[] tokenIds)
-func (_Nft *NftTransactor) MintBatchWithTiers(opts *bind.TransactOpts, tiers []uint8) (*types.Transaction, error) {
-	return _Nft.contract.Transact(opts, "mintBatchWithTiers", tiers)
-}
-
-// MintBatchWithTiers is a paid mutator transaction binding the contract method 0xc2e12a39.
-//
-// Solidity: function mintBatchWithTiers(uint8[] tiers) returns(uint256[] tokenIds)
-func (_Nft *NftSession) MintBatchWithTiers(tiers []uint8) (*types.Transaction, error) {
-	return _Nft.Contract.MintBatchWithTiers(&_Nft.TransactOpts, tiers)
-}
-
-// MintBatchWithTiers is a paid mutator transaction binding the contract method 0xc2e12a39.
-//
-// Solidity: function mintBatchWithTiers(uint8[] tiers) returns(uint256[] tokenIds)
-func (_Nft *NftTransactorSession) MintBatchWithTiers(tiers []uint8) (*types.Transaction, error) {
-	return _Nft.Contract.MintBatchWithTiers(&_Nft.TransactOpts, tiers)
-}
-
 // OpenBox is a paid mutator transaction binding the contract method 0xb1e5e2b7.
 //
-// Solidity: function openBox(uint256 tokenId) returns()
+// Solidity: function openBox(uint256 tokenId) payable returns()
 func (_Nft *NftTransactor) OpenBox(opts *bind.TransactOpts, tokenId *big.Int) (*types.Transaction, error) {
 	return _Nft.contract.Transact(opts, "openBox", tokenId)
 }
 
 // OpenBox is a paid mutator transaction binding the contract method 0xb1e5e2b7.
 //
-// Solidity: function openBox(uint256 tokenId) returns()
+// Solidity: function openBox(uint256 tokenId) payable returns()
 func (_Nft *NftSession) OpenBox(tokenId *big.Int) (*types.Transaction, error) {
 	return _Nft.Contract.OpenBox(&_Nft.TransactOpts, tokenId)
 }
 
 // OpenBox is a paid mutator transaction binding the contract method 0xb1e5e2b7.
 //
-// Solidity: function openBox(uint256 tokenId) returns()
+// Solidity: function openBox(uint256 tokenId) payable returns()
 func (_Nft *NftTransactorSession) OpenBox(tokenId *big.Int) (*types.Transaction, error) {
 	return _Nft.Contract.OpenBox(&_Nft.TransactOpts, tokenId)
 }
@@ -2437,6 +2896,132 @@ func (_Nft *NftTransactorSession) SetGlobalSlotStepCost(newCost *big.Int) (*type
 	return _Nft.Contract.SetGlobalSlotStepCost(&_Nft.TransactOpts, newCost)
 }
 
+// SetOpenFeeBNB is a paid mutator transaction binding the contract method 0x775859d0.
+//
+// Solidity: function setOpenFeeBNB(uint256 feeWei) returns()
+func (_Nft *NftTransactor) SetOpenFeeBNB(opts *bind.TransactOpts, feeWei *big.Int) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setOpenFeeBNB", feeWei)
+}
+
+// SetOpenFeeBNB is a paid mutator transaction binding the contract method 0x775859d0.
+//
+// Solidity: function setOpenFeeBNB(uint256 feeWei) returns()
+func (_Nft *NftSession) SetOpenFeeBNB(feeWei *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.SetOpenFeeBNB(&_Nft.TransactOpts, feeWei)
+}
+
+// SetOpenFeeBNB is a paid mutator transaction binding the contract method 0x775859d0.
+//
+// Solidity: function setOpenFeeBNB(uint256 feeWei) returns()
+func (_Nft *NftTransactorSession) SetOpenFeeBNB(feeWei *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.SetOpenFeeBNB(&_Nft.TransactOpts, feeWei)
+}
+
+// SetOpenFeeConfig is a paid mutator transaction binding the contract method 0x12b811fa.
+//
+// Solidity: function setOpenFeeConfig(uint256 feeWei, address receiver) returns()
+func (_Nft *NftTransactor) SetOpenFeeConfig(opts *bind.TransactOpts, feeWei *big.Int, receiver common.Address) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setOpenFeeConfig", feeWei, receiver)
+}
+
+// SetOpenFeeConfig is a paid mutator transaction binding the contract method 0x12b811fa.
+//
+// Solidity: function setOpenFeeConfig(uint256 feeWei, address receiver) returns()
+func (_Nft *NftSession) SetOpenFeeConfig(feeWei *big.Int, receiver common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetOpenFeeConfig(&_Nft.TransactOpts, feeWei, receiver)
+}
+
+// SetOpenFeeConfig is a paid mutator transaction binding the contract method 0x12b811fa.
+//
+// Solidity: function setOpenFeeConfig(uint256 feeWei, address receiver) returns()
+func (_Nft *NftTransactorSession) SetOpenFeeConfig(feeWei *big.Int, receiver common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetOpenFeeConfig(&_Nft.TransactOpts, feeWei, receiver)
+}
+
+// SetOpenFeeReceiver is a paid mutator transaction binding the contract method 0xd59d8dd2.
+//
+// Solidity: function setOpenFeeReceiver(address receiver) returns()
+func (_Nft *NftTransactor) SetOpenFeeReceiver(opts *bind.TransactOpts, receiver common.Address) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setOpenFeeReceiver", receiver)
+}
+
+// SetOpenFeeReceiver is a paid mutator transaction binding the contract method 0xd59d8dd2.
+//
+// Solidity: function setOpenFeeReceiver(address receiver) returns()
+func (_Nft *NftSession) SetOpenFeeReceiver(receiver common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetOpenFeeReceiver(&_Nft.TransactOpts, receiver)
+}
+
+// SetOpenFeeReceiver is a paid mutator transaction binding the contract method 0xd59d8dd2.
+//
+// Solidity: function setOpenFeeReceiver(address receiver) returns()
+func (_Nft *NftTransactorSession) SetOpenFeeReceiver(receiver common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetOpenFeeReceiver(&_Nft.TransactOpts, receiver)
+}
+
+// SetParams is a paid mutator transaction binding the contract method 0x5a0ce676.
+//
+// Solidity: function setParams(uint256 denom, uint256 aFeeBps, uint256 monthlyRateDefault) returns()
+func (_Nft *NftTransactor) SetParams(opts *bind.TransactOpts, denom *big.Int, aFeeBps *big.Int, monthlyRateDefault *big.Int) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setParams", denom, aFeeBps, monthlyRateDefault)
+}
+
+// SetParams is a paid mutator transaction binding the contract method 0x5a0ce676.
+//
+// Solidity: function setParams(uint256 denom, uint256 aFeeBps, uint256 monthlyRateDefault) returns()
+func (_Nft *NftSession) SetParams(denom *big.Int, aFeeBps *big.Int, monthlyRateDefault *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.SetParams(&_Nft.TransactOpts, denom, aFeeBps, monthlyRateDefault)
+}
+
+// SetParams is a paid mutator transaction binding the contract method 0x5a0ce676.
+//
+// Solidity: function setParams(uint256 denom, uint256 aFeeBps, uint256 monthlyRateDefault) returns()
+func (_Nft *NftTransactorSession) SetParams(denom *big.Int, aFeeBps *big.Int, monthlyRateDefault *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.SetParams(&_Nft.TransactOpts, denom, aFeeBps, monthlyRateDefault)
+}
+
+// SetPieceToken is a paid mutator transaction binding the contract method 0x6ef54d1e.
+//
+// Solidity: function setPieceToken(address newPiece) returns()
+func (_Nft *NftTransactor) SetPieceToken(opts *bind.TransactOpts, newPiece common.Address) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setPieceToken", newPiece)
+}
+
+// SetPieceToken is a paid mutator transaction binding the contract method 0x6ef54d1e.
+//
+// Solidity: function setPieceToken(address newPiece) returns()
+func (_Nft *NftSession) SetPieceToken(newPiece common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetPieceToken(&_Nft.TransactOpts, newPiece)
+}
+
+// SetPieceToken is a paid mutator transaction binding the contract method 0x6ef54d1e.
+//
+// Solidity: function setPieceToken(address newPiece) returns()
+func (_Nft *NftTransactorSession) SetPieceToken(newPiece common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetPieceToken(&_Nft.TransactOpts, newPiece)
+}
+
+// SetPieceValueUsdtE18 is a paid mutator transaction binding the contract method 0x013e5afc.
+//
+// Solidity: function setPieceValueUsdtE18(uint256 newValueUsdtE18) returns()
+func (_Nft *NftTransactor) SetPieceValueUsdtE18(opts *bind.TransactOpts, newValueUsdtE18 *big.Int) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setPieceValueUsdtE18", newValueUsdtE18)
+}
+
+// SetPieceValueUsdtE18 is a paid mutator transaction binding the contract method 0x013e5afc.
+//
+// Solidity: function setPieceValueUsdtE18(uint256 newValueUsdtE18) returns()
+func (_Nft *NftSession) SetPieceValueUsdtE18(newValueUsdtE18 *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.SetPieceValueUsdtE18(&_Nft.TransactOpts, newValueUsdtE18)
+}
+
+// SetPieceValueUsdtE18 is a paid mutator transaction binding the contract method 0x013e5afc.
+//
+// Solidity: function setPieceValueUsdtE18(uint256 newValueUsdtE18) returns()
+func (_Nft *NftTransactorSession) SetPieceValueUsdtE18(newValueUsdtE18 *big.Int) (*types.Transaction, error) {
+	return _Nft.Contract.SetPieceValueUsdtE18(&_Nft.TransactOpts, newValueUsdtE18)
+}
+
 // SetRewardOnce is a paid mutator transaction binding the contract method 0xe78d18e4.
 //
 // Solidity: function setRewardOnce(uint256 tokenId, int256 reward_) returns()
@@ -2456,6 +3041,27 @@ func (_Nft *NftSession) SetRewardOnce(tokenId *big.Int, reward_ *big.Int) (*type
 // Solidity: function setRewardOnce(uint256 tokenId, int256 reward_) returns()
 func (_Nft *NftTransactorSession) SetRewardOnce(tokenId *big.Int, reward_ *big.Int) (*types.Transaction, error) {
 	return _Nft.Contract.SetRewardOnce(&_Nft.TransactOpts, tokenId, reward_)
+}
+
+// SetStakingContract is a paid mutator transaction binding the contract method 0x9dd373b9.
+//
+// Solidity: function setStakingContract(address newStaking) returns()
+func (_Nft *NftTransactor) SetStakingContract(opts *bind.TransactOpts, newStaking common.Address) (*types.Transaction, error) {
+	return _Nft.contract.Transact(opts, "setStakingContract", newStaking)
+}
+
+// SetStakingContract is a paid mutator transaction binding the contract method 0x9dd373b9.
+//
+// Solidity: function setStakingContract(address newStaking) returns()
+func (_Nft *NftSession) SetStakingContract(newStaking common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetStakingContract(&_Nft.TransactOpts, newStaking)
+}
+
+// SetStakingContract is a paid mutator transaction binding the contract method 0x9dd373b9.
+//
+// Solidity: function setStakingContract(address newStaking) returns()
+func (_Nft *NftTransactorSession) SetStakingContract(newStaking common.Address) (*types.Transaction, error) {
+	return _Nft.Contract.SetStakingContract(&_Nft.TransactOpts, newStaking)
 }
 
 // SetTierPrice is a paid mutator transaction binding the contract method 0x4a5c6f8c.
@@ -3158,6 +3764,160 @@ func (_Nft *NftFilterer) WatchApprovalForAll(opts *bind.WatchOpts, sink chan<- *
 func (_Nft *NftFilterer) ParseApprovalForAll(log types.Log) (*NftApprovalForAll, error) {
 	event := new(NftApprovalForAll)
 	if err := _Nft.contract.UnpackLog(event, "ApprovalForAll", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NftBurnedIterator is returned from FilterBurned and is used to iterate over the raw logs and unpacked data for Burned events raised by the Nft contract.
+type NftBurnedIterator struct {
+	Event *NftBurned // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftBurnedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftBurned)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftBurned)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftBurnedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftBurnedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftBurned represents a Burned event raised by the Nft contract.
+type NftBurned struct {
+	Owner     common.Address
+	TokenId   *big.Int
+	Timestamp *big.Int
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterBurned is a free log retrieval operation binding the contract event 0x23ff0e75edf108e3d0392d92e13e8c8a868ef19001bd49f9e94876dc46dff87f.
+//
+// Solidity: event Burned(address indexed owner, uint256 indexed tokenId, uint256 timestamp)
+func (_Nft *NftFilterer) FilterBurned(opts *bind.FilterOpts, owner []common.Address, tokenId []*big.Int) (*NftBurnedIterator, error) {
+
+	var ownerRule []interface{}
+	for _, ownerItem := range owner {
+		ownerRule = append(ownerRule, ownerItem)
+	}
+	var tokenIdRule []interface{}
+	for _, tokenIdItem := range tokenId {
+		tokenIdRule = append(tokenIdRule, tokenIdItem)
+	}
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "Burned", ownerRule, tokenIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &NftBurnedIterator{contract: _Nft.contract, event: "Burned", logs: logs, sub: sub}, nil
+}
+
+// WatchBurned is a free log subscription operation binding the contract event 0x23ff0e75edf108e3d0392d92e13e8c8a868ef19001bd49f9e94876dc46dff87f.
+//
+// Solidity: event Burned(address indexed owner, uint256 indexed tokenId, uint256 timestamp)
+func (_Nft *NftFilterer) WatchBurned(opts *bind.WatchOpts, sink chan<- *NftBurned, owner []common.Address, tokenId []*big.Int) (event.Subscription, error) {
+
+	var ownerRule []interface{}
+	for _, ownerItem := range owner {
+		ownerRule = append(ownerRule, ownerItem)
+	}
+	var tokenIdRule []interface{}
+	for _, tokenIdItem := range tokenId {
+		tokenIdRule = append(tokenIdRule, tokenIdItem)
+	}
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "Burned", ownerRule, tokenIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftBurned)
+				if err := _Nft.contract.UnpackLog(event, "Burned", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseBurned is a log parse operation binding the contract event 0x23ff0e75edf108e3d0392d92e13e8c8a868ef19001bd49f9e94876dc46dff87f.
+//
+// Solidity: event Burned(address indexed owner, uint256 indexed tokenId, uint256 timestamp)
+func (_Nft *NftFilterer) ParseBurned(log types.Log) (*NftBurned, error) {
+	event := new(NftBurned)
+	if err := _Nft.contract.UnpackLog(event, "Burned", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -4193,6 +4953,141 @@ func (_Nft *NftFilterer) ParseMinted(log types.Log) (*NftMinted, error) {
 	return event, nil
 }
 
+// NftOpenFeeConfigChangedIterator is returned from FilterOpenFeeConfigChanged and is used to iterate over the raw logs and unpacked data for OpenFeeConfigChanged events raised by the Nft contract.
+type NftOpenFeeConfigChangedIterator struct {
+	Event *NftOpenFeeConfigChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftOpenFeeConfigChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftOpenFeeConfigChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftOpenFeeConfigChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftOpenFeeConfigChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftOpenFeeConfigChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftOpenFeeConfigChanged represents a OpenFeeConfigChanged event raised by the Nft contract.
+type NftOpenFeeConfigChanged struct {
+	OpenFeeBNB      *big.Int
+	OpenFeeReceiver common.Address
+	Raw             types.Log // Blockchain specific contextual infos
+}
+
+// FilterOpenFeeConfigChanged is a free log retrieval operation binding the contract event 0xe0e59605d0066759eb9ef5a7d5c286244c870fb42449cbcefb448d2836899a95.
+//
+// Solidity: event OpenFeeConfigChanged(uint256 openFeeBNB, address openFeeReceiver)
+func (_Nft *NftFilterer) FilterOpenFeeConfigChanged(opts *bind.FilterOpts) (*NftOpenFeeConfigChangedIterator, error) {
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "OpenFeeConfigChanged")
+	if err != nil {
+		return nil, err
+	}
+	return &NftOpenFeeConfigChangedIterator{contract: _Nft.contract, event: "OpenFeeConfigChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchOpenFeeConfigChanged is a free log subscription operation binding the contract event 0xe0e59605d0066759eb9ef5a7d5c286244c870fb42449cbcefb448d2836899a95.
+//
+// Solidity: event OpenFeeConfigChanged(uint256 openFeeBNB, address openFeeReceiver)
+func (_Nft *NftFilterer) WatchOpenFeeConfigChanged(opts *bind.WatchOpts, sink chan<- *NftOpenFeeConfigChanged) (event.Subscription, error) {
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "OpenFeeConfigChanged")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftOpenFeeConfigChanged)
+				if err := _Nft.contract.UnpackLog(event, "OpenFeeConfigChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseOpenFeeConfigChanged is a log parse operation binding the contract event 0xe0e59605d0066759eb9ef5a7d5c286244c870fb42449cbcefb448d2836899a95.
+//
+// Solidity: event OpenFeeConfigChanged(uint256 openFeeBNB, address openFeeReceiver)
+func (_Nft *NftFilterer) ParseOpenFeeConfigChanged(log types.Log) (*NftOpenFeeConfigChanged, error) {
+	event := new(NftOpenFeeConfigChanged)
+	if err := _Nft.contract.UnpackLog(event, "OpenFeeConfigChanged", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // NftOpenedIterator is returned from FilterOpened and is used to iterate over the raw logs and unpacked data for Opened events raised by the Nft contract.
 type NftOpenedIterator struct {
 	Event *NftOpened // Event containing the contract specifics and raw log
@@ -4265,12 +5160,13 @@ type NftOpened struct {
 	Owner     common.Address
 	TokenId   *big.Int
 	Timestamp *big.Int
+	BnbPaid   *big.Int
 	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterOpened is a free log retrieval operation binding the contract event 0x0e00eb3434eeed137478dadba5581f87fdda6f16b438d9d1b616b24093bfbb42.
+// FilterOpened is a free log retrieval operation binding the contract event 0x1ae84d4a14bea8146749d9831e35557d4318d019c88ef77238907396f34fb38e.
 //
-// Solidity: event Opened(address indexed owner, uint256 indexed tokenId, uint256 timestamp)
+// Solidity: event Opened(address indexed owner, uint256 indexed tokenId, uint256 timestamp, uint256 bnbPaid)
 func (_Nft *NftFilterer) FilterOpened(opts *bind.FilterOpts, owner []common.Address, tokenId []*big.Int) (*NftOpenedIterator, error) {
 
 	var ownerRule []interface{}
@@ -4289,9 +5185,9 @@ func (_Nft *NftFilterer) FilterOpened(opts *bind.FilterOpts, owner []common.Addr
 	return &NftOpenedIterator{contract: _Nft.contract, event: "Opened", logs: logs, sub: sub}, nil
 }
 
-// WatchOpened is a free log subscription operation binding the contract event 0x0e00eb3434eeed137478dadba5581f87fdda6f16b438d9d1b616b24093bfbb42.
+// WatchOpened is a free log subscription operation binding the contract event 0x1ae84d4a14bea8146749d9831e35557d4318d019c88ef77238907396f34fb38e.
 //
-// Solidity: event Opened(address indexed owner, uint256 indexed tokenId, uint256 timestamp)
+// Solidity: event Opened(address indexed owner, uint256 indexed tokenId, uint256 timestamp, uint256 bnbPaid)
 func (_Nft *NftFilterer) WatchOpened(opts *bind.WatchOpts, sink chan<- *NftOpened, owner []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var ownerRule []interface{}
@@ -4335,12 +5231,583 @@ func (_Nft *NftFilterer) WatchOpened(opts *bind.WatchOpts, sink chan<- *NftOpene
 	}), nil
 }
 
-// ParseOpened is a log parse operation binding the contract event 0x0e00eb3434eeed137478dadba5581f87fdda6f16b438d9d1b616b24093bfbb42.
+// ParseOpened is a log parse operation binding the contract event 0x1ae84d4a14bea8146749d9831e35557d4318d019c88ef77238907396f34fb38e.
 //
-// Solidity: event Opened(address indexed owner, uint256 indexed tokenId, uint256 timestamp)
+// Solidity: event Opened(address indexed owner, uint256 indexed tokenId, uint256 timestamp, uint256 bnbPaid)
 func (_Nft *NftFilterer) ParseOpened(log types.Log) (*NftOpened, error) {
 	event := new(NftOpened)
 	if err := _Nft.contract.UnpackLog(event, "Opened", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NftParamsChangedIterator is returned from FilterParamsChanged and is used to iterate over the raw logs and unpacked data for ParamsChanged events raised by the Nft contract.
+type NftParamsChangedIterator struct {
+	Event *NftParamsChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftParamsChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftParamsChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftParamsChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftParamsChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftParamsChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftParamsChanged represents a ParamsChanged event raised by the Nft contract.
+type NftParamsChanged struct {
+	BpsDenominator        *big.Int
+	AccountAFeeBps        *big.Int
+	MonthlyRateDefaultE18 *big.Int
+	Raw                   types.Log // Blockchain specific contextual infos
+}
+
+// FilterParamsChanged is a free log retrieval operation binding the contract event 0xc67740ec6b8e01e85235967c5031201015f6bc252124415197f443c6d48a2a8f.
+//
+// Solidity: event ParamsChanged(uint256 bpsDenominator, uint256 accountAFeeBps, uint256 monthlyRateDefaultE18)
+func (_Nft *NftFilterer) FilterParamsChanged(opts *bind.FilterOpts) (*NftParamsChangedIterator, error) {
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "ParamsChanged")
+	if err != nil {
+		return nil, err
+	}
+	return &NftParamsChangedIterator{contract: _Nft.contract, event: "ParamsChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchParamsChanged is a free log subscription operation binding the contract event 0xc67740ec6b8e01e85235967c5031201015f6bc252124415197f443c6d48a2a8f.
+//
+// Solidity: event ParamsChanged(uint256 bpsDenominator, uint256 accountAFeeBps, uint256 monthlyRateDefaultE18)
+func (_Nft *NftFilterer) WatchParamsChanged(opts *bind.WatchOpts, sink chan<- *NftParamsChanged) (event.Subscription, error) {
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "ParamsChanged")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftParamsChanged)
+				if err := _Nft.contract.UnpackLog(event, "ParamsChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseParamsChanged is a log parse operation binding the contract event 0xc67740ec6b8e01e85235967c5031201015f6bc252124415197f443c6d48a2a8f.
+//
+// Solidity: event ParamsChanged(uint256 bpsDenominator, uint256 accountAFeeBps, uint256 monthlyRateDefaultE18)
+func (_Nft *NftFilterer) ParseParamsChanged(log types.Log) (*NftParamsChanged, error) {
+	event := new(NftParamsChanged)
+	if err := _Nft.contract.UnpackLog(event, "ParamsChanged", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NftPieceHoldingAddedIterator is returned from FilterPieceHoldingAdded and is used to iterate over the raw logs and unpacked data for PieceHoldingAdded events raised by the Nft contract.
+type NftPieceHoldingAddedIterator struct {
+	Event *NftPieceHoldingAdded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftPieceHoldingAddedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftPieceHoldingAdded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftPieceHoldingAdded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftPieceHoldingAddedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftPieceHoldingAddedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftPieceHoldingAdded represents a PieceHoldingAdded event raised by the Nft contract.
+type NftPieceHoldingAdded struct {
+	User                 common.Address
+	BurnAmount           *big.Int
+	ValueAddedUsdt       *big.Int
+	NewPieceHoldingValue *big.Int
+	Raw                  types.Log // Blockchain specific contextual infos
+}
+
+// FilterPieceHoldingAdded is a free log retrieval operation binding the contract event 0x170bb387490bfead43cc0280c4cc0b6cc8c32e3e1e91b40645b000933d547b1c.
+//
+// Solidity: event PieceHoldingAdded(address indexed user, uint256 burnAmount, uint256 valueAddedUsdt, uint256 newPieceHoldingValue)
+func (_Nft *NftFilterer) FilterPieceHoldingAdded(opts *bind.FilterOpts, user []common.Address) (*NftPieceHoldingAddedIterator, error) {
+
+	var userRule []interface{}
+	for _, userItem := range user {
+		userRule = append(userRule, userItem)
+	}
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "PieceHoldingAdded", userRule)
+	if err != nil {
+		return nil, err
+	}
+	return &NftPieceHoldingAddedIterator{contract: _Nft.contract, event: "PieceHoldingAdded", logs: logs, sub: sub}, nil
+}
+
+// WatchPieceHoldingAdded is a free log subscription operation binding the contract event 0x170bb387490bfead43cc0280c4cc0b6cc8c32e3e1e91b40645b000933d547b1c.
+//
+// Solidity: event PieceHoldingAdded(address indexed user, uint256 burnAmount, uint256 valueAddedUsdt, uint256 newPieceHoldingValue)
+func (_Nft *NftFilterer) WatchPieceHoldingAdded(opts *bind.WatchOpts, sink chan<- *NftPieceHoldingAdded, user []common.Address) (event.Subscription, error) {
+
+	var userRule []interface{}
+	for _, userItem := range user {
+		userRule = append(userRule, userItem)
+	}
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "PieceHoldingAdded", userRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftPieceHoldingAdded)
+				if err := _Nft.contract.UnpackLog(event, "PieceHoldingAdded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParsePieceHoldingAdded is a log parse operation binding the contract event 0x170bb387490bfead43cc0280c4cc0b6cc8c32e3e1e91b40645b000933d547b1c.
+//
+// Solidity: event PieceHoldingAdded(address indexed user, uint256 burnAmount, uint256 valueAddedUsdt, uint256 newPieceHoldingValue)
+func (_Nft *NftFilterer) ParsePieceHoldingAdded(log types.Log) (*NftPieceHoldingAdded, error) {
+	event := new(NftPieceHoldingAdded)
+	if err := _Nft.contract.UnpackLog(event, "PieceHoldingAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NftPieceTokenChangedIterator is returned from FilterPieceTokenChanged and is used to iterate over the raw logs and unpacked data for PieceTokenChanged events raised by the Nft contract.
+type NftPieceTokenChangedIterator struct {
+	Event *NftPieceTokenChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftPieceTokenChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftPieceTokenChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftPieceTokenChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftPieceTokenChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftPieceTokenChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftPieceTokenChanged represents a PieceTokenChanged event raised by the Nft contract.
+type NftPieceTokenChanged struct {
+	OldPiece common.Address
+	NewPiece common.Address
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterPieceTokenChanged is a free log retrieval operation binding the contract event 0x03bc23adb4580907fc84238351b8c9a1079e0e17f10e83910b2ab2591b0b7831.
+//
+// Solidity: event PieceTokenChanged(address indexed oldPiece, address indexed newPiece)
+func (_Nft *NftFilterer) FilterPieceTokenChanged(opts *bind.FilterOpts, oldPiece []common.Address, newPiece []common.Address) (*NftPieceTokenChangedIterator, error) {
+
+	var oldPieceRule []interface{}
+	for _, oldPieceItem := range oldPiece {
+		oldPieceRule = append(oldPieceRule, oldPieceItem)
+	}
+	var newPieceRule []interface{}
+	for _, newPieceItem := range newPiece {
+		newPieceRule = append(newPieceRule, newPieceItem)
+	}
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "PieceTokenChanged", oldPieceRule, newPieceRule)
+	if err != nil {
+		return nil, err
+	}
+	return &NftPieceTokenChangedIterator{contract: _Nft.contract, event: "PieceTokenChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchPieceTokenChanged is a free log subscription operation binding the contract event 0x03bc23adb4580907fc84238351b8c9a1079e0e17f10e83910b2ab2591b0b7831.
+//
+// Solidity: event PieceTokenChanged(address indexed oldPiece, address indexed newPiece)
+func (_Nft *NftFilterer) WatchPieceTokenChanged(opts *bind.WatchOpts, sink chan<- *NftPieceTokenChanged, oldPiece []common.Address, newPiece []common.Address) (event.Subscription, error) {
+
+	var oldPieceRule []interface{}
+	for _, oldPieceItem := range oldPiece {
+		oldPieceRule = append(oldPieceRule, oldPieceItem)
+	}
+	var newPieceRule []interface{}
+	for _, newPieceItem := range newPiece {
+		newPieceRule = append(newPieceRule, newPieceItem)
+	}
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "PieceTokenChanged", oldPieceRule, newPieceRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftPieceTokenChanged)
+				if err := _Nft.contract.UnpackLog(event, "PieceTokenChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParsePieceTokenChanged is a log parse operation binding the contract event 0x03bc23adb4580907fc84238351b8c9a1079e0e17f10e83910b2ab2591b0b7831.
+//
+// Solidity: event PieceTokenChanged(address indexed oldPiece, address indexed newPiece)
+func (_Nft *NftFilterer) ParsePieceTokenChanged(log types.Log) (*NftPieceTokenChanged, error) {
+	event := new(NftPieceTokenChanged)
+	if err := _Nft.contract.UnpackLog(event, "PieceTokenChanged", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NftPieceValueChangedIterator is returned from FilterPieceValueChanged and is used to iterate over the raw logs and unpacked data for PieceValueChanged events raised by the Nft contract.
+type NftPieceValueChangedIterator struct {
+	Event *NftPieceValueChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftPieceValueChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftPieceValueChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftPieceValueChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftPieceValueChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftPieceValueChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftPieceValueChanged represents a PieceValueChanged event raised by the Nft contract.
+type NftPieceValueChanged struct {
+	OldValueUsdtE18 *big.Int
+	NewValueUsdtE18 *big.Int
+	Raw             types.Log // Blockchain specific contextual infos
+}
+
+// FilterPieceValueChanged is a free log retrieval operation binding the contract event 0x8cac28b5de93b812c51392809a662b730d9b80efa707e864074fd8ceb706b054.
+//
+// Solidity: event PieceValueChanged(uint256 oldValueUsdtE18, uint256 newValueUsdtE18)
+func (_Nft *NftFilterer) FilterPieceValueChanged(opts *bind.FilterOpts) (*NftPieceValueChangedIterator, error) {
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "PieceValueChanged")
+	if err != nil {
+		return nil, err
+	}
+	return &NftPieceValueChangedIterator{contract: _Nft.contract, event: "PieceValueChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchPieceValueChanged is a free log subscription operation binding the contract event 0x8cac28b5de93b812c51392809a662b730d9b80efa707e864074fd8ceb706b054.
+//
+// Solidity: event PieceValueChanged(uint256 oldValueUsdtE18, uint256 newValueUsdtE18)
+func (_Nft *NftFilterer) WatchPieceValueChanged(opts *bind.WatchOpts, sink chan<- *NftPieceValueChanged) (event.Subscription, error) {
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "PieceValueChanged")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftPieceValueChanged)
+				if err := _Nft.contract.UnpackLog(event, "PieceValueChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParsePieceValueChanged is a log parse operation binding the contract event 0x8cac28b5de93b812c51392809a662b730d9b80efa707e864074fd8ceb706b054.
+//
+// Solidity: event PieceValueChanged(uint256 oldValueUsdtE18, uint256 newValueUsdtE18)
+func (_Nft *NftFilterer) ParsePieceValueChanged(log types.Log) (*NftPieceValueChanged, error) {
+	event := new(NftPieceValueChanged)
+	if err := _Nft.contract.UnpackLog(event, "PieceValueChanged", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -4582,16 +6049,17 @@ func (it *NftRewardSetOnceIterator) Close() error {
 
 // NftRewardSetOnce represents a RewardSetOnce event raised by the Nft contract.
 type NftRewardSetOnce struct {
-	Admin     common.Address
-	TokenId   *big.Int
-	Reward    *big.Int
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
+	Admin          common.Address
+	TokenId        *big.Int
+	Reward         *big.Int
+	Timestamp      *big.Int
+	ProfitNotified *big.Int
+	Raw            types.Log // Blockchain specific contextual infos
 }
 
-// FilterRewardSetOnce is a free log retrieval operation binding the contract event 0x4ada494445a1c66ec0bbdea39214d560b31ed4f2dc325206165c259c515dd4af.
+// FilterRewardSetOnce is a free log retrieval operation binding the contract event 0x34c1d818a4247ed2f506dfa14100369260c0fc65727b0a48c96ff28119daad7b.
 //
-// Solidity: event RewardSetOnce(address indexed admin, uint256 indexed tokenId, int256 reward, uint256 timestamp)
+// Solidity: event RewardSetOnce(address indexed admin, uint256 indexed tokenId, int256 reward, uint256 timestamp, uint256 profitNotified)
 func (_Nft *NftFilterer) FilterRewardSetOnce(opts *bind.FilterOpts, admin []common.Address, tokenId []*big.Int) (*NftRewardSetOnceIterator, error) {
 
 	var adminRule []interface{}
@@ -4610,9 +6078,9 @@ func (_Nft *NftFilterer) FilterRewardSetOnce(opts *bind.FilterOpts, admin []comm
 	return &NftRewardSetOnceIterator{contract: _Nft.contract, event: "RewardSetOnce", logs: logs, sub: sub}, nil
 }
 
-// WatchRewardSetOnce is a free log subscription operation binding the contract event 0x4ada494445a1c66ec0bbdea39214d560b31ed4f2dc325206165c259c515dd4af.
+// WatchRewardSetOnce is a free log subscription operation binding the contract event 0x34c1d818a4247ed2f506dfa14100369260c0fc65727b0a48c96ff28119daad7b.
 //
-// Solidity: event RewardSetOnce(address indexed admin, uint256 indexed tokenId, int256 reward, uint256 timestamp)
+// Solidity: event RewardSetOnce(address indexed admin, uint256 indexed tokenId, int256 reward, uint256 timestamp, uint256 profitNotified)
 func (_Nft *NftFilterer) WatchRewardSetOnce(opts *bind.WatchOpts, sink chan<- *NftRewardSetOnce, admin []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var adminRule []interface{}
@@ -4656,9 +6124,9 @@ func (_Nft *NftFilterer) WatchRewardSetOnce(opts *bind.WatchOpts, sink chan<- *N
 	}), nil
 }
 
-// ParseRewardSetOnce is a log parse operation binding the contract event 0x4ada494445a1c66ec0bbdea39214d560b31ed4f2dc325206165c259c515dd4af.
+// ParseRewardSetOnce is a log parse operation binding the contract event 0x34c1d818a4247ed2f506dfa14100369260c0fc65727b0a48c96ff28119daad7b.
 //
-// Solidity: event RewardSetOnce(address indexed admin, uint256 indexed tokenId, int256 reward, uint256 timestamp)
+// Solidity: event RewardSetOnce(address indexed admin, uint256 indexed tokenId, int256 reward, uint256 timestamp, uint256 profitNotified)
 func (_Nft *NftFilterer) ParseRewardSetOnce(log types.Log) (*NftRewardSetOnce, error) {
 	event := new(NftRewardSetOnce)
 	if err := _Nft.contract.UnpackLog(event, "RewardSetOnce", log); err != nil {
@@ -5296,6 +6764,159 @@ func (_Nft *NftFilterer) WatchSlotsPurchased(opts *bind.WatchOpts, sink chan<- *
 func (_Nft *NftFilterer) ParseSlotsPurchased(log types.Log) (*NftSlotsPurchased, error) {
 	event := new(NftSlotsPurchased)
 	if err := _Nft.contract.UnpackLog(event, "SlotsPurchased", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NftStakingContractChangedIterator is returned from FilterStakingContractChanged and is used to iterate over the raw logs and unpacked data for StakingContractChanged events raised by the Nft contract.
+type NftStakingContractChangedIterator struct {
+	Event *NftStakingContractChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NftStakingContractChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NftStakingContractChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NftStakingContractChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NftStakingContractChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NftStakingContractChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NftStakingContractChanged represents a StakingContractChanged event raised by the Nft contract.
+type NftStakingContractChanged struct {
+	OldStaking common.Address
+	NewStaking common.Address
+	Raw        types.Log // Blockchain specific contextual infos
+}
+
+// FilterStakingContractChanged is a free log retrieval operation binding the contract event 0x4502a0b31e425abf32e0aeda2ff2d41e7daf2be34bce1ff1749ca01f338cd399.
+//
+// Solidity: event StakingContractChanged(address indexed oldStaking, address indexed newStaking)
+func (_Nft *NftFilterer) FilterStakingContractChanged(opts *bind.FilterOpts, oldStaking []common.Address, newStaking []common.Address) (*NftStakingContractChangedIterator, error) {
+
+	var oldStakingRule []interface{}
+	for _, oldStakingItem := range oldStaking {
+		oldStakingRule = append(oldStakingRule, oldStakingItem)
+	}
+	var newStakingRule []interface{}
+	for _, newStakingItem := range newStaking {
+		newStakingRule = append(newStakingRule, newStakingItem)
+	}
+
+	logs, sub, err := _Nft.contract.FilterLogs(opts, "StakingContractChanged", oldStakingRule, newStakingRule)
+	if err != nil {
+		return nil, err
+	}
+	return &NftStakingContractChangedIterator{contract: _Nft.contract, event: "StakingContractChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchStakingContractChanged is a free log subscription operation binding the contract event 0x4502a0b31e425abf32e0aeda2ff2d41e7daf2be34bce1ff1749ca01f338cd399.
+//
+// Solidity: event StakingContractChanged(address indexed oldStaking, address indexed newStaking)
+func (_Nft *NftFilterer) WatchStakingContractChanged(opts *bind.WatchOpts, sink chan<- *NftStakingContractChanged, oldStaking []common.Address, newStaking []common.Address) (event.Subscription, error) {
+
+	var oldStakingRule []interface{}
+	for _, oldStakingItem := range oldStaking {
+		oldStakingRule = append(oldStakingRule, oldStakingItem)
+	}
+	var newStakingRule []interface{}
+	for _, newStakingItem := range newStaking {
+		newStakingRule = append(newStakingRule, newStakingItem)
+	}
+
+	logs, sub, err := _Nft.contract.WatchLogs(opts, "StakingContractChanged", oldStakingRule, newStakingRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NftStakingContractChanged)
+				if err := _Nft.contract.UnpackLog(event, "StakingContractChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseStakingContractChanged is a log parse operation binding the contract event 0x4502a0b31e425abf32e0aeda2ff2d41e7daf2be34bce1ff1749ca01f338cd399.
+//
+// Solidity: event StakingContractChanged(address indexed oldStaking, address indexed newStaking)
+func (_Nft *NftFilterer) ParseStakingContractChanged(log types.Log) (*NftStakingContractChanged, error) {
+	event := new(NftStakingContractChanged)
+	if err := _Nft.contract.UnpackLog(event, "StakingContractChanged", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

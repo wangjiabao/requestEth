@@ -1473,18 +1473,14 @@ func (s *TransactionService) GetBoxNew(ctx context.Context, req *pb.GetBoxNewReq
 			continue
 		}
 
-		if len(tmp.Infos) != len(tmp.TokenIds) {
-			break
-		}
-
-		for k, vTmp := range tmp.TokenIds {
+		for _, vTmp := range tmp {
 			res = append(res, &pb.GetBoxNewReply_List{
-				TokenId:  vTmp.String(),
-				Price:    tmp.Infos[k].UsdtPaid.String(),
-				OpenedAt: tmp.Infos[k].OpenedAt,
-				MintAt:   tmp.Infos[k].MintedAt,
-				Reward:   tmp.Infos[k].Reward.String(),
-				RewardAt: tmp.Infos[k].RewardSetAt,
+				TokenId:  vTmp.TokenId.String(),
+				Price:    vTmp.UsdtPaid.String(),
+				OpenedAt: vTmp.OpenedAt,
+				MintAt:   vTmp.MintedAt,
+				Reward:   vTmp.Reward.String(),
+				RewardAt: vTmp.RewardSetAt,
 			})
 		}
 
@@ -1531,18 +1527,14 @@ func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenR
 			continue
 		}
 
-		if len(tmp.Infos) != len(tmp.TokenIds) {
-			break
-		}
-
-		for k, vTmp := range tmp.TokenIds {
+		for _, vTmp := range tmp {
 			res = append(res, &pb.GetBoxOpenReply_List{
-				TokenId:  vTmp.String(),
-				Price:    tmp.Infos[k].UsdtPaid.String(),
-				OpenedAt: tmp.Infos[k].OpenedAt,
-				MintAt:   tmp.Infos[k].MintedAt,
-				Reward:   tmp.Infos[k].Reward.String(),
-				RewardAt: tmp.Infos[k].RewardSetAt,
+				TokenId:  vTmp.TokenId.String(),
+				Price:    vTmp.UsdtPaid.String(),
+				OpenedAt: vTmp.OpenedAt,
+				MintAt:   vTmp.MintedAt,
+				Reward:   vTmp.Reward.String(),
+				RewardAt: vTmp.RewardSetAt,
 			})
 		}
 
