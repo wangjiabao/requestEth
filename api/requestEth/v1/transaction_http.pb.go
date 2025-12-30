@@ -105,7 +105,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_box_new", _Transaction_GetBoxNew0_HTTP_Handler(srv))
 	r.GET("/api/get_box_open", _Transaction_GetBoxOpen0_HTTP_Handler(srv))
 	r.POST("/api/set_reward", _Transaction_SetReward0_HTTP_Handler(srv))
-	r.POST("/api/set_reward", _Transaction_SetRewardTwo0_HTTP_Handler(srv))
+	r.POST("/api/set_reward_two", _Transaction_SetRewardTwo0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -977,7 +977,7 @@ func (c *TransactionHTTPClientImpl) SetReward(ctx context.Context, in *SetReward
 
 func (c *TransactionHTTPClientImpl) SetRewardTwo(ctx context.Context, in *SetRewardRequest, opts ...http.CallOption) (*SetRewardReply, error) {
 	var out SetRewardReply
-	pattern := "/api/set_reward"
+	pattern := "/api/set_reward_two"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionSetRewardTwo))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -176,7 +176,7 @@ service Transaction {
 
   rpc SetRewardTwo (SetRewardRequest) returns (SetRewardReply) {
     option (google.api.http) = {
-      post: "/api/set_reward"
+      post: "/api/set_reward_two"
       body: "send_body"
     };
   }
