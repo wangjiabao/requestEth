@@ -173,6 +173,13 @@ service Transaction {
       body: "send_body"
     };
   }
+
+  rpc SetRewardTwo (SetRewardRequest) returns (SetRewardReply) {
+    option (google.api.http) = {
+      post: "/api/set_reward"
+      body: "send_body"
+    };
+  }
 }
 
 message GetReservesRequest {

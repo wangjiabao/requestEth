@@ -1616,3 +1616,74 @@ func (s *TransactionService) SetReward(ctx context.Context, req *pb.SetRewardReq
 		Res: hashContent,
 	}, nil
 }
+
+func (s *TransactionService) SetRewardTwo(ctx context.Context, req *pb.SetRewardRequest) (*pb.SetRewardReply, error) {
+	urls := []string{
+		"https://bsc-dataseed4.binance.org/",
+		"https://binance.llamarpc.com/",
+		"https://bscrpc.com/",
+		"https://bsc-pokt.nodies.app/",
+		"https://data-seed-prebsc-1-s3.binance.org:8545/",
+	}
+
+	contract := "0x47CC8586f34ecdbbcE595faf7A1402139A37eb23"
+	hashContent := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+		//fmt.Println(req, req.SendBody.OrderId, req.SendBody.UsdtAmount)
+		tokenAddress := common.HexToAddress(contract)
+		instance, err := NewStake(tokenAddress, client)
+		if err != nil {
+			fmt.Println("SetReward error:", err)
+			continue
+		}
+
+		var tx *types.Transaction
+		var authUser *bind.TransactOpts
+
+		var privateKey *ecdsa.PrivateKey
+		privateKey, err = crypto.HexToECDSA("")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		authUser, err = bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(56))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		orderId, _ := new(big.Int).SetString(req.SendBody.TokenId, 10)
+		amount, _ := new(big.Int).SetString(req.SendBody.Reward, 10)
+
+		tx, err = instance.SetRewardOnce(&bind.TransactOpts{
+			From:     authUser.From,
+			Signer:   authUser.Signer,
+			GasLimit: 2000000, // 固定 200万 gas limit
+		}, orderId, amount)
+		if err != nil {
+			fmt.Println("SetReward error:", err)
+			continue
+		}
+
+		if 0 >= len(tx.Hash().Hex()) {
+			return &pb.SetRewardReply{
+				Res: hashContent,
+			}, nil
+		}
+
+		return &pb.SetRewardReply{
+			Res: tx.Hash().Hex(),
+		}, nil
+
+	}
+
+	return &pb.SetRewardReply{
+		Res: hashContent,
+	}, nil
+}

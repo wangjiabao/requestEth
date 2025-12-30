@@ -41,6 +41,7 @@ const OperationTransactionSendAICAT = "/api.requestEth.v1.Transaction/SendAICAT"
 const OperationTransactionSendTransaction = "/api.requestEth.v1.Transaction/SendTransaction"
 const OperationTransactionSendTransactionEth = "/api.requestEth.v1.Transaction/SendTransactionEth"
 const OperationTransactionSetReward = "/api.requestEth.v1.Transaction/SetReward"
+const OperationTransactionSetRewardTwo = "/api.requestEth.v1.Transaction/SetRewardTwo"
 const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
 const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
@@ -69,6 +70,7 @@ type TransactionHTTPServer interface {
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
 	SendTransactionEth(context.Context, *SendTransactionEthRequest) (*SendTransactionEthReply, error)
 	SetReward(context.Context, *SetRewardRequest) (*SetRewardReply, error)
+	SetRewardTwo(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
@@ -103,6 +105,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_box_new", _Transaction_GetBoxNew0_HTTP_Handler(srv))
 	r.GET("/api/get_box_open", _Transaction_GetBoxOpen0_HTTP_Handler(srv))
 	r.POST("/api/set_reward", _Transaction_SetReward0_HTTP_Handler(srv))
+	r.POST("/api/set_reward", _Transaction_SetRewardTwo0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -626,6 +629,28 @@ func _Transaction_SetReward0_HTTP_Handler(srv TransactionHTTPServer) func(ctx ht
 	}
 }
 
+func _Transaction_SetRewardTwo0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SetRewardRequest
+		if err := ctx.Bind(&in.SendBody); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionSetRewardTwo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SetRewardTwo(ctx, req.(*SetRewardRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SetRewardReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
@@ -649,6 +674,7 @@ type TransactionHTTPClient interface {
 	SendTransaction(ctx context.Context, req *SendTransactionRequest, opts ...http.CallOption) (rsp *SendTransactionReply, err error)
 	SendTransactionEth(ctx context.Context, req *SendTransactionEthRequest, opts ...http.CallOption) (rsp *SendTransactionEthReply, err error)
 	SetReward(ctx context.Context, req *SetRewardRequest, opts ...http.CallOption) (rsp *SetRewardReply, err error)
+	SetRewardTwo(ctx context.Context, req *SetRewardRequest, opts ...http.CallOption) (rsp *SetRewardReply, err error)
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
 	VerifySig(ctx context.Context, req *VerifySigRequest, opts ...http.CallOption) (rsp *VerifySigReply, err error)
@@ -941,6 +967,19 @@ func (c *TransactionHTTPClientImpl) SetReward(ctx context.Context, in *SetReward
 	pattern := "/api/set_reward"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTransactionSetReward))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) SetRewardTwo(ctx context.Context, in *SetRewardRequest, opts ...http.CallOption) (*SetRewardReply, error) {
+	var out SetRewardReply
+	pattern := "/api/set_reward"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTransactionSetRewardTwo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.SendBody, &out, opts...)
 	if err != nil {

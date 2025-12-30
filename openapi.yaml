@@ -455,7 +455,7 @@ paths:
         post:
             tags:
                 - Transaction
-            operationId: Transaction_SetReward
+            operationId: Transaction_SetRewardTwo
             requestBody:
                 content:
                     application/json:
