@@ -30,6 +30,7 @@ const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
 const OperationTransactionGetBoxAllLength = "/api.requestEth.v1.Transaction/GetBoxAllLength"
 const OperationTransactionGetBoxNew = "/api.requestEth.v1.Transaction/GetBoxNew"
 const OperationTransactionGetBoxOpen = "/api.requestEth.v1.Transaction/GetBoxOpen"
+const OperationTransactionGetBoxRewardEvent = "/api.requestEth.v1.Transaction/GetBoxRewardEvent"
 const OperationTransactionGetBuyAICATByOrderId = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
 const OperationTransactionGetBuyByOrderId = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
 const OperationTransactionGetDailyFee = "/api.requestEth.v1.Transaction/GetDailyFee"
@@ -59,6 +60,7 @@ type TransactionHTTPServer interface {
 	GetBoxAllLength(context.Context, *GetBoxAllRequest) (*GetBoxAllReply, error)
 	GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error)
 	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
+	GetBoxRewardEvent(context.Context, *GetBoxRewardEventRequest) (*GetBoxRewardEventReply, error)
 	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
 	GetDailyFee(context.Context, *GetDailyFeeRequest) (*GetDailyFeeReply, error)
@@ -106,6 +108,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_box_open", _Transaction_GetBoxOpen0_HTTP_Handler(srv))
 	r.POST("/api/set_reward", _Transaction_SetReward0_HTTP_Handler(srv))
 	r.POST("/api/set_reward_two", _Transaction_SetRewardTwo0_HTTP_Handler(srv))
+	r.GET("/api/get_box_reward_event", _Transaction_GetBoxRewardEvent0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -651,6 +654,25 @@ func _Transaction_SetRewardTwo0_HTTP_Handler(srv TransactionHTTPServer) func(ctx
 	}
 }
 
+func _Transaction_GetBoxRewardEvent0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBoxRewardEventRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBoxRewardEvent)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBoxRewardEvent(ctx, req.(*GetBoxRewardEventRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBoxRewardEventReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
@@ -663,6 +685,7 @@ type TransactionHTTPClient interface {
 	GetBoxAllLength(ctx context.Context, req *GetBoxAllRequest, opts ...http.CallOption) (rsp *GetBoxAllReply, err error)
 	GetBoxNew(ctx context.Context, req *GetBoxNewRequest, opts ...http.CallOption) (rsp *GetBoxNewReply, err error)
 	GetBoxOpen(ctx context.Context, req *GetBoxOpenRequest, opts ...http.CallOption) (rsp *GetBoxOpenReply, err error)
+	GetBoxRewardEvent(ctx context.Context, req *GetBoxRewardEventRequest, opts ...http.CallOption) (rsp *GetBoxRewardEventReply, err error)
 	GetBuyAICATByOrderId(ctx context.Context, req *GetBuyAICATByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyAICATByOrderIdReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
 	GetDailyFee(ctx context.Context, req *GetDailyFeeRequest, opts ...http.CallOption) (rsp *GetDailyFeeReply, err error)
@@ -824,6 +847,19 @@ func (c *TransactionHTTPClientImpl) GetBoxOpen(ctx context.Context, in *GetBoxOp
 	pattern := "/api/get_box_open"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetBoxOpen))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetBoxRewardEvent(ctx context.Context, in *GetBoxRewardEventRequest, opts ...http.CallOption) (*GetBoxRewardEventReply, error) {
+	var out GetBoxRewardEventReply
+	pattern := "/api/get_box_reward_event"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBoxRewardEvent))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

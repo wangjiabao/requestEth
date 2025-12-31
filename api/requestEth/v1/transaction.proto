@@ -180,6 +180,12 @@ service Transaction {
       body: "send_body"
     };
   }
+
+  rpc GetBoxRewardEvent (GetBoxRewardEventRequest) returns (GetBoxRewardEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_reward_event"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -385,7 +391,6 @@ message SetRewardReply {
   string res = 1;
 }
 
-
 message GetBuyAICATByOrderIdRequest {
   string orderId = 1;
 }
@@ -477,4 +482,10 @@ message GenerateKeyReply {
   string address = 1;
   string privateKey = 2;
   string err = 3;
+}
+
+message GetBoxRewardEventRequest {
+}
+
+message GetBoxRewardEventReply {
 }

@@ -4,7 +4,9 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -12,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
+	"strings"
 	"time"
 
 	pb "requestEth/api/requestEth/v1"
@@ -1686,4 +1689,292 @@ func (s *TransactionService) SetRewardTwo(ctx context.Context, req *pb.SetReward
 	return &pb.SetRewardReply{
 		Res: hashContent,
 	}, nil
+}
+
+func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetBoxRewardEventRequest) (*pb.GetBoxRewardEventReply, error) {
+	urls := []string{
+		"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+	}
+
+	//last := s.repo.GetLastProcessedBlock("RewardNotified") // 没有就 0
+
+	last := uint64(0)
+
+	var (
+		events  []RewardNotifiedEvent
+		newLast uint64
+	)
+
+	for _, url := range urls {
+		client, err := ethclient.DialContext(ctx, url)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		events, newLast, err = PollRewardNotifiedIncremental(ctx, client, last)
+		if err != nil {
+			fmt.Println(err)
+			// 换下一个 RPC
+			continue
+		}
+
+		for _, v := range events {
+			fmt.Println("记录", v)
+		}
+		fmt.Println(newLast)
+
+		//// 1) 落库：events（建议唯一键：tx_hash + log_index）
+		//// 2) 落库成功后更新 last block = newLast
+		//if err := s.repo.SaveRewardEventsAndUpdateLast(events, newLast); err != nil {
+		//	return err
+		//}
+		return &pb.GetBoxRewardEventReply{}, nil
+	}
+
+	return &pb.GetBoxRewardEventReply{}, nil
+}
+
+const (
+	// DeployBlock TODO: 你把这里替换成实际部署块高（从 BscScan/OKLink 的 Contract Creation 里看）
+	DeployBlock uint64 = 73406834
+
+	// Confirmations 防回滚确认数：最新块往回退 6 个块
+	Confirmations uint64 = 6
+
+	// QueryStep 每次 FilterLogs 的分段大小（BSC 公共 RPC 经常会限制范围，建议 2k~5k）
+	QueryStep uint64 = 2000
+)
+
+var (
+	DividendContract = common.HexToAddress("0x135d05e0d1a8083525D64B9C9831579D4B6811d2")
+)
+
+// 仅包含 RewardNotified 事件（够用就行）
+const umbrellaStakeDividendABI = `[
+  {
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "profit",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "userShare",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "l1",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "l2",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "top",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "pool",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "uplinePortionBps",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "toL1",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "toL2",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "toTop",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "toProject",
+				"type": "uint256"
+			}
+		],
+		"name": "RewardNotified",
+		"type": "event"
+	}
+]`
+
+type RewardNotifiedEvent struct {
+	// 用于唯一定位/落库去重
+	BlockNumber uint64
+	TxHash      common.Hash
+	LogIndex    uint
+
+	// indexed
+	User common.Address
+	L1   common.Address
+	L2   common.Address
+
+	// data（非 indexed）
+	Profit           *big.Int
+	UserShare        *big.Int
+	Top              common.Address
+	Pool             *big.Int
+	UplinePortionBps *big.Int
+	ToL1             *big.Int
+	ToL2             *big.Int
+	ToTop            *big.Int
+	ToProject        *big.Int
+}
+
+func parseRewardNotified(a abi.ABI, lg types.Log) (RewardNotifiedEvent, error) {
+	ev, ok := a.Events["RewardNotified"]
+	if !ok {
+		return RewardNotifiedEvent{}, fmt.Errorf("event RewardNotified not found in ABI")
+	}
+	if len(lg.Topics) != 4 {
+		return RewardNotifiedEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return RewardNotifiedEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := RewardNotifiedEvent{
+		BlockNumber: lg.BlockNumber,
+		TxHash:      lg.TxHash,
+		LogIndex:    lg.Index,
+
+		User: common.BytesToAddress(lg.Topics[1].Bytes()),
+		L1:   common.BytesToAddress(lg.Topics[2].Bytes()),
+		L2:   common.BytesToAddress(lg.Topics[3].Bytes()),
+	}
+
+	// data 部分按事件里“非 indexed inputs”的顺序解
+	values, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return RewardNotifiedEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	// 顺序：
+	// profit, userShare, top, pool, uplinePortionBps, toL1, toL2, toTop, toProject
+	if len(values) != 9 {
+		return RewardNotifiedEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(values))
+	}
+
+	out.Profit = values[0].(*big.Int)
+	out.UserShare = values[1].(*big.Int)
+	out.Top = values[2].(common.Address)
+	out.Pool = values[3].(*big.Int)
+	out.UplinePortionBps = values[4].(*big.Int)
+	out.ToL1 = values[5].(*big.Int)
+	out.ToL2 = values[6].(*big.Int)
+	out.ToTop = values[7].(*big.Int)
+	out.ToProject = values[8].(*big.Int)
+
+	return out, nil
+}
+
+// FetchRewardNotifiedByRange 按 [fromBlock, toBlock]（包含边界）拉取 RewardNotified 事件，内部自动分段 QueryStep
+func FetchRewardNotifiedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock uint64, toBlock uint64) ([]RewardNotifiedEvent, error) {
+
+	if toBlock < fromBlock {
+		return []RewardNotifiedEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(umbrellaStakeDividendABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	eventID := parsedABI.Events["RewardNotified"].ID
+
+	res := make([]RewardNotifiedEvent, 0, 64)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{eventID}},
+		}
+
+		logs, err := client.FilterLogs(ctx, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseRewardNotified(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	return res, nil
+}
+
+// PollRewardNotifiedIncremental 你描述的“增量拉取 + 最新块往回 6”核心逻辑
+// lastProcessedFromDB：DB 里记录的“已处理到的最高块”（建议含义：你上次成功跑完时的 safeTo）
+func PollRewardNotifiedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []RewardNotifiedEvent, newLastProcessed uint64, err error) {
+
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		// 链太新/异常情况
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlock {
+		from = DeployBlock
+	}
+
+	if safeTo < from {
+		// 没有可确认的新块
+		return []RewardNotifiedEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchRewardNotifiedByRange(ctx, client, DividendContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+
+	// 只要你把 evs 全部落库成功（建议 txHash+logIndex 唯一键），再把 DB 的 lastProcessed 更新为 safeTo
+	return evs, safeTo, nil
 }

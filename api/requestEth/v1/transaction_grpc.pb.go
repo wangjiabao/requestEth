@@ -46,6 +46,7 @@ const (
 	Transaction_GetBoxOpen_FullMethodName           = "/api.requestEth.v1.Transaction/GetBoxOpen"
 	Transaction_SetReward_FullMethodName            = "/api.requestEth.v1.Transaction/SetReward"
 	Transaction_SetRewardTwo_FullMethodName         = "/api.requestEth.v1.Transaction/SetRewardTwo"
+	Transaction_GetBoxRewardEvent_FullMethodName    = "/api.requestEth.v1.Transaction/GetBoxRewardEvent"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -79,6 +80,7 @@ type TransactionClient interface {
 	GetBoxOpen(ctx context.Context, in *GetBoxOpenRequest, opts ...grpc.CallOption) (*GetBoxOpenReply, error)
 	SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SetRewardReply, error)
 	SetRewardTwo(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SetRewardReply, error)
+	GetBoxRewardEvent(ctx context.Context, in *GetBoxRewardEventRequest, opts ...grpc.CallOption) (*GetBoxRewardEventReply, error)
 }
 
 type transactionClient struct {
@@ -332,6 +334,15 @@ func (c *transactionClient) SetRewardTwo(ctx context.Context, in *SetRewardReque
 	return out, nil
 }
 
+func (c *transactionClient) GetBoxRewardEvent(ctx context.Context, in *GetBoxRewardEventRequest, opts ...grpc.CallOption) (*GetBoxRewardEventReply, error) {
+	out := new(GetBoxRewardEventReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBoxRewardEvent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -363,6 +374,7 @@ type TransactionServer interface {
 	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
 	SetReward(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	SetRewardTwo(context.Context, *SetRewardRequest) (*SetRewardReply, error)
+	GetBoxRewardEvent(context.Context, *GetBoxRewardEventRequest) (*GetBoxRewardEventReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -450,6 +462,9 @@ func (UnimplementedTransactionServer) SetReward(context.Context, *SetRewardReque
 }
 func (UnimplementedTransactionServer) SetRewardTwo(context.Context, *SetRewardRequest) (*SetRewardReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetRewardTwo not implemented")
+}
+func (UnimplementedTransactionServer) GetBoxRewardEvent(context.Context, *GetBoxRewardEventRequest) (*GetBoxRewardEventReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBoxRewardEvent not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -950,6 +965,24 @@ func _Transaction_SetRewardTwo_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetBoxRewardEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBoxRewardEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBoxRewardEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBoxRewardEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBoxRewardEvent(ctx, req.(*GetBoxRewardEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1064,6 +1097,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetRewardTwo",
 			Handler:    _Transaction_SetRewardTwo_Handler,
+		},
+		{
+			MethodName: "GetBoxRewardEvent",
+			Handler:    _Transaction_GetBoxRewardEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
