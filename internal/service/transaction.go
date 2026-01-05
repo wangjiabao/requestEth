@@ -13,7 +13,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/go-kratos/kratos/v2/log"
 	"math/big"
+	"requestEth/internal/biz"
 	"strings"
 	"time"
 
@@ -22,10 +24,15 @@ import (
 
 type TransactionService struct {
 	pb.UnimplementedTransactionServer
+	log *log.Helper
+	ac  *biz.AppUsecase
 }
 
-func NewTransactionService() *TransactionService {
-	return &TransactionService{}
+func NewTransactionService(ac *biz.AppUsecase, logger log.Logger) *TransactionService {
+	return &TransactionService{
+		ac:  ac,
+		log: log.NewHelper(logger),
+	}
 }
 
 func (s *TransactionService) SendTransaction(ctx context.Context, req *pb.SendTransactionRequest) (*pb.SendTransactionReply, error) {
@@ -1495,6 +1502,14 @@ func (s *TransactionService) GetBoxNew(ctx context.Context, req *pb.GetBoxNewReq
 	}, nil
 }
 
+func (s *TransactionService) GetExchangeList(ctx context.Context, req *pb.GetExchangeListRequest) (*pb.GetExchangeListReply, error) {
+	return s.ac.GetExchangeList(ctx, req)
+}
+
+func (s *TransactionService) GetBuyList(ctx context.Context, req *pb.GetBuyListRequest) (*pb.GetBuyListReply, error) {
+	return s.ac.GetBuyList(ctx, req)
+}
+
 func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenRequest) (*pb.GetBoxOpenReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
@@ -1733,6 +1748,252 @@ func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetB
 
 	return &pb.GetBoxRewardEventReply{}, nil
 }
+
+func (s *TransactionService) GetExchangeEvent(ctx context.Context, req *pb.GetExchangeEventRequest) (*pb.GetExchangeEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.SwapTrade
+			errT  error
+		)
+		rLast, errT = s.ac.GetSwapTradeLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []SwapEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollSwapIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				tmpSide := uint8(0)
+				if 0 == v.Amount0In.Int64() { // 买
+					tmpSide = 1
+				} else if 0 == v.Amount1In.Int64() { // 卖
+					tmpSide = 2
+				}
+
+				err = s.ac.InsertSwapTrade(ctx, &biz.SwapTrade{
+					BlockNumber:     v.BlockNumber,
+					LogIndex:        uint32(v.LogIndex),
+					BlockTime:       v.BlockTime,
+					Sender:          v.Sender.String(),
+					ToAddr:          v.To.String(),
+					Side:            tmpSide,
+					Amount0In:       BigIntToFloat64(v.Amount0In, 18),
+					Amount1In:       BigIntToFloat64(v.Amount1In, 18),
+					Amount0OutNet:   BigIntToFloat64(v.Amount0OutNet, 18),
+					Amount1OutGross: BigIntToFloat64(v.Amount1OutGross, 18),
+					Amount0OutGross: BigIntToFloat64(v.Amount0OutGross, 18),
+				})
+				if nil != err {
+					fmt.Println("insert swap trade err", err)
+				}
+			}
+
+			return &pb.GetExchangeEventReply{}, nil
+		}
+	}
+
+	return &pb.GetExchangeEventReply{}, nil
+}
+
+func (s *TransactionService) GetBuyEvent(ctx context.Context, req *pb.GetBuyEventRequest) (*pb.GetBuyEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.PrimaryBuy
+			errT  error
+		)
+		rLast, errT = s.ac.GetBuyLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []BoughtEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollBoughtIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertBuyTrade(ctx, &biz.PrimaryBuy{
+					BlockNumber:  v.BlockNumber,
+					BlockTime:    v.BlockTime,
+					LogIndex:     uint32(v.LogIndex),
+					Buyer:        v.Buyer.String(),
+					ToAddr:       v.To.String(),
+					UsdtUsed:     BigIntToFloat64(v.UsdtUsed, 18),
+					AusdGrossOut: BigIntToFloat64(v.AusdGrossOut, 18),
+					AusdFee:      BigIntToFloat64(v.AusdFee, 18),
+					AusdNetOut:   BigIntToFloat64(v.AusdNetOut, 18),
+					PriceBefore:  BigIntToFloat64(v.PriceBefore, 18),
+					PriceAfter:   BigIntToFloat64(v.PriceAfter, 18),
+				})
+				if nil != err {
+					fmt.Println("insert buy err", err)
+				}
+			}
+
+			return &pb.GetBuyEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBuyEventReply{}, nil
+}
+
+func (s *TransactionService) GetSellEvent(ctx context.Context, req *pb.GetSellEventRequest) (*pb.GetSellEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.PrimarySell
+			errT  error
+		)
+		rLast, errT = s.ac.GetSellLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []SoldEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollSoldIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertSellTrade(ctx, &biz.PrimarySell{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    uint32(v.LogIndex),
+					Seller:      v.Seller.String(),
+					ToAddr:      v.To.String(),
+					AusdGrossIn: BigIntToFloat64(v.AusdGrossIn, 18),
+					AusdBurn:    BigIntToFloat64(v.AusdBurn, 18),
+					AusdFee:     BigIntToFloat64(v.AusdFee, 18),
+					UsdtOut:     BigIntToFloat64(v.UsdtOut, 18),
+					PriceBefore: BigIntToFloat64(v.PriceBefore, 18),
+					PriceAfter:  BigIntToFloat64(v.PriceAfter, 18),
+				})
+				if nil != err {
+					fmt.Println("insert sell err", err)
+				}
+			}
+
+			return &pb.GetSellEventReply{}, nil
+		}
+	}
+
+	return &pb.GetSellEventReply{}, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
 	// DeployBlock TODO: 你把这里替换成实际部署块高（从 BscScan/OKLink 的 Contract Creation 里看）
@@ -1976,5 +2237,557 @@ func PollRewardNotifiedIncremental(ctx context.Context, client *ethclient.Client
 	}
 
 	// 只要你把 evs 全部落库成功（建议 txHash+logIndex 唯一键），再把 DB 的 lastProcessed 更新为 safeTo
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func BigIntToFloat64(x *big.Int, decimals int) float64 {
+	if x == nil {
+		return 0
+	}
+	r := new(big.Rat).SetInt(x)
+	if decimals > 0 {
+		r.Quo(r, new(big.Rat).SetInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(decimals)), nil)))
+	}
+	f, _ := r.Float64()
+	return f
+}
+
+const (
+	// DeployBlockTwo TODO: 改成 SwapHrxUsdt 实际部署块高
+	DeployBlockTwo uint64 = 72859368
+)
+
+var (
+	// SwapContract TODO: 改成 SwapHrxUsdt 合约地址
+	SwapContract = common.HexToAddress("0x3ff0acac62d1c5f74581d7a45b974bcce5f054e1")
+)
+
+const swapHrxUsdtABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "sender", "type": "address"},
+      {"indexed": false, "internalType": "uint256", "name": "amount0In", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "amount1In", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "amount0OutGross", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "amount0OutNet", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "amount1OutGross", "type": "uint256"},
+      {"indexed": true,  "internalType": "address", "name": "to", "type": "address"}
+    ],
+    "name": "Swap",
+    "type": "event"
+  }
+]`
+
+type SwapEvent struct {
+	// 唯一定位（建议落库用 txHash+logIndex 去重）
+	BlockNumber uint64
+	TxHash      common.Hash
+	LogIndex    uint
+
+	// ✅ 秒级时间戳（区块级，同区块所有交易相同）
+	BlockTime uint64
+
+	// indexed
+	Sender common.Address
+	To     common.Address
+
+	// data
+	Amount0In       *big.Int
+	Amount1In       *big.Int
+	Amount0OutGross *big.Int
+	Amount0OutNet   *big.Int
+	Amount1OutGross *big.Int
+}
+
+func parseSwap(a abi.ABI, lg types.Log) (SwapEvent, error) {
+	ev, ok := a.Events["Swap"]
+	if !ok {
+		return SwapEvent{}, fmt.Errorf("event Swap not found in ABI")
+	}
+	if len(lg.Topics) != 3 {
+		return SwapEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return SwapEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := SwapEvent{
+		BlockNumber: lg.BlockNumber,
+		TxHash:      lg.TxHash,
+		LogIndex:    lg.Index,
+
+		Sender: common.BytesToAddress(lg.Topics[1].Bytes()),
+		To:     common.BytesToAddress(lg.Topics[2].Bytes()),
+	}
+
+	vals, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return SwapEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	if len(vals) != 5 {
+		return SwapEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(vals))
+	}
+
+	out.Amount0In = vals[0].(*big.Int)
+	out.Amount1In = vals[1].(*big.Int)
+	out.Amount0OutGross = vals[2].(*big.Int)
+	out.Amount0OutNet = vals[3].(*big.Int)
+	out.Amount1OutGross = vals[4].(*big.Int)
+	return out, nil
+}
+
+// ✅ 批量填充 blockTime：缓存 blockNumber -> header.Time（秒）
+func fillBlockTimes(ctx context.Context, client *ethclient.Client, evs []SwapEvent) error {
+	cache := make(map[uint64]uint64, 256)
+
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+// FetchSwapByRange 按 [fromBlock, toBlock] 拉取 Swap，并填充 BlockTime(秒)
+func FetchSwapByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]SwapEvent, error) {
+	if toBlock < fromBlock {
+		return []SwapEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(swapHrxUsdtABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	swapID := parsedABI.Events["Swap"].ID
+
+	res := make([]SwapEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{swapID}},
+		}
+
+		logs, err := client.FilterLogs(ctx, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseSwap(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ 统一补时间戳
+	if err := fillBlockTimes(ctx, client, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// PollSwapIncremental：增量拉取 + latest-6
+func PollSwapIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []SwapEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockTwo {
+		from = DeployBlockTwo
+	}
+	if safeTo < from {
+		return []SwapEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchSwapByRange(ctx, client, SwapContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	DeployBlockThree uint64 = 72528236
+	DeployBlockFour  uint64 = 72869154
+)
+
+var (
+	// PrimaryMarketContract TODO: 改成 BondingCurvePrimaryMarket 合约地址
+	PrimaryMarketContract = common.HexToAddress("0xe817f45dcd271dde3cac7d6ad9cb91de820c688a")
+)
+
+// 仅包含 Bought / Sold 事件（够用就行）
+const primaryMarketABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "buyer", "type": "address"},
+      {"indexed": true,  "internalType": "address", "name": "to", "type": "address"},
+      {"indexed": false, "internalType": "uint256", "name": "usdtUsed", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "ausdGrossOut", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "ausdFee", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "ausdNetOut", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "priceBefore", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "priceAfter", "type": "uint256"}
+    ],
+    "name": "Bought",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "seller", "type": "address"},
+      {"indexed": true,  "internalType": "address", "name": "to", "type": "address"},
+      {"indexed": false, "internalType": "uint256", "name": "ausdGrossIn", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "ausdFee", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "ausdBurn", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "usdtOut", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "priceBefore", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "priceAfter", "type": "uint256"}
+    ],
+    "name": "Sold",
+    "type": "event"
+  }
+]`
+
+// -------------------- Bought --------------------
+
+type BoughtEvent struct {
+	BlockNumber uint64
+	TxHash      common.Hash
+	LogIndex    uint
+
+	// ✅ 秒级时间戳（区块级）
+	BlockTime uint64
+
+	// indexed
+	Buyer common.Address
+	To    common.Address
+
+	// data
+	UsdtUsed     *big.Int
+	AusdGrossOut *big.Int
+	AusdFee      *big.Int
+	AusdNetOut   *big.Int
+	PriceBefore  *big.Int
+	PriceAfter   *big.Int
+}
+
+func parseBought(a abi.ABI, lg types.Log) (BoughtEvent, error) {
+	ev, ok := a.Events["Bought"]
+	if !ok {
+		return BoughtEvent{}, fmt.Errorf("event Bought not found in ABI")
+	}
+	// topics: [topic0=eventID, topic1=buyer, topic2=to]
+	if len(lg.Topics) != 3 {
+		return BoughtEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return BoughtEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := BoughtEvent{
+		BlockNumber: lg.BlockNumber,
+		TxHash:      lg.TxHash,
+		LogIndex:    lg.Index,
+
+		Buyer: common.BytesToAddress(lg.Topics[1].Bytes()),
+		To:    common.BytesToAddress(lg.Topics[2].Bytes()),
+	}
+
+	// 非 indexed inputs 顺序：
+	// usdtUsed, ausdGrossOut, ausdFee, ausdNetOut, priceBefore, priceAfter
+	values, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return BoughtEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	if len(values) != 6 {
+		return BoughtEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(values))
+	}
+
+	out.UsdtUsed = values[0].(*big.Int)
+	out.AusdGrossOut = values[1].(*big.Int)
+	out.AusdFee = values[2].(*big.Int)
+	out.AusdNetOut = values[3].(*big.Int)
+	out.PriceBefore = values[4].(*big.Int)
+	out.PriceAfter = values[5].(*big.Int)
+
+	return out, nil
+}
+
+// FetchBoughtByRange 按 [fromBlock, toBlock] 拉取 Bought，自动分段 QueryStep，并填 BlockTime
+func FetchBoughtByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]BoughtEvent, error) {
+	if toBlock < fromBlock {
+		return []BoughtEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(primaryMarketABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	boughtID := parsedABI.Events["Bought"].ID
+
+	res := make([]BoughtEvent, 0, 128)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{boughtID}},
+		}
+
+		logs, err := client.FilterLogs(ctx, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs Bought [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseBought(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse Bought tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	if err := fillBoughtTimes(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func fillBoughtTimes(ctx context.Context, client *ethclient.Client, evs []BoughtEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+// PollBoughtIncremental 增量拉取 + latest-6
+func PollBoughtIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []BoughtEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockThree {
+		from = DeployBlockThree
+	}
+	if safeTo < from {
+		return []BoughtEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchBoughtByRange(ctx, client, PrimaryMarketContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+// -------------------- Sold --------------------
+
+type SoldEvent struct {
+	BlockNumber uint64
+	TxHash      common.Hash
+	LogIndex    uint
+
+	// ✅ 秒级时间戳（区块级）
+	BlockTime uint64
+
+	// indexed
+	Seller common.Address
+	To     common.Address
+
+	// data
+	AusdGrossIn *big.Int
+	AusdFee     *big.Int
+	AusdBurn    *big.Int
+	UsdtOut     *big.Int
+	PriceBefore *big.Int
+	PriceAfter  *big.Int
+}
+
+func parseSold(a abi.ABI, lg types.Log) (SoldEvent, error) {
+	ev, ok := a.Events["Sold"]
+	if !ok {
+		return SoldEvent{}, fmt.Errorf("event Sold not found in ABI")
+	}
+	// topics: [topic0=eventID, topic1=seller, topic2=to]
+	if len(lg.Topics) != 3 {
+		return SoldEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return SoldEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := SoldEvent{
+		BlockNumber: lg.BlockNumber,
+		TxHash:      lg.TxHash,
+		LogIndex:    lg.Index,
+
+		Seller: common.BytesToAddress(lg.Topics[1].Bytes()),
+		To:     common.BytesToAddress(lg.Topics[2].Bytes()),
+	}
+
+	// 非 indexed inputs 顺序：
+	// ausdGrossIn, ausdFee, ausdBurn, usdtOut, priceBefore, priceAfter
+	values, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return SoldEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	if len(values) != 6 {
+		return SoldEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(values))
+	}
+
+	out.AusdGrossIn = values[0].(*big.Int)
+	out.AusdFee = values[1].(*big.Int)
+	out.AusdBurn = values[2].(*big.Int)
+	out.UsdtOut = values[3].(*big.Int)
+	out.PriceBefore = values[4].(*big.Int)
+	out.PriceAfter = values[5].(*big.Int)
+
+	return out, nil
+}
+
+// FetchSoldByRange 按 [fromBlock, toBlock] 拉取 Sold，自动分段 QueryStep，并填 BlockTime
+func FetchSoldByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]SoldEvent, error) {
+	if toBlock < fromBlock {
+		return []SoldEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(primaryMarketABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	soldID := parsedABI.Events["Sold"].ID
+
+	res := make([]SoldEvent, 0, 128)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{soldID}},
+		}
+
+		logs, err := client.FilterLogs(ctx, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs Sold [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseSold(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse Sold tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	if err := fillSoldTimes(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func fillSoldTimes(ctx context.Context, client *ethclient.Client, evs []SoldEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+// PollSoldIncremental 增量拉取 + latest-6
+func PollSoldIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []SoldEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockFour {
+		from = DeployBlockFour
+	}
+	if safeTo < from {
+		return []SoldEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchSoldByRange(ctx, client, PrimaryMarketContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
 	return evs, safeTo, nil
 }

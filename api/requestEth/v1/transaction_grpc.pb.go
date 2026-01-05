@@ -47,6 +47,11 @@ const (
 	Transaction_SetReward_FullMethodName            = "/api.requestEth.v1.Transaction/SetReward"
 	Transaction_SetRewardTwo_FullMethodName         = "/api.requestEth.v1.Transaction/SetRewardTwo"
 	Transaction_GetBoxRewardEvent_FullMethodName    = "/api.requestEth.v1.Transaction/GetBoxRewardEvent"
+	Transaction_GetExchangeEvent_FullMethodName     = "/api.requestEth.v1.Transaction/GetExchangeEvent"
+	Transaction_GetBuyEvent_FullMethodName          = "/api.requestEth.v1.Transaction/GetBuyEvent"
+	Transaction_GetSellEvent_FullMethodName         = "/api.requestEth.v1.Transaction/GetSellEvent"
+	Transaction_GetExchangeList_FullMethodName      = "/api.requestEth.v1.Transaction/GetExchangeList"
+	Transaction_GetBuyList_FullMethodName           = "/api.requestEth.v1.Transaction/GetBuyList"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -81,6 +86,11 @@ type TransactionClient interface {
 	SetReward(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SetRewardReply, error)
 	SetRewardTwo(ctx context.Context, in *SetRewardRequest, opts ...grpc.CallOption) (*SetRewardReply, error)
 	GetBoxRewardEvent(ctx context.Context, in *GetBoxRewardEventRequest, opts ...grpc.CallOption) (*GetBoxRewardEventReply, error)
+	GetExchangeEvent(ctx context.Context, in *GetExchangeEventRequest, opts ...grpc.CallOption) (*GetExchangeEventReply, error)
+	GetBuyEvent(ctx context.Context, in *GetBuyEventRequest, opts ...grpc.CallOption) (*GetBuyEventReply, error)
+	GetSellEvent(ctx context.Context, in *GetSellEventRequest, opts ...grpc.CallOption) (*GetSellEventReply, error)
+	GetExchangeList(ctx context.Context, in *GetExchangeListRequest, opts ...grpc.CallOption) (*GetExchangeListReply, error)
+	GetBuyList(ctx context.Context, in *GetBuyListRequest, opts ...grpc.CallOption) (*GetBuyListReply, error)
 }
 
 type transactionClient struct {
@@ -343,6 +353,51 @@ func (c *transactionClient) GetBoxRewardEvent(ctx context.Context, in *GetBoxRew
 	return out, nil
 }
 
+func (c *transactionClient) GetExchangeEvent(ctx context.Context, in *GetExchangeEventRequest, opts ...grpc.CallOption) (*GetExchangeEventReply, error) {
+	out := new(GetExchangeEventReply)
+	err := c.cc.Invoke(ctx, Transaction_GetExchangeEvent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetBuyEvent(ctx context.Context, in *GetBuyEventRequest, opts ...grpc.CallOption) (*GetBuyEventReply, error) {
+	out := new(GetBuyEventReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBuyEvent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetSellEvent(ctx context.Context, in *GetSellEventRequest, opts ...grpc.CallOption) (*GetSellEventReply, error) {
+	out := new(GetSellEventReply)
+	err := c.cc.Invoke(ctx, Transaction_GetSellEvent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetExchangeList(ctx context.Context, in *GetExchangeListRequest, opts ...grpc.CallOption) (*GetExchangeListReply, error) {
+	out := new(GetExchangeListReply)
+	err := c.cc.Invoke(ctx, Transaction_GetExchangeList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetBuyList(ctx context.Context, in *GetBuyListRequest, opts ...grpc.CallOption) (*GetBuyListReply, error) {
+	out := new(GetBuyListReply)
+	err := c.cc.Invoke(ctx, Transaction_GetBuyList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -375,6 +430,11 @@ type TransactionServer interface {
 	SetReward(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	SetRewardTwo(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	GetBoxRewardEvent(context.Context, *GetBoxRewardEventRequest) (*GetBoxRewardEventReply, error)
+	GetExchangeEvent(context.Context, *GetExchangeEventRequest) (*GetExchangeEventReply, error)
+	GetBuyEvent(context.Context, *GetBuyEventRequest) (*GetBuyEventReply, error)
+	GetSellEvent(context.Context, *GetSellEventRequest) (*GetSellEventReply, error)
+	GetExchangeList(context.Context, *GetExchangeListRequest) (*GetExchangeListReply, error)
+	GetBuyList(context.Context, *GetBuyListRequest) (*GetBuyListReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -465,6 +525,21 @@ func (UnimplementedTransactionServer) SetRewardTwo(context.Context, *SetRewardRe
 }
 func (UnimplementedTransactionServer) GetBoxRewardEvent(context.Context, *GetBoxRewardEventRequest) (*GetBoxRewardEventReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBoxRewardEvent not implemented")
+}
+func (UnimplementedTransactionServer) GetExchangeEvent(context.Context, *GetExchangeEventRequest) (*GetExchangeEventReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetExchangeEvent not implemented")
+}
+func (UnimplementedTransactionServer) GetBuyEvent(context.Context, *GetBuyEventRequest) (*GetBuyEventReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuyEvent not implemented")
+}
+func (UnimplementedTransactionServer) GetSellEvent(context.Context, *GetSellEventRequest) (*GetSellEventReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSellEvent not implemented")
+}
+func (UnimplementedTransactionServer) GetExchangeList(context.Context, *GetExchangeListRequest) (*GetExchangeListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetExchangeList not implemented")
+}
+func (UnimplementedTransactionServer) GetBuyList(context.Context, *GetBuyListRequest) (*GetBuyListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuyList not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -983,6 +1058,96 @@ func _Transaction_GetBoxRewardEvent_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetExchangeEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetExchangeEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetExchangeEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetExchangeEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetExchangeEvent(ctx, req.(*GetExchangeEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetBuyEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuyEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBuyEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBuyEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBuyEvent(ctx, req.(*GetBuyEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetSellEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSellEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetSellEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetSellEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetSellEvent(ctx, req.(*GetSellEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetExchangeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetExchangeListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetExchangeList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetExchangeList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetExchangeList(ctx, req.(*GetExchangeListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetBuyList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuyListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetBuyList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetBuyList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetBuyList(ctx, req.(*GetBuyListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1101,6 +1266,26 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetBoxRewardEvent",
 			Handler:    _Transaction_GetBoxRewardEvent_Handler,
+		},
+		{
+			MethodName: "GetExchangeEvent",
+			Handler:    _Transaction_GetExchangeEvent_Handler,
+		},
+		{
+			MethodName: "GetBuyEvent",
+			Handler:    _Transaction_GetBuyEvent_Handler,
+		},
+		{
+			MethodName: "GetSellEvent",
+			Handler:    _Transaction_GetSellEvent_Handler,
+		},
+		{
+			MethodName: "GetExchangeList",
+			Handler:    _Transaction_GetExchangeList_Handler,
+		},
+		{
+			MethodName: "GetBuyList",
+			Handler:    _Transaction_GetBuyList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

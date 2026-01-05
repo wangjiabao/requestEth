@@ -329,6 +329,51 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/get_buy_event:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBuyEvent
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBuyEventReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_buy_list:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBuyList
+            parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: string
+                - name: end
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBuyListReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/get_daily_fee:
         get:
             tags:
@@ -346,6 +391,51 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetDailyFeeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_exchange_event:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetExchangeEvent
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetExchangeEventReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_exchange_list:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetExchangeList
+            parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: string
+                - name: end
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetExchangeListReply'
                 default:
                     description: Default error response
                     content:
@@ -392,6 +482,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetReservesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_sell_event:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetSellEvent
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetSellEventReply'
                 default:
                     description: Default error response
                     content:
@@ -812,11 +920,53 @@ components:
                     type: string
                 catArray:
                     type: string
+        GetBuyEventReply:
+            type: object
+            properties: {}
+        GetBuyListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetBuyListReply_List'
+        GetBuyListReply_List:
+            type: object
+            properties:
+                blockTime:
+                    type: string
+                price:
+                    type: number
+                    format: double
+                usdtUse:
+                    type: number
+                    format: double
+                ausdGrossOut:
+                    type: number
+                    format: double
         GetDailyFeeReply:
             type: object
             properties:
                 ammount:
                     type: string
+        GetExchangeEventReply:
+            type: object
+            properties: {}
+        GetExchangeListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetExchangeListReply_List'
+        GetExchangeListReply_List:
+            type: object
+            properties:
+                blockTime:
+                    type: string
+                price:
+                    type: number
+                    format: double
         GetLpByOrderIdReply:
             type: object
             properties:
@@ -833,6 +983,9 @@ components:
                     type: string
                 reservesTwo:
                     type: string
+        GetSellEventReply:
+            type: object
+            properties: {}
         GetUserLpReply:
             type: object
             properties:

@@ -186,6 +186,36 @@ service Transaction {
       get: "/api/get_box_reward_event"
     };
   }
+
+  rpc GetExchangeEvent (GetExchangeEventRequest) returns (GetExchangeEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_exchange_event"
+    };
+  }
+
+  rpc GetBuyEvent (GetBuyEventRequest) returns (GetBuyEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_buy_event"
+    };
+  }
+
+  rpc GetSellEvent (GetSellEventRequest) returns (GetSellEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_sell_event"
+    };
+  }
+
+  rpc GetExchangeList (GetExchangeListRequest) returns (GetExchangeListReply) {
+    option (google.api.http) = {
+      get: "/api/get_exchange_list"
+    };
+  }
+
+  rpc GetBuyList (GetBuyListRequest) returns (GetBuyListReply) {
+    option (google.api.http) = {
+      get: "/api/get_buy_list"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -488,4 +518,50 @@ message GetBoxRewardEventRequest {
 }
 
 message GetBoxRewardEventReply {
+}
+
+message GetExchangeEventRequest {
+}
+
+message GetExchangeEventReply {
+}
+
+message GetBuyEventRequest {
+}
+
+message GetBuyEventReply {
+}
+
+message GetSellEventRequest {
+}
+
+message GetSellEventReply {
+}
+
+message GetExchangeListRequest {
+  uint64 start = 1;
+  uint64 end = 2;
+}
+
+message GetExchangeListReply {
+  repeated List list = 1;
+  message List {
+    uint64 blockTime = 1;
+    double price = 2;
+  }
+}
+
+message GetBuyListRequest {
+  uint64 start = 1;
+  uint64 end = 2;
+}
+
+message GetBuyListReply {
+  repeated List list = 1;
+  message List {
+    uint64 blockTime = 1;
+    double price = 2;
+    double usdtUse = 3;
+    double ausdGrossOut = 4;
+  }
 }
