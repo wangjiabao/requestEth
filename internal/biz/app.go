@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	pb "requestEth/api/requestEth/v1"
 	"time"
@@ -58,7 +59,37 @@ type PrimarySell struct {
 	UpdatedAt   time.Time
 }
 
-func (PrimaryBuy) TableName() string { return "primary_buy" }
+type RewardNotified struct {
+	ID               uint64
+	BlockNumber      uint64
+	BlockTime        uint64
+	LogIndex         uint32
+	User             string
+	L1               string
+	L2               string
+	Profit           float64
+	UserShare        float64
+	Top              string
+	Pool             float64
+	UplinePortionBps uint64
+	ToL1             float64
+	ToL2             float64
+	ToTop            float64
+	ToProject        float64
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+}
+
+type RewardDetail struct {
+	ID         uint64
+	User       string
+	Amount     float64
+	Reason     uint64
+	NotifiedId uint64
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	BlockTime  uint64
+}
 
 type UserRepo interface {
 	GetSwapTradeLast(ctx context.Context) (*SwapTrade, error)
@@ -70,6 +101,10 @@ type UserRepo interface {
 	GetPrimarySellLast(ctx context.Context) (*PrimarySell, error)
 	GetPrimarySell(ctx context.Context, start, end uint64) ([]*PrimarySell, error)
 	InsertPrimarySell(ctx context.Context, iData *PrimarySell) error
+	GetRewardNotifiedLast(ctx context.Context) (*RewardNotified, error)
+	GetRewardNotified(ctx context.Context, start, end uint64) ([]*RewardNotified, error)
+	InsertRewardNotified(ctx context.Context, iData *RewardNotified) error
+	GetUserRewardByUserIdPage(ctx context.Context, b *Pagination, address string, reason uint64) ([]*RewardDetail, error, int64)
 }
 
 // AppUsecase is an app usecase.
@@ -153,6 +188,39 @@ func (ac *AppUsecase) InsertSellTrade(ctx context.Context, trade *PrimarySell) e
 	return err
 }
 
+func (ac *AppUsecase) GetRewardLast(ctx context.Context) (*RewardNotified, error) {
+	var (
+		rLast *RewardNotified
+		err   error
+	)
+	rLast, err = ac.userRepo.GetRewardNotifiedLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertReward(ctx context.Context, trade *RewardNotified) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertRewardNotified(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "分红写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
 func (ac *AppUsecase) GetExchangeList(ctx context.Context, req *pb.GetExchangeListRequest) (*pb.GetExchangeListReply, error) {
 	res := make([]*pb.GetExchangeListReply_List, 0)
 
@@ -209,4 +277,51 @@ func (ac *AppUsecase) GetBuyList(ctx context.Context, req *pb.GetBuyListRequest)
 	}
 
 	return &pb.GetBuyListReply{List: res}, nil
+}
+
+type Pagination struct {
+	PageNum  int
+	PageSize int
+}
+
+func (ac *AppUsecase) GetRewardList(ctx context.Context, req *pb.GetRewardListRequest) (*pb.GetRewardListReply, error) {
+	res := make([]*pb.GetRewardListReply_List, 0)
+
+	var (
+		userRewards []*RewardDetail
+		count       int64
+		err         error
+	)
+
+	if 0 > req.Reason || 5 < req.Reason || 0 >= len(req.Address) {
+		return &pb.GetRewardListReply{
+			Count: 0,
+			List:  res,
+		}, nil
+	}
+
+	userRewards, err, count = ac.userRepo.GetUserRewardByUserIdPage(ctx, &Pagination{
+		PageNum:  int(req.Page),
+		PageSize: 20,
+	}, req.Address, req.Reason)
+	if nil != err {
+		return &pb.GetRewardListReply{
+			Count: uint64(count),
+			List:  res,
+		}, err
+	}
+
+	for _, vUserReward := range userRewards {
+		res = append(res, &pb.GetRewardListReply_List{
+			User:      vUserReward.User,
+			Reason:    vUserReward.Reason,
+			Amount:    vUserReward.Amount,
+			BlockTime: vUserReward.BlockTime,
+		})
+	}
+
+	return &pb.GetRewardListReply{
+		Count: uint64(count),
+		List:  res,
+	}, nil
 }

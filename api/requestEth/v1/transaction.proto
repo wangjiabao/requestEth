@@ -216,6 +216,12 @@ service Transaction {
       get: "/api/get_buy_list"
     };
   }
+
+  rpc GetRewardList (GetRewardListRequest) returns (GetRewardListReply) {
+    option (google.api.http) = {
+      get: "/api/get_reward_list"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -563,5 +569,22 @@ message GetBuyListReply {
     double price = 2;
     double usdtUse = 3;
     double ausdGrossOut = 4;
+  }
+}
+
+message GetRewardListRequest {
+  string address = 3;
+  uint64 page = 1;
+  uint64 reason = 2;
+}
+
+message GetRewardListReply {
+  uint64 count = 2; // 总数，每页20
+  repeated List list = 1;
+  message List {
+    string user = 1;
+    uint64 reason = 2; // 1盲盒收益 2L1收益 3L2收益 4Top收益 5项目方收益
+    double amount = 3; // 金额
+    uint64 blockTime = 4; // 时间
   }
 }

@@ -1510,6 +1510,10 @@ func (s *TransactionService) GetBuyList(ctx context.Context, req *pb.GetBuyListR
 	return s.ac.GetBuyList(ctx, req)
 }
 
+func (s *TransactionService) GetRewardList(ctx context.Context, req *pb.GetRewardListRequest) (*pb.GetRewardListReply, error) {
+	return s.ac.GetRewardList(ctx, req)
+}
+
 func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenRequest) (*pb.GetBoxOpenReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
@@ -1707,43 +1711,83 @@ func (s *TransactionService) SetRewardTwo(ctx context.Context, req *pb.SetReward
 }
 
 func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetBoxRewardEventRequest) (*pb.GetBoxRewardEventReply, error) {
-	urls := []string{
-		"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
-	}
-
-	//last := s.repo.GetLastProcessedBlock("RewardNotified") // 没有就 0
-
-	last := uint64(0)
-
-	var (
-		events  []RewardNotifiedEvent
-		newLast uint64
-	)
-
-	for _, url := range urls {
-		client, err := ethclient.DialContext(ctx, url)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		events, newLast, err = PollRewardNotifiedIncremental(ctx, client, last)
-		if err != nil {
-			fmt.Println(err)
-			// 换下一个 RPC
-			continue
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
 
-		for _, v := range events {
-			fmt.Println("记录", v)
-		}
-		fmt.Println(newLast)
+		last := uint64(0)
 
-		//// 1) 落库：events（建议唯一键：tx_hash + log_index）
-		//// 2) 落库成功后更新 last block = newLast
-		//if err := s.repo.SaveRewardEventsAndUpdateLast(events, newLast); err != nil {
-		//	return err
-		//}
-		return &pb.GetBoxRewardEventReply{}, nil
+		var (
+			rLast *biz.RewardNotified
+			errT  error
+		)
+		rLast, errT = s.ac.GetRewardLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []RewardNotifiedEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollRewardNotifiedIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertReward(ctx, &biz.RewardNotified{
+					BlockNumber:      v.BlockNumber,
+					BlockTime:        v.BlockTime,
+					LogIndex:         uint32(v.LogIndex),
+					User:             v.User.String(),
+					L1:               v.L1.String(),
+					L2:               v.L2.String(),
+					Profit:           BigIntToFloat64(v.Profit, 18),
+					UserShare:        BigIntToFloat64(v.UserShare, 18),
+					Top:              v.Top.String(),
+					Pool:             BigIntToFloat64(v.Pool, 18),
+					UplinePortionBps: v.UplinePortionBps.Uint64(),
+					ToL1:             BigIntToFloat64(v.ToL1, 18),
+					ToL2:             BigIntToFloat64(v.ToL2, 18),
+					ToTop:            BigIntToFloat64(v.ToTop, 18),
+					ToProject:        BigIntToFloat64(v.ToProject, 18),
+				})
+				if nil != err {
+					fmt.Println("insert reward list err", err)
+				}
+			}
+
+			return &pb.GetBoxRewardEventReply{}, nil
+		}
 	}
 
 	return &pb.GetBoxRewardEventReply{}, nil
@@ -2096,6 +2140,7 @@ const umbrellaStakeDividendABI = `[
 type RewardNotifiedEvent struct {
 	// 用于唯一定位/落库去重
 	BlockNumber uint64
+	BlockTime   uint64
 	TxHash      common.Hash
 	LogIndex    uint
 
@@ -2162,6 +2207,24 @@ func parseRewardNotified(a abi.ABI, lg types.Log) (RewardNotifiedEvent, error) {
 	return out, nil
 }
 
+func fillRewardNotifiedTimes(ctx context.Context, client *ethclient.Client, evs []RewardNotifiedEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
 // FetchRewardNotifiedByRange 按 [fromBlock, toBlock]（包含边界）拉取 RewardNotified 事件，内部自动分段 QueryStep
 func FetchRewardNotifiedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock uint64, toBlock uint64) ([]RewardNotifiedEvent, error) {
 
@@ -2202,6 +2265,11 @@ func FetchRewardNotifiedByRange(ctx context.Context, client *ethclient.Client, c
 			}
 			res = append(res, ev)
 		}
+	}
+
+	// ✅ 统一补时间戳
+	if err := fillRewardNotifiedTimes(ctx, client, res); err != nil {
+		return nil, err
 	}
 
 	return res, nil

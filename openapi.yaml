@@ -488,6 +488,37 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/get_reward_list:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetRewardList
+            parameters:
+                - name: address
+                  in: query
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+                - name: reason
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetRewardListReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/get_sell_event:
         get:
             tags:
@@ -982,6 +1013,27 @@ components:
                 reservesOne:
                     type: string
                 reservesTwo:
+                    type: string
+        GetRewardListReply:
+            type: object
+            properties:
+                count:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetRewardListReply_List'
+        GetRewardListReply_List:
+            type: object
+            properties:
+                user:
+                    type: string
+                reason:
+                    type: string
+                amount:
+                    type: number
+                    format: double
+                blockTime:
                     type: string
         GetSellEventReply:
             type: object

@@ -40,6 +40,7 @@ const OperationTransactionGetExchangeEvent = "/api.requestEth.v1.Transaction/Get
 const OperationTransactionGetExchangeList = "/api.requestEth.v1.Transaction/GetExchangeList"
 const OperationTransactionGetLpByOrderId = "/api.requestEth.v1.Transaction/GetLpByOrderId"
 const OperationTransactionGetReserves = "/api.requestEth.v1.Transaction/GetReserves"
+const OperationTransactionGetRewardList = "/api.requestEth.v1.Transaction/GetRewardList"
 const OperationTransactionGetSellEvent = "/api.requestEth.v1.Transaction/GetSellEvent"
 const OperationTransactionGetUserLp = "/api.requestEth.v1.Transaction/GetUserLp"
 const OperationTransactionRemoveLiquidity = "/api.requestEth.v1.Transaction/RemoveLiquidity"
@@ -75,6 +76,7 @@ type TransactionHTTPServer interface {
 	GetExchangeList(context.Context, *GetExchangeListRequest) (*GetExchangeListReply, error)
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
+	GetRewardList(context.Context, *GetRewardListRequest) (*GetRewardListReply, error)
 	GetSellEvent(context.Context, *GetSellEventRequest) (*GetSellEventReply, error)
 	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
@@ -124,6 +126,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_sell_event", _Transaction_GetSellEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_exchange_list", _Transaction_GetExchangeList0_HTTP_Handler(srv))
 	r.GET("/api/get_buy_list", _Transaction_GetBuyList0_HTTP_Handler(srv))
+	r.GET("/api/get_reward_list", _Transaction_GetRewardList0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -783,6 +786,25 @@ func _Transaction_GetBuyList0_HTTP_Handler(srv TransactionHTTPServer) func(ctx h
 	}
 }
 
+func _Transaction_GetRewardList0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetRewardListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetRewardList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetRewardList(ctx, req.(*GetRewardListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetRewardListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
@@ -805,6 +827,7 @@ type TransactionHTTPClient interface {
 	GetExchangeList(ctx context.Context, req *GetExchangeListRequest, opts ...http.CallOption) (rsp *GetExchangeListReply, err error)
 	GetLpByOrderId(ctx context.Context, req *GetLpByOrderIdRequest, opts ...http.CallOption) (rsp *GetLpByOrderIdReply, err error)
 	GetReserves(ctx context.Context, req *GetReservesRequest, opts ...http.CallOption) (rsp *GetReservesReply, err error)
+	GetRewardList(ctx context.Context, req *GetRewardListRequest, opts ...http.CallOption) (rsp *GetRewardListReply, err error)
 	GetSellEvent(ctx context.Context, req *GetSellEventRequest, opts ...http.CallOption) (rsp *GetSellEventReply, err error)
 	GetUserLp(ctx context.Context, req *GetUserLpRequest, opts ...http.CallOption) (rsp *GetUserLpReply, err error)
 	RemoveLiquidity(ctx context.Context, req *RemoveLiquidityRequest, opts ...http.CallOption) (rsp *RemoveLiquidityReply, err error)
@@ -1092,6 +1115,19 @@ func (c *TransactionHTTPClientImpl) GetReserves(ctx context.Context, in *GetRese
 	pattern := "/api/get_reserves"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetReserves))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetRewardList(ctx context.Context, in *GetRewardListRequest, opts ...http.CallOption) (*GetRewardListReply, error) {
+	var out GetRewardListReply
+	pattern := "/api/get_reward_list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetRewardList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

@@ -73,6 +73,44 @@ type PrimarySell struct {
 	UpdatedAt time.Time `gorm:"type:datetime;not null;comment:更新时间"`
 }
 
+type RewardNotified struct {
+	ID uint64 `gorm:"primarykey;type:bigint unsigned;comment:主键"`
+
+	BlockNumber uint64 `gorm:"column:block_number;type:bigint unsigned;not null;index:idx_block_log,priority:1;comment:区块高度"`
+	BlockTime   uint64 `gorm:"column:block_time;type:bigint unsigned;not null;index:idx_block_time;comment:区块时间(秒)"`
+	LogIndex    uint32 `gorm:"column:log_index;type:int unsigned;not null;default:0;index:idx_block_log,priority:2;comment:logIndex(排序用)"`
+
+	User string `gorm:"column:user;type:varchar(42);not null;index:idx_user_time,priority:1;comment:indexed user"`
+	L1   string `gorm:"column:l1;type:varchar(42);not null;index:idx_l1_time,priority:1;comment:indexed l1"`
+	L2   string `gorm:"column:l2;type:varchar(42);not null;index:idx_l2_time,priority:1;comment:indexed l2"`
+
+	Profit    float64 `gorm:"column:profit;type:decimal(65,18);not null;default:0;comment:profit"`
+	UserShare float64 `gorm:"column:user_share;type:decimal(65,18);not null;default:0;comment:userShare"`
+	Top       string  `gorm:"column:top;type:varchar(42);not null;index:idx_top_time,priority:1;comment:top"`
+
+	Pool             float64 `gorm:"column:pool;type:decimal(65,18);not null;default:0;comment:pool"`
+	UplinePortionBps uint64  `gorm:"column:upline_portion_bps;type:bigint unsigned;not null;default:0;comment:uplinePortionBps"`
+
+	ToL1      float64 `gorm:"column:to_l1;type:decimal(65,18);not null;default:0;comment:toL1"`
+	ToL2      float64 `gorm:"column:to_l2;type:decimal(65,18);not null;default:0;comment:toL2"`
+	ToTop     float64 `gorm:"column:to_top;type:decimal(65,18);not null;default:0;comment:toTop"`
+	ToProject float64 `gorm:"column:to_project;type:decimal(65,18);not null;default:0;comment:toProject"`
+
+	CreatedAt time.Time `gorm:"type:datetime;not null;comment:创建时间"`
+	UpdatedAt time.Time `gorm:"type:datetime;not null;comment:更新时间"`
+}
+
+type RewardDetail struct {
+	ID         uint64    `gorm:"primarykey;type:bigint unsigned;comment:主键"`
+	User       string    `gorm:"column:user;type:varchar(42);not null;index:idx_user_time,priority:1;comment:indexed user"`
+	Amount     float64   `gorm:"column:amount;type:decimal(65,18);not null;default:0;comment:amount"`
+	Reason     uint64    `gorm:"column:reason;type:bigint unsigned;not null;default:0;comment:reason"`
+	NotifiedId uint64    `gorm:"column:notified_id;type:int unsigned;not null;default:0;comment:notified_id"`
+	CreatedAt  time.Time `gorm:"type:datetime;not null;comment:创建时间"`
+	UpdatedAt  time.Time `gorm:"type:datetime;not null;comment:更新时间"`
+	BlockTime  uint64    `gorm:"column:block_time;type:bigint unsigned;not null;index:idx_block_time;comment:区块时间(秒)"`
+}
+
 type UserRepo struct {
 	data *Data
 	log  *log.Helper
@@ -348,4 +386,198 @@ func (u *UserRepo) InsertPrimarySell(ctx context.Context, iData *biz.PrimarySell
 		return errors.New(500, "CREATE_PRIMARY_SELL_ERROR", "信息创建失败")
 	}
 	return nil
+}
+
+func (u *UserRepo) GetRewardNotifiedLast(ctx context.Context) (*biz.RewardNotified, error) {
+	var v RewardNotified
+
+	if err := u.data.DB(ctx).Table("reward_notified").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "REWARD_NOTIFIED_ERROR", err.Error())
+	}
+
+	return &biz.RewardNotified{
+		ID:               v.ID,
+		BlockNumber:      v.BlockNumber,
+		BlockTime:        v.BlockTime,
+		LogIndex:         v.LogIndex,
+		User:             v.User,
+		L1:               v.L1,
+		L2:               v.L2,
+		Profit:           v.Profit,
+		UserShare:        v.UserShare,
+		Top:              v.Top,
+		Pool:             v.Pool,
+		UplinePortionBps: v.UplinePortionBps,
+		ToL1:             v.ToL1,
+		ToL2:             v.ToL2,
+		ToTop:            v.ToTop,
+		ToProject:        v.ToProject,
+		CreatedAt:        v.CreatedAt,
+		UpdatedAt:        v.UpdatedAt,
+	}, nil
+}
+
+func (u *UserRepo) GetRewardNotified(ctx context.Context, start, end uint64) ([]*biz.RewardNotified, error) {
+	var s []RewardNotified
+	res := make([]*biz.RewardNotified, 0)
+
+	if err := u.data.DB(ctx).
+		Table("reward_notified").
+		Where("block_time >= ?", start).
+		Where("block_time <= ?", end).
+		Order("block_time asc, id asc").
+		Find(&s).Error; err != nil {
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "REWARD_NOTIFIED_ERROR", err.Error())
+	}
+
+	for _, v := range s {
+		res = append(res, &biz.RewardNotified{
+			ID:               v.ID,
+			BlockNumber:      v.BlockNumber,
+			BlockTime:        v.BlockTime,
+			LogIndex:         v.LogIndex,
+			User:             v.User,
+			L1:               v.L1,
+			L2:               v.L2,
+			Profit:           v.Profit,
+			UserShare:        v.UserShare,
+			Top:              v.Top,
+			Pool:             v.Pool,
+			UplinePortionBps: v.UplinePortionBps,
+			ToL1:             v.ToL1,
+			ToL2:             v.ToL2,
+			ToTop:            v.ToTop,
+			ToProject:        v.ToProject,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+		})
+	}
+	return res, nil
+}
+
+func (u *UserRepo) InsertRewardNotified(ctx context.Context, iData *biz.RewardNotified) error {
+	var s RewardNotified
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.User = iData.User
+	s.L1 = iData.L1
+	s.L2 = iData.L2
+
+	s.Profit = iData.Profit
+	s.UserShare = iData.UserShare
+	s.Top = iData.Top
+
+	s.Pool = iData.Pool
+	s.UplinePortionBps = iData.UplinePortionBps
+
+	s.ToL1 = iData.ToL1
+	s.ToL2 = iData.ToL2
+	s.ToTop = iData.ToTop
+	s.ToProject = iData.ToProject
+
+	if err := u.data.DB(ctx).Table("reward_notified").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_REWARD_NOTIFIED_ERROR", "信息创建失败")
+	}
+
+	var one RewardDetail
+	one.User = s.User
+	one.Reason = 1
+	one.NotifiedId = s.ID
+	one.Amount = s.UserShare
+	one.BlockTime = s.BlockTime
+	if err := u.data.DB(ctx).Table("reward_detail").Create(&one).Error; err != nil {
+		return errors.New(500, "CREATE_REWARD_DETAIL_ERROR", "信息创建失败")
+	}
+
+	var two RewardDetail
+	two.User = s.L1
+	two.Reason = 2
+	two.NotifiedId = s.ID
+	two.Amount = s.ToL1
+	two.BlockTime = s.BlockTime
+	if err := u.data.DB(ctx).Table("reward_detail").Create(&two).Error; err != nil {
+		return errors.New(500, "CREATE_REWARD_DETAIL_ERROR", "信息创建失败")
+	}
+
+	var three RewardDetail
+	three.User = s.L2
+	three.Reason = 3
+	three.NotifiedId = s.ID
+	three.Amount = s.ToL2
+	three.BlockTime = s.BlockTime
+	if err := u.data.DB(ctx).Table("reward_detail").Create(&three).Error; err != nil {
+		return errors.New(500, "CREATE_REWARD_DETAIL_ERROR", "信息创建失败")
+	}
+
+	var four RewardDetail
+	four.User = s.Top
+	four.Reason = 4
+	four.NotifiedId = s.ID
+	four.Amount = s.ToTop
+	four.BlockTime = s.BlockTime
+	if err := u.data.DB(ctx).Table("reward_detail").Create(&four).Error; err != nil {
+		return errors.New(500, "CREATE_REWARD_DETAIL_ERROR", "信息创建失败")
+	}
+
+	var five RewardDetail
+	five.User = "0x144351b1a5Af4538f53556633D8f10495aA564A8"
+	five.Reason = 5
+	five.NotifiedId = s.ID
+	five.Amount = s.ToProject
+	five.BlockTime = s.BlockTime
+	if err := u.data.DB(ctx).Table("reward_detail").Create(&five).Error; err != nil {
+		return errors.New(500, "CREATE_REWARD_DETAIL_ERROR", "信息创建失败")
+	}
+
+	return nil
+}
+
+// GetUserRewardByUserIdPage .
+func (u *UserRepo) GetUserRewardByUserIdPage(ctx context.Context, b *biz.Pagination, address string, reason uint64) ([]*biz.RewardDetail, error, int64) {
+	var (
+		count   int64
+		rewards []*RewardDetail
+	)
+
+	res := make([]*biz.RewardDetail, 0)
+
+	instance := u.data.db.Where("user", address).Table("reward_detail").Order("id desc")
+	if 0 < reason {
+		instance = instance.Where("reason=?", reason)
+	}
+
+	instance = instance.Count(&count)
+
+	if err := instance.Scopes(Paginate(b.PageNum, b.PageSize)).Find(&rewards).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, errors.NotFound("REWARD_NOT_FOUND", "reward not found"), 0
+		}
+
+		return nil, errors.New(500, "REWARD ERROR", err.Error()), 0
+	}
+
+	for _, reward := range rewards {
+		res = append(res, &biz.RewardDetail{
+			ID:         reward.ID,
+			User:       reward.User,
+			Amount:     reward.Amount,
+			Reason:     reward.Reason,
+			BlockTime:  reward.BlockTime,
+			NotifiedId: reward.NotifiedId,
+			CreatedAt:  reward.CreatedAt,
+			UpdatedAt:  reward.UpdatedAt,
+		})
+	}
+
+	return res, nil, count
 }
