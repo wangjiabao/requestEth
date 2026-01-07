@@ -462,6 +462,46 @@ func (u *UserRepo) GetRewardNotified(ctx context.Context, start, end uint64) ([]
 	return res, nil
 }
 
+func (u *UserRepo) GetRewardNotifiedByIds(ctx context.Context, ids []uint64) (map[uint64]*biz.RewardNotified, error) {
+	var s []RewardNotified
+	res := make(map[uint64]*biz.RewardNotified, 0)
+
+	if err := u.data.DB(ctx).
+		Table("reward_notified").
+		Where("id in(?)", ids).
+		Find(&s).Error; err != nil {
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "REWARD_NOTIFIED_ERROR", err.Error())
+	}
+
+	for _, v := range s {
+		res[v.ID] = &biz.RewardNotified{
+			ID:               v.ID,
+			BlockNumber:      v.BlockNumber,
+			BlockTime:        v.BlockTime,
+			LogIndex:         v.LogIndex,
+			User:             v.User,
+			L1:               v.L1,
+			L2:               v.L2,
+			Profit:           v.Profit,
+			UserShare:        v.UserShare,
+			Top:              v.Top,
+			Pool:             v.Pool,
+			UplinePortionBps: v.UplinePortionBps,
+			ToL1:             v.ToL1,
+			ToL2:             v.ToL2,
+			ToTop:            v.ToTop,
+			ToProject:        v.ToProject,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+		}
+	}
+	return res, nil
+}
+
 func (u *UserRepo) InsertRewardNotified(ctx context.Context, iData *biz.RewardNotified) error {
 	var s RewardNotified
 

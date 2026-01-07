@@ -103,6 +103,7 @@ type UserRepo interface {
 	InsertPrimarySell(ctx context.Context, iData *PrimarySell) error
 	GetRewardNotifiedLast(ctx context.Context) (*RewardNotified, error)
 	GetRewardNotified(ctx context.Context, start, end uint64) ([]*RewardNotified, error)
+	GetRewardNotifiedByIds(ctx context.Context, ids []uint64) (map[uint64]*RewardNotified, error)
 	InsertRewardNotified(ctx context.Context, iData *RewardNotified) error
 	GetUserRewardByUserIdPage(ctx context.Context, b *Pagination, address string, reason uint64) ([]*RewardDetail, error, int64)
 }
@@ -311,9 +312,30 @@ func (ac *AppUsecase) GetRewardList(ctx context.Context, req *pb.GetRewardListRe
 		}, err
 	}
 
+	tmpIds := make([]uint64, 0)
 	for _, vUserReward := range userRewards {
+		tmpIds = append(tmpIds, vUserReward.NotifiedId)
+	}
+
+	var (
+		rn map[uint64]*RewardNotified
+	)
+
+	rn, err = ac.userRepo.GetRewardNotifiedByIds(ctx, tmpIds)
+	if nil != err {
+		return &pb.GetRewardListReply{
+			Count: uint64(count),
+			List:  res,
+		}, err
+	}
+
+	for _, vUserReward := range userRewards {
+		if _, ok := rn[vUserReward.NotifiedId]; !ok {
+			continue
+		}
+
 		res = append(res, &pb.GetRewardListReply_List{
-			User:      vUserReward.User,
+			User:      rn[vUserReward.NotifiedId].User,
 			Reason:    vUserReward.Reason,
 			Amount:    vUserReward.Amount,
 			BlockTime: vUserReward.BlockTime,
