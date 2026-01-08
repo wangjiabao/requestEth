@@ -14,7 +14,6 @@ import (
 func NewHTTPServer(c *conf.Server, transactionService *service.TransactionService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Filter(handlers.CORS(
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}),
 			handlers.AllowedOrigins([]string{"*"}),
 		)),
