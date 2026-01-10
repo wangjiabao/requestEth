@@ -80,6 +80,26 @@ type RewardNotified struct {
 	UpdatedAt        time.Time
 }
 
+type NftMarketPurchase struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	Buyer   string
+	Seller  string
+	TokenID uint64
+
+	PriceUSDT  float64
+	FeePaidInB uint8
+	FeeUSDT    float64
+	FeeB       float64
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type RewardDetail struct {
 	ID         uint64
 	User       string
@@ -106,6 +126,9 @@ type UserRepo interface {
 	GetRewardNotifiedByIds(ctx context.Context, ids []uint64) (map[uint64]*RewardNotified, error)
 	InsertRewardNotified(ctx context.Context, iData *RewardNotified) error
 	GetUserRewardByUserIdPage(ctx context.Context, b *Pagination, address string, reason uint64) ([]*RewardDetail, error, int64)
+	GetNftMarketPurchaseByAddressPage(ctx context.Context, b *Pagination, address string, side uint64) ([]*NftMarketPurchase, error, int64)
+	GetNftMarketPurchaseLast(ctx context.Context) (*NftMarketPurchase, error)
+	InsertNftMarketPurchase(ctx context.Context, iData *NftMarketPurchase) error
 }
 
 // AppUsecase is an app usecase.
@@ -216,6 +239,39 @@ func (ac *AppUsecase) InsertReward(ctx context.Context, trade *RewardNotified) e
 		return nil
 	}); nil != err {
 		fmt.Println(err, "分红写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetNftMarketPurchaseLast(ctx context.Context) (*NftMarketPurchase, error) {
+	var (
+		rLast *NftMarketPurchase
+		err   error
+	)
+	rLast, err = ac.userRepo.GetNftMarketPurchaseLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertNftMarketPurchase(ctx context.Context, trade *NftMarketPurchase) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertNftMarketPurchase(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "买盲盒写入mysql错误")
 		return err
 	}
 
@@ -343,6 +399,43 @@ func (ac *AppUsecase) GetRewardList(ctx context.Context, req *pb.GetRewardListRe
 	}
 
 	return &pb.GetRewardListReply{
+		Count: uint64(count),
+		List:  res,
+	}, nil
+}
+
+func (ac *AppUsecase) GetBuyBoxList(ctx context.Context, req *pb.GetBuyBoxListRequest) (*pb.GetBuyBoxListReply, error) {
+	res := make([]*pb.GetBuyBoxListReply_List, 0)
+
+	var (
+		records []*NftMarketPurchase
+		count   int64
+		err     error
+	)
+
+	records, err, count = ac.userRepo.GetNftMarketPurchaseByAddressPage(ctx, &Pagination{
+		PageNum:  int(req.Page),
+		PageSize: 20,
+	}, req.Address, 1)
+	if nil != err {
+		return &pb.GetBuyBoxListReply{
+			Count: uint64(count),
+			List:  res,
+		}, err
+	}
+
+	for _, v := range records {
+		res = append(res, &pb.GetBuyBoxListReply_List{
+			User:      v.Buyer,
+			TokenId:   v.TokenID,
+			PriceUsdt: v.PriceUSDT,
+			FeeUsdt:   v.FeeUSDT,
+			FeeB:      v.FeeB,
+			BlockTime: v.BlockTime,
+		})
+	}
+
+	return &pb.GetBuyBoxListReply{
 		Count: uint64(count),
 		List:  res,
 	}, nil

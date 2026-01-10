@@ -205,6 +205,12 @@ service Transaction {
     };
   }
 
+  rpc GetBoxBuyEvent (GetBoxBuyEventRequest) returns (GetBoxBuyEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_buy_event"
+    };
+  }
+
   rpc GetExchangeList (GetExchangeListRequest) returns (GetExchangeListReply) {
     option (google.api.http) = {
       get: "/api/get_exchange_list"
@@ -220,6 +226,12 @@ service Transaction {
   rpc GetRewardList (GetRewardListRequest) returns (GetRewardListReply) {
     option (google.api.http) = {
       get: "/api/get_reward_list"
+    };
+  }
+
+  rpc GetBuyBoxList (GetBuyBoxListRequest) returns (GetBuyBoxListReply) {
+    option (google.api.http) = {
+      get: "/api/get_buy_box_list"
     };
   }
 }
@@ -544,6 +556,12 @@ message GetSellEventRequest {
 message GetSellEventReply {
 }
 
+message GetBoxBuyEventRequest {
+}
+
+message GetBoxBuyEventReply {
+}
+
 message GetExchangeListRequest {
   uint64 start = 1;
   uint64 end = 2;
@@ -585,6 +603,24 @@ message GetRewardListReply {
     string user = 1;
     uint64 reason = 2; // 1盲盒收益 2L1收益 3L2收益 4Top收益 5项目方收益
     double amount = 3; // 金额
+    uint64 blockTime = 4; // 时间
+  }
+}
+
+message GetBuyBoxListRequest {
+  string address = 3;
+  uint64 page = 1;
+}
+
+message GetBuyBoxListReply {
+  uint64 count = 2; // 总数，每页20
+  repeated List list = 1;
+  message List {
+    string user = 1;
+    uint64 tokenId = 2; // tokenId
+    double priceUsdt = 3; // 金额
+    double feeUsdt = 6; // 手续费u
+    double feeB = 5; // 手续费b
     uint64 blockTime = 4; // 时间
   }
 }

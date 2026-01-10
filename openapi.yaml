@@ -207,6 +207,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/get_box_buy_event:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBoxBuyEvent
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBoxBuyEventReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/get_box_new:
         get:
             tags:
@@ -323,6 +341,33 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetBuyAICATByOrderIdReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_buy_box_list:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBuyBoxList
+            parameters:
+                - name: address
+                  in: query
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBuyBoxListReply'
                 default:
                     description: Default error response
                     content:
@@ -892,6 +937,9 @@ components:
                     type: string
                 openLength:
                     type: string
+        GetBoxBuyEventReply:
+            type: object
+            properties: {}
         GetBoxNewReply:
             type: object
             properties:
@@ -943,6 +991,33 @@ components:
             type: object
             properties:
                 amount:
+                    type: string
+        GetBuyBoxListReply:
+            type: object
+            properties:
+                count:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetBuyBoxListReply_List'
+        GetBuyBoxListReply_List:
+            type: object
+            properties:
+                user:
+                    type: string
+                tokenId:
+                    type: string
+                priceUsdt:
+                    type: number
+                    format: double
+                feeUsdt:
+                    type: number
+                    format: double
+                feeB:
+                    type: number
+                    format: double
+                blockTime:
                     type: string
         GetBuyByOrderIdReply:
             type: object

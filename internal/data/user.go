@@ -111,6 +111,27 @@ type RewardDetail struct {
 	BlockTime  uint64    `gorm:"column:block_time;type:bigint unsigned;not null;index:idx_block_time;comment:区块时间(秒)"`
 }
 
+// data/nft_market_purchase.go
+type NftMarketPurchase struct {
+	ID uint64 `gorm:"primaryKey;autoIncrement;column:id"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null"`
+	BlockTime   uint64 `gorm:"column:block_time;not null"`
+	LogIndex    uint   `gorm:"column:log_index;not null"`
+
+	Buyer   string `gorm:"column:buyer;type:varchar(42);not null"`
+	Seller  string `gorm:"column:seller;type:varchar(42);not null"`
+	TokenID uint64 `gorm:"column:token_id;not null"`
+
+	PriceUSDT  float64 `gorm:"column:price_usdt;type:decimal(65,18);not null"`
+	FeePaidInB uint8   `gorm:"column:fee_paid_in_b;not null"`
+	FeeUSDT    float64 `gorm:"column:fee_usdt;type:decimal(65,18);not null"`
+	FeeB       float64 `gorm:"column:fee_b;type:decimal(65,18);not null"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"` // 你表没有也无所谓
+}
+
 type UserRepo struct {
 	data *Data
 	log  *log.Helper
@@ -620,4 +641,117 @@ func (u *UserRepo) GetUserRewardByUserIdPage(ctx context.Context, b *biz.Paginat
 	}
 
 	return res, nil, count
+}
+
+// GetNftMarketPurchaseByAddressPage
+// side: 0=buyer或seller  1=buyer  2=seller
+func (u *UserRepo) GetNftMarketPurchaseByAddressPage(
+	ctx context.Context,
+	b *biz.Pagination,
+	address string,
+	side uint64,
+) ([]*biz.NftMarketPurchase, error, int64) {
+
+	var (
+		count int64
+		rows  []*NftMarketPurchase
+	)
+
+	res := make([]*biz.NftMarketPurchase, 0)
+
+	instance := u.data.DB(ctx).Table("nft_market_purchase").Order("id desc")
+
+	if address != "" {
+		if side == 1 {
+			instance = instance.Where("buyer = ?", address)
+		} else if side == 2 {
+			instance = instance.Where("seller = ?", address)
+		} else {
+			instance = instance.Where("(buyer = ? OR seller = ?)", address, address)
+		}
+	}
+
+	instance = instance.Count(&count)
+
+	if err := instance.Scopes(Paginate(b.PageNum, b.PageSize)).Find(&rows).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, errors.NotFound("NFT_PURCHASE_NOT_FOUND", "purchase not found"), 0
+		}
+		return nil, errors.New(500, "NFT_PURCHASE_PAGE_ERROR", err.Error()), 0
+	}
+
+	for _, r := range rows {
+		res = append(res, &biz.NftMarketPurchase{
+			ID:          r.ID,
+			BlockNumber: r.BlockNumber,
+			BlockTime:   r.BlockTime,
+			LogIndex:    r.LogIndex,
+
+			Buyer:   r.Buyer,
+			Seller:  r.Seller,
+			TokenID: r.TokenID,
+
+			PriceUSDT:  r.PriceUSDT,
+			FeePaidInB: r.FeePaidInB,
+			FeeUSDT:    r.FeeUSDT,
+			FeeB:       r.FeeB,
+
+			CreatedAt: r.CreatedAt,
+			UpdatedAt: r.UpdatedAt,
+		})
+	}
+
+	return res, nil, count
+}
+
+func (u *UserRepo) InsertNftMarketPurchase(ctx context.Context, iData *biz.NftMarketPurchase) error {
+	var s NftMarketPurchase
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.Buyer = iData.Buyer
+	s.Seller = iData.Seller
+	s.TokenID = iData.TokenID
+
+	s.PriceUSDT = iData.PriceUSDT
+	s.FeePaidInB = iData.FeePaidInB
+	s.FeeUSDT = iData.FeeUSDT
+	s.FeeB = iData.FeeB
+
+	if err := u.data.DB(ctx).Table("nft_market_purchase").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_NFT_MARKET_PURCHASE_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetNftMarketPurchaseLast(ctx context.Context) (*biz.NftMarketPurchase, error) {
+	var v NftMarketPurchase
+
+	if err := u.data.DB(ctx).Table("nft_market_purchase").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "NFT_MARKET_PURCHASE_ERROR", err.Error())
+	}
+
+	return &biz.NftMarketPurchase{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		Buyer:   v.Buyer,
+		Seller:  v.Seller,
+		TokenID: v.TokenID,
+
+		PriceUSDT:  v.PriceUSDT,
+		FeePaidInB: v.FeePaidInB,
+		FeeUSDT:    v.FeeUSDT,
+		FeeB:       v.FeeB,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
 }

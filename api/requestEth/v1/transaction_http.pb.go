@@ -28,10 +28,12 @@ const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
 const OperationTransactionGetAllTwo = "/api.requestEth.v1.Transaction/GetAllTwo"
 const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
 const OperationTransactionGetBoxAllLength = "/api.requestEth.v1.Transaction/GetBoxAllLength"
+const OperationTransactionGetBoxBuyEvent = "/api.requestEth.v1.Transaction/GetBoxBuyEvent"
 const OperationTransactionGetBoxNew = "/api.requestEth.v1.Transaction/GetBoxNew"
 const OperationTransactionGetBoxOpen = "/api.requestEth.v1.Transaction/GetBoxOpen"
 const OperationTransactionGetBoxRewardEvent = "/api.requestEth.v1.Transaction/GetBoxRewardEvent"
 const OperationTransactionGetBuyAICATByOrderId = "/api.requestEth.v1.Transaction/GetBuyAICATByOrderId"
+const OperationTransactionGetBuyBoxList = "/api.requestEth.v1.Transaction/GetBuyBoxList"
 const OperationTransactionGetBuyByOrderId = "/api.requestEth.v1.Transaction/GetBuyByOrderId"
 const OperationTransactionGetBuyEvent = "/api.requestEth.v1.Transaction/GetBuyEvent"
 const OperationTransactionGetBuyList = "/api.requestEth.v1.Transaction/GetBuyList"
@@ -64,10 +66,12 @@ type TransactionHTTPServer interface {
 	GetAllTwo(context.Context, *GetAllTwoRequest) (*GetAllTwoReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
 	GetBoxAllLength(context.Context, *GetBoxAllRequest) (*GetBoxAllReply, error)
+	GetBoxBuyEvent(context.Context, *GetBoxBuyEventRequest) (*GetBoxBuyEventReply, error)
 	GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error)
 	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
 	GetBoxRewardEvent(context.Context, *GetBoxRewardEventRequest) (*GetBoxRewardEventReply, error)
 	GetBuyAICATByOrderId(context.Context, *GetBuyAICATByOrderIdRequest) (*GetBuyAICATByOrderIdReply, error)
+	GetBuyBoxList(context.Context, *GetBuyBoxListRequest) (*GetBuyBoxListReply, error)
 	GetBuyByOrderId(context.Context, *GetBuyByOrderIdRequest) (*GetBuyByOrderIdReply, error)
 	GetBuyEvent(context.Context, *GetBuyEventRequest) (*GetBuyEventReply, error)
 	GetBuyList(context.Context, *GetBuyListRequest) (*GetBuyListReply, error)
@@ -124,9 +128,11 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_exchange_event", _Transaction_GetExchangeEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_buy_event", _Transaction_GetBuyEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_sell_event", _Transaction_GetSellEvent0_HTTP_Handler(srv))
+	r.GET("/api/get_box_buy_event", _Transaction_GetBoxBuyEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_exchange_list", _Transaction_GetExchangeList0_HTTP_Handler(srv))
 	r.GET("/api/get_buy_list", _Transaction_GetBuyList0_HTTP_Handler(srv))
 	r.GET("/api/get_reward_list", _Transaction_GetRewardList0_HTTP_Handler(srv))
+	r.GET("/api/get_buy_box_list", _Transaction_GetBuyBoxList0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -748,6 +754,25 @@ func _Transaction_GetSellEvent0_HTTP_Handler(srv TransactionHTTPServer) func(ctx
 	}
 }
 
+func _Transaction_GetBoxBuyEvent0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBoxBuyEventRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBoxBuyEvent)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBoxBuyEvent(ctx, req.(*GetBoxBuyEventRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBoxBuyEventReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Transaction_GetExchangeList0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetExchangeListRequest
@@ -805,6 +830,25 @@ func _Transaction_GetRewardList0_HTTP_Handler(srv TransactionHTTPServer) func(ct
 	}
 }
 
+func _Transaction_GetBuyBoxList0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBuyBoxListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBuyBoxList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBuyBoxList(ctx, req.(*GetBuyBoxListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBuyBoxListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
@@ -815,10 +859,12 @@ type TransactionHTTPClient interface {
 	GetAllTwo(ctx context.Context, req *GetAllTwoRequest, opts ...http.CallOption) (rsp *GetAllTwoReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
 	GetBoxAllLength(ctx context.Context, req *GetBoxAllRequest, opts ...http.CallOption) (rsp *GetBoxAllReply, err error)
+	GetBoxBuyEvent(ctx context.Context, req *GetBoxBuyEventRequest, opts ...http.CallOption) (rsp *GetBoxBuyEventReply, err error)
 	GetBoxNew(ctx context.Context, req *GetBoxNewRequest, opts ...http.CallOption) (rsp *GetBoxNewReply, err error)
 	GetBoxOpen(ctx context.Context, req *GetBoxOpenRequest, opts ...http.CallOption) (rsp *GetBoxOpenReply, err error)
 	GetBoxRewardEvent(ctx context.Context, req *GetBoxRewardEventRequest, opts ...http.CallOption) (rsp *GetBoxRewardEventReply, err error)
 	GetBuyAICATByOrderId(ctx context.Context, req *GetBuyAICATByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyAICATByOrderIdReply, err error)
+	GetBuyBoxList(ctx context.Context, req *GetBuyBoxListRequest, opts ...http.CallOption) (rsp *GetBuyBoxListReply, err error)
 	GetBuyByOrderId(ctx context.Context, req *GetBuyByOrderIdRequest, opts ...http.CallOption) (rsp *GetBuyByOrderIdReply, err error)
 	GetBuyEvent(ctx context.Context, req *GetBuyEventRequest, opts ...http.CallOption) (rsp *GetBuyEventReply, err error)
 	GetBuyList(ctx context.Context, req *GetBuyListRequest, opts ...http.CallOption) (rsp *GetBuyListReply, err error)
@@ -967,6 +1013,19 @@ func (c *TransactionHTTPClientImpl) GetBoxAllLength(ctx context.Context, in *Get
 	return &out, err
 }
 
+func (c *TransactionHTTPClientImpl) GetBoxBuyEvent(ctx context.Context, in *GetBoxBuyEventRequest, opts ...http.CallOption) (*GetBoxBuyEventReply, error) {
+	var out GetBoxBuyEventReply
+	pattern := "/api/get_box_buy_event"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBoxBuyEvent))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *TransactionHTTPClientImpl) GetBoxNew(ctx context.Context, in *GetBoxNewRequest, opts ...http.CallOption) (*GetBoxNewReply, error) {
 	var out GetBoxNewReply
 	pattern := "/api/get_box_new"
@@ -1011,6 +1070,19 @@ func (c *TransactionHTTPClientImpl) GetBuyAICATByOrderId(ctx context.Context, in
 	pattern := "/api/get_buy_aicat_by_order_id"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetBuyAICATByOrderId))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetBuyBoxList(ctx context.Context, in *GetBuyBoxListRequest, opts ...http.CallOption) (*GetBuyBoxListReply, error) {
+	var out GetBuyBoxListReply
+	pattern := "/api/get_buy_box_list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBuyBoxList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

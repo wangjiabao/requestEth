@@ -1514,6 +1514,10 @@ func (s *TransactionService) GetRewardList(ctx context.Context, req *pb.GetRewar
 	return s.ac.GetRewardList(ctx, req)
 }
 
+func (s *TransactionService) GetBuyBoxList(ctx context.Context, req *pb.GetBuyBoxListRequest) (*pb.GetBuyBoxListReply, error) {
+	return s.ac.GetBuyBoxList(ctx, req)
+}
+
 func (s *TransactionService) GetBoxOpen(ctx context.Context, req *pb.GetBoxOpenRequest) (*pb.GetBoxOpenReply, error) {
 	urls := []string{
 		"https://bsc-dataseed4.binance.org/",
@@ -2035,6 +2039,88 @@ func (s *TransactionService) GetSellEvent(ctx context.Context, req *pb.GetSellEv
 	}
 
 	return &pb.GetSellEventReply{}, nil
+}
+
+func (s *TransactionService) GetBoxBuyEvent(ctx context.Context, req *pb.GetBoxBuyEventRequest) (*pb.GetBoxBuyEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.NftMarketPurchase
+			errT  error
+		)
+		rLast, errT = s.ac.GetNftMarketPurchaseLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []PurchasedEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollPurchasedIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				tmpPaid := uint8(1)
+				if v.FeePaidInB {
+					tmpPaid = 2
+				}
+				err = s.ac.InsertNftMarketPurchase(ctx, &biz.NftMarketPurchase{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					Buyer:       v.Buyer.String(),
+					Seller:      v.Seller.String(),
+					TokenID:     v.TokenID.Uint64(),
+					PriceUSDT:   BigIntToFloat64(v.PriceUSDT, 18),
+					FeePaidInB:  tmpPaid,
+					FeeUSDT:     BigIntToFloat64(v.FeeUSDT, 18),
+					FeeB:        BigIntToFloat64(v.FeeB, 18),
+				})
+				if nil != err {
+					fmt.Println("insert sell err", err)
+				}
+			}
+
+			return &pb.GetBoxBuyEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxBuyEventReply{}, nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2854,6 +2940,206 @@ func PollSoldIncremental(ctx context.Context, client *ethclient.Client, lastProc
 	}
 
 	evs, err := FetchSoldByRange(ctx, client, PrimaryMarketContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+const (
+	// DeployBlockNFT TODO: 改成 BlindBoxNFT 实际部署块高
+	DeployBlockNFT uint64 = 73413516
+)
+
+var (
+	// NftContract TODO: 改成 BlindBoxNFT 合约地址
+	NftContract = common.HexToAddress("0xE447b0391d3F03befeC0dC09E25c049132618fd9")
+)
+
+const blindBoxPurchasedABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "buyer", "type": "address"},
+      {"indexed": true,  "internalType": "address", "name": "seller", "type": "address"},
+      {"indexed": true,  "internalType": "uint256", "name": "tokenId", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "priceUSDT", "type": "uint256"},
+      {"indexed": false, "internalType": "bool",    "name": "feePaidInB", "type": "bool"},
+      {"indexed": false, "internalType": "uint256", "name": "feeUSDT", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "feeB", "type": "uint256"}
+    ],
+    "name": "Purchased",
+    "type": "event"
+  }
+]`
+
+type PurchasedEvent struct {
+	// 唯一定位（建议落库用 blockNumber+logIndex 去重）
+	BlockNumber uint64
+	LogIndex    uint
+
+	// ✅ 秒级时间戳（区块级，同区块所有交易相同）
+	BlockTime uint64
+
+	// indexed
+	Buyer   common.Address
+	Seller  common.Address
+	TokenID *big.Int
+
+	// data（原样 bigint）
+	PriceUSDT  *big.Int
+	FeePaidInB bool
+	FeeUSDT    *big.Int
+	FeeB       *big.Int
+}
+
+func parsePurchased(a abi.ABI, lg types.Log) (PurchasedEvent, error) {
+	ev, ok := a.Events["Purchased"]
+	if !ok {
+		return PurchasedEvent{}, fmt.Errorf("event Purchased not found in ABI")
+	}
+	// topics: [eventId, buyer, seller, tokenId]
+	if len(lg.Topics) != 4 {
+		return PurchasedEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return PurchasedEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := PurchasedEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+
+		Buyer:   common.BytesToAddress(lg.Topics[1].Bytes()),
+		Seller:  common.BytesToAddress(lg.Topics[2].Bytes()),
+		TokenID: new(big.Int).SetBytes(lg.Topics[3].Bytes()),
+	}
+
+	vals, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return PurchasedEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	// data: priceUSDT, feePaidInB, feeUSDT, feeB
+	if len(vals) != 4 {
+		return PurchasedEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(vals))
+	}
+
+	// 类型断言（严格点，避免 panic）
+	price, ok := vals[0].(*big.Int)
+	if !ok {
+		return PurchasedEvent{}, fmt.Errorf("bad type priceUSDT: %T", vals[0])
+	}
+	paidInB, ok := vals[1].(bool)
+	if !ok {
+		return PurchasedEvent{}, fmt.Errorf("bad type feePaidInB: %T", vals[1])
+	}
+	feeU, ok := vals[2].(*big.Int)
+	if !ok {
+		return PurchasedEvent{}, fmt.Errorf("bad type feeUSDT: %T", vals[2])
+	}
+	feeB, ok := vals[3].(*big.Int)
+	if !ok {
+		return PurchasedEvent{}, fmt.Errorf("bad type feeB: %T", vals[3])
+	}
+
+	out.PriceUSDT = price
+	out.FeePaidInB = paidInB
+	out.FeeUSDT = feeU
+	out.FeeB = feeB
+
+	return out, nil
+}
+
+// ✅ 批量填充 blockTime：缓存 blockNumber -> header.Time（秒）
+func fillBlockTimesPurchased(ctx context.Context, client *ethclient.Client, evs []PurchasedEvent) error {
+	cache := make(map[uint64]uint64, 256)
+
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+// FetchPurchasedByRange 按 [fromBlock, toBlock] 拉取 Purchased，并填充 BlockTime(秒)
+func FetchPurchasedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]PurchasedEvent, error) {
+	if toBlock < fromBlock {
+		return []PurchasedEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(blindBoxPurchasedABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	purchasedID := parsedABI.Events["Purchased"].ID
+
+	res := make([]PurchasedEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{purchasedID}},
+		}
+
+		logs, err := client.FilterLogs(ctx, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parsePurchased(parsedABI, lg)
+			if err != nil {
+				// 不落库 txHash，但报错时带上方便定位
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ 统一补时间戳
+	if err := fillBlockTimesPurchased(ctx, client, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// PollPurchasedIncremental：增量拉取 + latest-6
+func PollPurchasedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []PurchasedEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockNFT {
+		from = DeployBlockNFT
+	}
+	if safeTo < from {
+		return []PurchasedEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchPurchasedByRange(ctx, client, NftContract, from, safeTo)
 	if err != nil {
 		return nil, lastProcessedFromDB, err
 	}
