@@ -2335,7 +2335,7 @@ func (s *TransactionService) GetBoxUnListEvent(ctx context.Context, req *pb.GetB
 					BlockTime:   v.BlockTime,
 					LogIndex:    v.LogIndex,
 					Operator:    v.Operator.String(),
-					TokenID:     0,
+					TokenID:     v.TokenID.Uint64(),
 				})
 				if nil != err {
 					fmt.Println("insert un list box err", err)
