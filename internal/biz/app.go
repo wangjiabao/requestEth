@@ -111,6 +111,90 @@ type RewardDetail struct {
 	BlockTime  uint64
 }
 
+type NftMinted struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	ToAddr  string
+	TokenID uint64
+
+	Tier     uint64
+	UsdtPaid float64
+
+	Status   uint8
+	ListedAt uint64
+
+	OpenStatus uint8
+	OpenedAt   uint64
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type NftMarketListed struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	Seller    string
+	TokenID   uint64
+	Timestamp uint64
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type NftMarketUnlisted struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	Operator string
+	TokenID  uint64
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type NftOpened struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	UserAddr string
+	TokenID  uint64
+
+	OpenedAt uint64
+	Reward   float64
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type NftTransfer struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	FromAddr string
+	ToAddr   string
+	TokenID  uint64
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type UserRepo interface {
 	GetSwapTradeLast(ctx context.Context) (*SwapTrade, error)
 	GetSwapTrade(ctx context.Context, start, end uint64) ([]*SwapTrade, error)
@@ -129,6 +213,16 @@ type UserRepo interface {
 	GetNftMarketPurchaseByAddressPage(ctx context.Context, b *Pagination, address string, side uint64) ([]*NftMarketPurchase, error, int64)
 	GetNftMarketPurchaseLast(ctx context.Context) (*NftMarketPurchase, error)
 	InsertNftMarketPurchase(ctx context.Context, iData *NftMarketPurchase) error
+	InsertNftMinted(ctx context.Context, iData *NftMinted) error
+	GetNftMintedLast(ctx context.Context) (*NftMinted, error)
+	InsertNftMarketListed(ctx context.Context, iData *NftMarketListed) error
+	GetNftMarketListedLast(ctx context.Context) (*NftMarketListed, error)
+	InsertNftMarketUnlisted(ctx context.Context, iData *NftMarketUnlisted) error
+	GetNftMarketUnlistedLast(ctx context.Context) (*NftMarketUnlisted, error)
+	InsertNftOpened(ctx context.Context, iData *NftOpened) error
+	GetNftOpenedLast(ctx context.Context) (*NftOpened, error)
+	InsertNftTransfer(ctx context.Context, iData *NftTransfer) error
+	GetNftTransferLast(ctx context.Context) (*NftTransfer, error)
 }
 
 // AppUsecase is an app usecase.
@@ -265,6 +359,171 @@ func (ac *AppUsecase) InsertNftMarketPurchase(ctx context.Context, trade *NftMar
 
 	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
 		err = ac.userRepo.InsertNftMarketPurchase(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "买盲盒写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetNftMarketListedLast(ctx context.Context) (*NftMarketListed, error) {
+	var (
+		rLast *NftMarketListed
+		err   error
+	)
+	rLast, err = ac.userRepo.GetNftMarketListedLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertNftMarketListed(ctx context.Context, trade *NftMarketListed) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertNftMarketListed(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "买盲盒写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetNftMarketUnlistedLast(ctx context.Context) (*NftMarketUnlisted, error) {
+	var (
+		rLast *NftMarketUnlisted
+		err   error
+	)
+	rLast, err = ac.userRepo.GetNftMarketUnlistedLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertNftMarketUnlisted(ctx context.Context, trade *NftMarketUnlisted) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertNftMarketUnlisted(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "买盲盒写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetNftTransferLast(ctx context.Context) (*NftTransfer, error) {
+	var (
+		rLast *NftTransfer
+		err   error
+	)
+	rLast, err = ac.userRepo.GetNftTransferLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertNftTransfer(ctx context.Context, trade *NftTransfer) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertNftTransfer(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "买盲盒写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetNftOpenedLast(ctx context.Context) (*NftOpened, error) {
+	var (
+		rLast *NftOpened
+		err   error
+	)
+	rLast, err = ac.userRepo.GetNftOpenedLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertNftOpened(ctx context.Context, trade *NftOpened) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertNftOpened(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "买盲盒写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetNftMintedLast(ctx context.Context) (*NftMinted, error) {
+	var (
+		rLast *NftMinted
+		err   error
+	)
+	rLast, err = ac.userRepo.GetNftMintedLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertNftMinted(ctx context.Context, trade *NftMinted) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertNftMinted(ctx, trade)
 		if nil != err {
 			return err
 		}

@@ -211,6 +211,36 @@ service Transaction {
     };
   }
 
+  rpc GetBoxMintEvent (GetBoxMintEventRequest) returns (GetBoxMintEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_mint_event"
+    };
+  }
+
+  rpc GetBoxListEvent (GetBoxListEventRequest) returns (GetBoxListEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_list_event"
+    };
+  }
+
+  rpc GetBoxUnListEvent (GetBoxUnListEventRequest) returns (GetBoxUnListEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_unlist_event"
+    };
+  }
+
+  rpc GetBoxOpenEvent (GetBoxOpenEventRequest) returns (GetBoxOpenEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_open_event"
+    };
+  }
+
+  rpc GetBoxTransferEvent (GetBoxTransferEventRequest) returns (GetBoxTransferEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_transfer_event"
+    };
+  }
+
   rpc GetExchangeList (GetExchangeListRequest) returns (GetExchangeListReply) {
     option (google.api.http) = {
       get: "/api/get_exchange_list"
@@ -560,6 +590,36 @@ message GetBoxBuyEventRequest {
 }
 
 message GetBoxBuyEventReply {
+}
+
+message GetBoxMintEventRequest {
+}
+
+message GetBoxMintEventReply {
+}
+
+message GetBoxListEventRequest {
+}
+
+message GetBoxListEventReply {
+}
+
+message GetBoxUnListEventRequest {
+}
+
+message GetBoxUnListEventReply {
+}
+
+message GetBoxOpenEventRequest {
+}
+
+message GetBoxOpenEventReply {
+}
+
+message GetBoxTransferEventRequest {
+}
+
+message GetBoxTransferEventReply {
 }
 
 message GetExchangeListRequest {

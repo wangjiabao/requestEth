@@ -132,6 +132,90 @@ type NftMarketPurchase struct {
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"` // 你表没有也无所谓
 }
 
+type NftMinted struct {
+	ID uint64 `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null" json:"block_number"`
+	BlockTime   uint64 `gorm:"column:block_time;not null" json:"block_time"`
+	LogIndex    uint   `gorm:"column:log_index;not null;default:0" json:"log_index"`
+
+	ToAddr  string `gorm:"column:to_addr;type:varchar(42);not null" json:"to_addr"`
+	TokenID uint64 `gorm:"column:token_id;not null" json:"token_id"`
+
+	Tier     uint64  `gorm:"column:tier;not null;default:0" json:"tier"`
+	UsdtPaid float64 `gorm:"column:usdt_paid;not null;default:0" json:"usdt_paid"`
+
+	Status   uint8  `gorm:"column:status;not null;default:0" json:"status"`
+	ListedAt uint64 `gorm:"column:listed_at;not null;default:0" json:"listed_at"`
+
+	OpenStatus uint8  `gorm:"column:open_status;not null;default:0" json:"open_status"`
+	OpenedAt   uint64 `gorm:"column:opened_at;not null;default:0" json:"opened_at"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
+}
+
+type NftMarketListed struct {
+	ID uint64 `gorm:"column:id;primaryKey;autoIncrement"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null"`
+	BlockTime   uint64 `gorm:"column:block_time;not null"`
+	LogIndex    uint   `gorm:"column:log_index;not null;default:0"`
+
+	Seller    string `gorm:"column:seller;type:varchar(42);not null"`
+	TokenID   uint64 `gorm:"column:token_id;not null"`
+	Timestamp uint64 `gorm:"column:timestamp;not null;default:0"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+}
+
+type NftMarketUnlisted struct {
+	ID uint64 `gorm:"column:id;primaryKey;autoIncrement"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null"`
+	BlockTime   uint64 `gorm:"column:block_time;not null"`
+	LogIndex    uint   `gorm:"column:log_index;not null;default:0"`
+
+	Operator string `gorm:"column:operator;type:varchar(42);not null"`
+	TokenID  uint64 `gorm:"column:token_id;not null"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+}
+
+type NftOpened struct {
+	ID uint64 `gorm:"column:id;primaryKey;autoIncrement"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null"`
+	BlockTime   uint64 `gorm:"column:block_time;not null"`
+	LogIndex    uint   `gorm:"column:log_index;not null;default:0"`
+
+	UserAddr string `gorm:"column:user_addr;type:varchar(42);not null"`
+	TokenID  uint64 `gorm:"column:token_id;not null" json:"token_id"`
+
+	OpenedAt uint64  `gorm:"column:opened_at;not null;default:0"`
+	Reward   float64 `gorm:"column:reward;type:decimal(65,18);not null;default:0"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+}
+
+type NftTransfer struct {
+	ID uint64 `gorm:"column:id;primaryKey;autoIncrement"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null"`
+	BlockTime   uint64 `gorm:"column:block_time;not null"`
+	LogIndex    uint   `gorm:"column:log_index;not null;default:0"`
+
+	FromAddr string `gorm:"column:from_addr;type:varchar(42);not null"`
+	ToAddr   string `gorm:"column:to_addr;type:varchar(42);not null"`
+	TokenID  uint64 `gorm:"column:token_id;not null"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+}
+
 type UserRepo struct {
 	data *Data
 	log  *log.Helper
@@ -750,6 +834,231 @@ func (u *UserRepo) GetNftMarketPurchaseLast(ctx context.Context) (*biz.NftMarket
 		FeePaidInB: v.FeePaidInB,
 		FeeUSDT:    v.FeeUSDT,
 		FeeB:       v.FeeB,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
+}
+
+func (u *UserRepo) InsertNftMinted(ctx context.Context, iData *biz.NftMinted) error {
+	var s NftMinted
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.ToAddr = iData.ToAddr
+	s.TokenID = iData.TokenID
+
+	s.Tier = iData.Tier
+	s.UsdtPaid = iData.UsdtPaid
+
+	// ✅ 默认值交给 DB：status/open_status/listed_at/opened_at
+	// 如果你就是要插入时强行写，也可以从 iData 赋值
+
+	if err := u.data.DB(ctx).Table("nft_minted").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_NFT_MINTED_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetNftMintedLast(ctx context.Context) (*biz.NftMinted, error) {
+	var v NftMinted
+
+	if err := u.data.DB(ctx).Table("nft_minted").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "NFT_MINTED_ERROR", err.Error())
+	}
+
+	return &biz.NftMinted{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		ToAddr:  v.ToAddr,
+		TokenID: v.TokenID,
+
+		Tier:     v.Tier,
+		UsdtPaid: v.UsdtPaid,
+
+		Status:   v.Status,
+		ListedAt: v.ListedAt,
+
+		OpenStatus: v.OpenStatus,
+		OpenedAt:   v.OpenedAt,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
+}
+
+func (u *UserRepo) InsertNftMarketListed(ctx context.Context, iData *biz.NftMarketListed) error {
+	var s NftMarketListed
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.Seller = iData.Seller
+	s.TokenID = iData.TokenID
+	s.Timestamp = iData.Timestamp
+
+	if err := u.data.DB(ctx).Table("nft_market_listed").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_NFT_MARKET_LISTED_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetNftMarketListedLast(ctx context.Context) (*biz.NftMarketListed, error) {
+	var v NftMarketListed
+
+	if err := u.data.DB(ctx).Table("nft_market_listed").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "NFT_MARKET_LISTED_ERROR", err.Error())
+	}
+
+	return &biz.NftMarketListed{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		Seller:    v.Seller,
+		TokenID:   v.TokenID,
+		Timestamp: v.Timestamp,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
+}
+
+func (u *UserRepo) InsertNftMarketUnlisted(ctx context.Context, iData *biz.NftMarketUnlisted) error {
+	var s NftMarketUnlisted
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.Operator = iData.Operator
+	s.TokenID = iData.TokenID
+
+	if err := u.data.DB(ctx).Table("nft_market_unlisted").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_NFT_MARKET_UNLISTED_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetNftMarketUnlistedLast(ctx context.Context) (*biz.NftMarketUnlisted, error) {
+	var v NftMarketUnlisted
+
+	if err := u.data.DB(ctx).Table("nft_market_unlisted").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "NFT_MARKET_UNLISTED_ERROR", err.Error())
+	}
+
+	return &biz.NftMarketUnlisted{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		Operator: v.Operator,
+		TokenID:  v.TokenID,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
+}
+
+func (u *UserRepo) InsertNftOpened(ctx context.Context, iData *biz.NftOpened) error {
+	var s NftOpened
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.UserAddr = iData.UserAddr
+	s.TokenID = iData.TokenID
+
+	s.OpenedAt = iData.OpenedAt
+	s.Reward = iData.Reward
+
+	if err := u.data.DB(ctx).Table("nft_opened").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_NFT_OPENED_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetNftOpenedLast(ctx context.Context) (*biz.NftOpened, error) {
+	var v NftOpened
+
+	if err := u.data.DB(ctx).Table("nft_opened").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "NFT_OPENED_ERROR", err.Error())
+	}
+
+	return &biz.NftOpened{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		UserAddr: v.UserAddr,
+		TokenID:  v.TokenID,
+
+		OpenedAt: v.OpenedAt,
+		Reward:   v.Reward,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
+}
+
+func (u *UserRepo) InsertNftTransfer(ctx context.Context, iData *biz.NftTransfer) error {
+	var s NftTransfer
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.FromAddr = iData.FromAddr
+	s.ToAddr = iData.ToAddr
+	s.TokenID = iData.TokenID
+
+	if err := u.data.DB(ctx).Table("nft_transfer").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_NFT_TRANSFER_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetNftTransferLast(ctx context.Context) (*biz.NftTransfer, error) {
+	var v NftTransfer
+
+	if err := u.data.DB(ctx).Table("nft_transfer").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	return &biz.NftTransfer{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		FromAddr: v.FromAddr,
+		ToAddr:   v.ToAddr,
+		TokenID:  v.TokenID,
 
 		CreatedAt: v.CreatedAt,
 		UpdatedAt: v.UpdatedAt,

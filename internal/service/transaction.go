@@ -2123,6 +2123,381 @@ func (s *TransactionService) GetBoxBuyEvent(ctx context.Context, req *pb.GetBoxB
 	return &pb.GetBoxBuyEventReply{}, nil
 }
 
+func (s *TransactionService) GetBoxMintEvent(ctx context.Context, req *pb.GetBoxMintEventRequest) (*pb.GetBoxMintEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.NftMinted
+			errT  error
+		)
+		rLast, errT = s.ac.GetNftMintedLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []MintedEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollMintedIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertNftMinted(ctx, &biz.NftMinted{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					ToAddr:      v.To.String(),
+					TokenID:     v.TokenID.Uint64(),
+					Tier:        uint64(v.Tier),
+					UsdtPaid:    BigIntToFloat64(v.UsdtPaid, 18),
+					Status:      0,
+					ListedAt:    0,
+					OpenStatus:  0,
+					OpenedAt:    0,
+				})
+				if nil != err {
+					fmt.Println("insert minted box err", err)
+				}
+			}
+
+			return &pb.GetBoxMintEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxMintEventReply{}, nil
+}
+
+func (s *TransactionService) GetBoxListEvent(ctx context.Context, req *pb.GetBoxListEventRequest) (*pb.GetBoxListEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.NftMarketListed
+			errT  error
+		)
+		rLast, errT = s.ac.GetNftMarketListedLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []ListedEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollListedIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertNftMarketListed(ctx, &biz.NftMarketListed{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					Seller:      v.Seller.String(),
+					TokenID:     v.TokenID.Uint64(),
+					Timestamp:   v.Timestamp.Uint64(),
+				})
+				if nil != err {
+					fmt.Println("insert list box err", err)
+				}
+			}
+
+			return &pb.GetBoxListEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxListEventReply{}, nil
+}
+
+func (s *TransactionService) GetBoxUnListEvent(ctx context.Context, req *pb.GetBoxUnListEventRequest) (*pb.GetBoxUnListEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.NftMarketUnlisted
+			errT  error
+		)
+		rLast, errT = s.ac.GetNftMarketUnlistedLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []UnlistedEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollUnlistedIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertNftMarketUnlisted(ctx, &biz.NftMarketUnlisted{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					Operator:    v.Operator.String(),
+					TokenID:     0,
+				})
+				if nil != err {
+					fmt.Println("insert un list box err", err)
+				}
+			}
+
+			return &pb.GetBoxUnListEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxUnListEventReply{}, nil
+}
+
+func (s *TransactionService) GetBoxOpenEvent(ctx context.Context, req *pb.GetBoxOpenEventRequest) (*pb.GetBoxOpenEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.NftOpened
+			errT  error
+		)
+		rLast, errT = s.ac.GetNftOpenedLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []OpenedEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollOpenedIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertNftOpened(ctx, &biz.NftOpened{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					UserAddr:    v.Owner.String(),
+					TokenID:     v.TokenID.Uint64(),
+					OpenedAt:    v.Timestamp.Uint64(),
+					Reward:      BigIntToFloat64(v.BnbPaid, 18),
+				})
+				if nil != err {
+					fmt.Println("insert open box err", err)
+				}
+			}
+
+			return &pb.GetBoxOpenEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxOpenEventReply{}, nil
+}
+
+func (s *TransactionService) GetBoxTransferEvent(ctx context.Context, req *pb.GetBoxTransferEventRequest) (*pb.GetBoxTransferEventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.NftTransfer
+			errT  error
+		)
+		rLast, errT = s.ac.GetNftTransferLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []TransferEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollTransferIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertNftTransfer(ctx, &biz.NftTransfer{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					FromAddr:    v.From.String(),
+					ToAddr:      v.To.String(),
+					TokenID:     v.TokenID.Uint64(),
+				})
+				if nil != err {
+					fmt.Println("insert tran box err", err)
+				}
+			}
+
+			return &pb.GetBoxTransferEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxTransferEventReply{}, nil
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
@@ -2946,6 +3321,8 @@ func PollSoldIncremental(ctx context.Context, client *ethclient.Client, lastProc
 	return evs, safeTo, nil
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const (
 	// DeployBlockNFT TODO: 改成 BlindBoxNFT 实际部署块高
 	DeployBlockNFT uint64 = 73413516
@@ -3024,7 +3401,6 @@ func parsePurchased(a abi.ABI, lg types.Log) (PurchasedEvent, error) {
 		return PurchasedEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(vals))
 	}
 
-	// 类型断言（严格点，避免 panic）
 	price, ok := vals[0].(*big.Int)
 	if !ok {
 		return PurchasedEvent{}, fmt.Errorf("bad type priceUSDT: %T", vals[0])
@@ -3050,6 +3426,44 @@ func parsePurchased(a abi.ABI, lg types.Log) (PurchasedEvent, error) {
 	return out, nil
 }
 
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func filterLogsRetryPurchased(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func headerByNumberRetryPurchased(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
 // ✅ 批量填充 blockTime：缓存 blockNumber -> header.Time（秒）
 func fillBlockTimesPurchased(ctx context.Context, client *ethclient.Client, evs []PurchasedEvent) error {
 	cache := make(map[uint64]uint64, 256)
@@ -3060,10 +3474,12 @@ func fillBlockTimesPurchased(ctx context.Context, client *ethclient.Client, evs 
 			evs[i].BlockTime = ts
 			continue
 		}
-		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+
+		h, err := headerByNumberRetryPurchased(ctx, client, bn)
 		if err != nil {
 			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
 		}
+
 		cache[bn] = h.Time
 		evs[i].BlockTime = h.Time
 	}
@@ -3097,7 +3513,8 @@ func FetchPurchasedByRange(ctx context.Context, client *ethclient.Client, contra
 			Topics:    [][]common.Hash{{purchasedID}},
 		}
 
-		logs, err := client.FilterLogs(ctx, q)
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetryPurchased(ctx, client, q)
 		if err != nil {
 			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
 		}
@@ -3105,14 +3522,13 @@ func FetchPurchasedByRange(ctx context.Context, client *ethclient.Client, contra
 		for _, lg := range logs {
 			ev, err := parsePurchased(parsedABI, lg)
 			if err != nil {
-				// 不落库 txHash，但报错时带上方便定位
 				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
 			}
 			res = append(res, ev)
 		}
 	}
 
-	// ✅ 统一补时间戳
+	// ✅ 统一补时间戳（HeaderByNumber 也最多重试 5 次）
 	if err := fillBlockTimesPurchased(ctx, client, res); err != nil {
 		return nil, err
 	}
@@ -3120,7 +3536,7 @@ func FetchPurchasedByRange(ctx context.Context, client *ethclient.Client, contra
 	return res, nil
 }
 
-// PollPurchasedIncremental：增量拉取 + latest-6
+// PollPurchasedIncremental：增量拉取 + latest-Confirmations
 func PollPurchasedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []PurchasedEvent, newLastProcessed uint64, err error) {
 	head, err := client.BlockNumber(ctx)
 	if err != nil {
@@ -3140,6 +3556,997 @@ func PollPurchasedIncremental(ctx context.Context, client *ethclient.Client, las
 	}
 
 	evs, err := FetchPurchasedByRange(ctx, client, NftContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	DeployBlockNFTListed uint64 = 73402672 // TODO: 改成你想开始监听的块高
+)
+
+const blindBoxListedABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "seller", "type": "address"},
+      {"indexed": true,  "internalType": "uint256", "name": "tokenId", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256"}
+    ],
+    "name": "Listed",
+    "type": "event"
+  }
+]`
+
+type ListedEvent struct {
+	BlockNumber uint64
+	LogIndex    uint
+	BlockTime   uint64 // 秒级（区块时间）
+
+	// indexed
+	Seller  common.Address
+	TokenID *big.Int
+
+	// data
+	Timestamp *big.Int
+}
+
+func parseListed(a abi.ABI, lg types.Log) (ListedEvent, error) {
+	ev, ok := a.Events["Listed"]
+	if !ok {
+		return ListedEvent{}, fmt.Errorf("event Listed not found in ABI")
+	}
+	// topics: [eventId, seller, tokenId]
+	if len(lg.Topics) != 3 {
+		return ListedEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return ListedEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := ListedEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+		Seller:      common.BytesToAddress(lg.Topics[1].Bytes()),
+		TokenID:     new(big.Int).SetBytes(lg.Topics[2].Bytes()),
+	}
+
+	vals, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return ListedEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	// data: timestamp
+	if len(vals) != 1 {
+		return ListedEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(vals))
+	}
+
+	ts, ok := vals[0].(*big.Int)
+	if !ok {
+		return ListedEvent{}, fmt.Errorf("bad type timestamp: %T", vals[0])
+	}
+	out.Timestamp = ts
+
+	return out, nil
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func filterLogsRetryListed(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func headerByNumberRetryListed(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+func fillBlockTimesListed(ctx context.Context, client *ethclient.Client, evs []ListedEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+
+		h, err := headerByNumberRetryListed(ctx, client, bn)
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+func FetchListedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]ListedEvent, error) {
+	if toBlock < fromBlock {
+		return []ListedEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(blindBoxListedABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	listedID := parsedABI.Events["Listed"].ID
+
+	res := make([]ListedEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{listedID}},
+		}
+
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetryListed(ctx, client, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseListed(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ HeaderByNumber 也最多重试 5 次
+	if err := fillBlockTimesListed(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func PollListedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []ListedEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockNFTListed {
+		from = DeployBlockNFTListed
+	}
+	if safeTo < from {
+		return []ListedEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchListedByRange(ctx, client, NftContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	DeployBlockNFTUnlisted uint64 = 73530659 // TODO: 改成你想开始监听的块高
+)
+
+const blindBoxUnlistedABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "operator", "type": "address"},
+      {"indexed": true,  "internalType": "uint256", "name": "tokenId", "type": "uint256"}
+    ],
+    "name": "Unlisted",
+    "type": "event"
+  }
+]`
+
+type UnlistedEvent struct {
+	BlockNumber uint64
+	LogIndex    uint
+	BlockTime   uint64 // 秒级
+
+	// indexed
+	Operator common.Address
+	TokenID  *big.Int
+}
+
+func parseUnlisted(a abi.ABI, lg types.Log) (UnlistedEvent, error) {
+	ev, ok := a.Events["Unlisted"]
+	if !ok {
+		return UnlistedEvent{}, fmt.Errorf("event Unlisted not found in ABI")
+	}
+	// topics: [eventId, operator, tokenId]
+	if len(lg.Topics) != 3 {
+		return UnlistedEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return UnlistedEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	return UnlistedEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+		Operator:    common.BytesToAddress(lg.Topics[1].Bytes()),
+		TokenID:     new(big.Int).SetBytes(lg.Topics[2].Bytes()),
+	}, nil
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func filterLogsRetryUnlisted(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func headerByNumberRetryUnlisted(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+func fillBlockTimesUnlisted(ctx context.Context, client *ethclient.Client, evs []UnlistedEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+
+		h, err := headerByNumberRetryUnlisted(ctx, client, bn)
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+func FetchUnlistedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]UnlistedEvent, error) {
+	if toBlock < fromBlock {
+		return []UnlistedEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(blindBoxUnlistedABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	unlistedID := parsedABI.Events["Unlisted"].ID
+
+	res := make([]UnlistedEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{unlistedID}},
+		}
+
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetryUnlisted(ctx, client, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseUnlisted(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ HeaderByNumber 也最多重试 5 次
+	if err := fillBlockTimesUnlisted(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func PollUnlistedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []UnlistedEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockNFTUnlisted {
+		from = DeployBlockNFTUnlisted
+	}
+	if safeTo < from {
+		return []UnlistedEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchUnlistedByRange(ctx, client, NftContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* =========================
+   Minted (铸造) 事件
+   ========================= */
+
+const (
+	DeployBlockNFTMint uint64 = 72539344
+)
+
+const blindBoxMintedABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "to", "type": "address"},
+      {"indexed": true,  "internalType": "uint256", "name": "tokenId", "type": "uint256"},
+      {"indexed": true,  "internalType": "uint8",   "name": "tier", "type": "uint8"},
+      {"indexed": false, "internalType": "uint256", "name": "usdtPaid", "type": "uint256"}
+    ],
+    "name": "Minted",
+    "type": "event"
+  }
+]`
+
+type MintedEvent struct {
+	BlockNumber uint64
+	LogIndex    uint
+	BlockTime   uint64 // 秒级
+
+	// indexed
+	To      common.Address
+	TokenID *big.Int
+
+	// data
+	Tier     uint8
+	UsdtPaid *big.Int
+}
+
+func parseMinted(a abi.ABI, lg types.Log) (MintedEvent, error) {
+	ev, ok := a.Events["Minted"]
+	if !ok {
+		return MintedEvent{}, fmt.Errorf("event Minted not found in ABI")
+	}
+	// topics: [eventId, to, tokenId, tier]
+	if len(lg.Topics) != 4 {
+		return MintedEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return MintedEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := MintedEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+
+		To:      common.BytesToAddress(lg.Topics[1].Bytes()),
+		TokenID: new(big.Int).SetBytes(lg.Topics[2].Bytes()),
+	}
+
+	// tier 是 indexed，topic 里是 32 bytes uint
+	tierBI := new(big.Int).SetBytes(lg.Topics[3].Bytes())
+	if tierBI.Sign() < 0 || tierBI.BitLen() > 8 {
+		return MintedEvent{}, fmt.Errorf("tier out of uint8: %s", tierBI.String())
+	}
+	out.Tier = uint8(tierBI.Uint64())
+
+	// 非 indexed data：usdtPaid
+	vals, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return MintedEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	if len(vals) != 1 {
+		return MintedEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(vals))
+	}
+
+	usdtPaid, ok := vals[0].(*big.Int)
+	if !ok {
+		return MintedEvent{}, fmt.Errorf("bad type usdtPaid: %T", vals[0])
+	}
+	out.UsdtPaid = usdtPaid
+
+	return out, nil
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func filterLogsRetryMinted(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func headerByNumberRetryMinted(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+func fillBlockTimesMinted(ctx context.Context, client *ethclient.Client, evs []MintedEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+
+		h, err := headerByNumberRetryMinted(ctx, client, bn)
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+// FetchMintedByRange 按 [fromBlock, toBlock] 拉取 Minted，并填充 BlockTime(秒)
+func FetchMintedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]MintedEvent, error) {
+	if toBlock < fromBlock {
+		return []MintedEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(blindBoxMintedABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	mintedID := parsedABI.Events["Minted"].ID
+
+	res := make([]MintedEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{mintedID}},
+		}
+
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetryMinted(ctx, client, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseMinted(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ HeaderByNumber 也最多重试 5 次
+	if err := fillBlockTimesMinted(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// PollMintedIncremental：增量拉取 + latest-Confirmations
+func PollMintedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []MintedEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockNFTMint {
+		from = DeployBlockNFTMint
+	}
+	if safeTo < from {
+		return []MintedEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchMintedByRange(ctx, client, NftContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	DeployBlockNFTOpened uint64 = 73406511 // TODO: 按你的实际部署/开启监听块高改
+)
+
+const blindBoxOpenedABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "owner", "type": "address"},
+      {"indexed": true,  "internalType": "uint256", "name": "tokenId", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "bnbPaid", "type": "uint256"}
+    ],
+    "name": "Opened",
+    "type": "event"
+  }
+]`
+
+type OpenedEvent struct {
+	BlockNumber uint64
+	LogIndex    uint
+	BlockTime   uint64 // 秒级（区块时间）
+
+	// indexed
+	Owner   common.Address
+	TokenID *big.Int
+
+	// data
+	Timestamp *big.Int
+	BnbPaid   *big.Int
+}
+
+func parseOpened(a abi.ABI, lg types.Log) (OpenedEvent, error) {
+	ev, ok := a.Events["Opened"]
+	if !ok {
+		return OpenedEvent{}, fmt.Errorf("event Opened not found in ABI")
+	}
+	// topics: [eventId, owner, tokenId]
+	if len(lg.Topics) != 3 {
+		return OpenedEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return OpenedEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	out := OpenedEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+
+		Owner:   common.BytesToAddress(lg.Topics[1].Bytes()),
+		TokenID: new(big.Int).SetBytes(lg.Topics[2].Bytes()),
+	}
+
+	vals, err := ev.Inputs.NonIndexed().Unpack(lg.Data)
+	if err != nil {
+		return OpenedEvent{}, fmt.Errorf("unpack data: %w", err)
+	}
+	// data: timestamp, bnbPaid
+	if len(vals) != 2 {
+		return OpenedEvent{}, fmt.Errorf("unexpected decoded values len=%d", len(vals))
+	}
+
+	ts, ok := vals[0].(*big.Int)
+	if !ok {
+		return OpenedEvent{}, fmt.Errorf("bad type timestamp: %T", vals[0])
+	}
+	bnbPaid, ok := vals[1].(*big.Int)
+	if !ok {
+		return OpenedEvent{}, fmt.Errorf("bad type bnbPaid: %T", vals[1])
+	}
+
+	out.Timestamp = ts
+	out.BnbPaid = bnbPaid
+	return out, nil
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func filterLogsRetryOpened(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func headerByNumberRetryOpened(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+func fillBlockTimesOpened(ctx context.Context, client *ethclient.Client, evs []OpenedEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+
+		h, err := headerByNumberRetryOpened(ctx, client, bn)
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+func FetchOpenedByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]OpenedEvent, error) {
+	if toBlock < fromBlock {
+		return []OpenedEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(blindBoxOpenedABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	openedID := parsedABI.Events["Opened"].ID
+
+	res := make([]OpenedEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{openedID}},
+		}
+
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetryOpened(ctx, client, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseOpened(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ HeaderByNumber 也最多重试 5 次
+	if err := fillBlockTimesOpened(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func PollOpenedIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []OpenedEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockNFTOpened {
+		from = DeployBlockNFTOpened
+	}
+	if safeTo < from {
+		return []OpenedEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchOpenedByRange(ctx, client, NftContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	DeployBlockNFTTransfer uint64 = 72530801 // TODO: 按你的实际部署/开启监听块高改
+)
+
+const erc721TransferABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,  "internalType": "address", "name": "from", "type": "address"},
+      {"indexed": true,  "internalType": "address", "name": "to",   "type": "address"},
+      {"indexed": true,  "internalType": "uint256", "name": "tokenId", "type": "uint256"}
+    ],
+    "name": "Transfer",
+    "type": "event"
+  }
+]`
+
+type TransferEvent struct {
+	BlockNumber uint64
+	LogIndex    uint
+	BlockTime   uint64 // 秒级（区块时间）
+
+	// indexed
+	From    common.Address
+	To      common.Address
+	TokenID *big.Int
+}
+
+func parseTransfer(a abi.ABI, lg types.Log) (TransferEvent, error) {
+	ev, ok := a.Events["Transfer"]
+	if !ok {
+		return TransferEvent{}, fmt.Errorf("event Transfer not found in ABI")
+	}
+	// topics: [eventId, from, to, tokenId]
+	if len(lg.Topics) != 4 {
+		return TransferEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return TransferEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	return TransferEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+
+		From:    common.BytesToAddress(lg.Topics[1].Bytes()),
+		To:      common.BytesToAddress(lg.Topics[2].Bytes()),
+		TokenID: new(big.Int).SetBytes(lg.Topics[3].Bytes()),
+	}, nil
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func filterLogsRetry(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量，不放全局）
+func headerByNumberRetry(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+func fillBlockTimesTransfer(ctx context.Context, client *ethclient.Client, evs []TransferEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+
+		h, err := headerByNumberRetry(ctx, client, bn)
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+func FetchTransferByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]TransferEvent, error) {
+	if toBlock < fromBlock {
+		return []TransferEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(erc721TransferABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	transferID := parsedABI.Events["Transfer"].ID
+
+	res := make([]TransferEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{transferID}},
+		}
+
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetry(ctx, client, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseTransfer(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	// ✅ HeaderByNumber 也最多重试 5 次
+	if err := fillBlockTimesTransfer(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func PollTransferIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []TransferEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockNFTTransfer {
+		from = DeployBlockNFTTransfer
+	}
+	if safeTo < from {
+		return []TransferEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchTransferByRange(ctx, client, NftContract, from, safeTo)
 	if err != nil {
 		return nil, lastProcessedFromDB, err
 	}
