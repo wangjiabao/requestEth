@@ -58,6 +58,7 @@ const OperationTransactionSetReward = "/api.requestEth.v1.Transaction/SetReward"
 const OperationTransactionSetRewardTwo = "/api.requestEth.v1.Transaction/SetRewardTwo"
 const OperationTransactionTokenBalance = "/api.requestEth.v1.Transaction/TokenBalance"
 const OperationTransactionTransaction = "/api.requestEth.v1.Transaction/Transaction"
+const OperationTransactionUpdateBox = "/api.requestEth.v1.Transaction/UpdateBox"
 const OperationTransactionVerifySig = "/api.requestEth.v1.Transaction/VerifySig"
 const OperationTransactionWithdrawAICAT = "/api.requestEth.v1.Transaction/WithdrawAICAT"
 
@@ -101,6 +102,7 @@ type TransactionHTTPServer interface {
 	SetRewardTwo(context.Context, *SetRewardRequest) (*SetRewardReply, error)
 	TokenBalance(context.Context, *TokenBalanceRequest) (*TokenBalanceReply, error)
 	Transaction(context.Context, *TransactionRequest) (*TransactionReply, error)
+	UpdateBox(context.Context, *UpdateBoxRequest) (*UpdateBoxReply, error)
 	VerifySig(context.Context, *VerifySigRequest) (*VerifySigReply, error)
 	WithdrawAICAT(context.Context, *WithdrawAICATRequest) (*WithdrawAICATReply, error)
 }
@@ -148,6 +150,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_buy_list", _Transaction_GetBuyList0_HTTP_Handler(srv))
 	r.GET("/api/get_reward_list", _Transaction_GetRewardList0_HTTP_Handler(srv))
 	r.GET("/api/get_buy_box_list", _Transaction_GetBuyBoxList0_HTTP_Handler(srv))
+	r.GET("/api/update_box", _Transaction_UpdateBox0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -959,6 +962,25 @@ func _Transaction_GetBuyBoxList0_HTTP_Handler(srv TransactionHTTPServer) func(ct
 	}
 }
 
+func _Transaction_UpdateBox0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateBoxRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionUpdateBox)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateBox(ctx, req.(*UpdateBoxRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateBoxReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
@@ -999,6 +1021,7 @@ type TransactionHTTPClient interface {
 	SetRewardTwo(ctx context.Context, req *SetRewardRequest, opts ...http.CallOption) (rsp *SetRewardReply, err error)
 	TokenBalance(ctx context.Context, req *TokenBalanceRequest, opts ...http.CallOption) (rsp *TokenBalanceReply, err error)
 	Transaction(ctx context.Context, req *TransactionRequest, opts ...http.CallOption) (rsp *TransactionReply, err error)
+	UpdateBox(ctx context.Context, req *UpdateBoxRequest, opts ...http.CallOption) (rsp *UpdateBoxReply, err error)
 	VerifySig(ctx context.Context, req *VerifySigRequest, opts ...http.CallOption) (rsp *VerifySigReply, err error)
 	WithdrawAICAT(ctx context.Context, req *WithdrawAICATRequest, opts ...http.CallOption) (rsp *WithdrawAICATReply, err error)
 }
@@ -1510,6 +1533,19 @@ func (c *TransactionHTTPClientImpl) Transaction(ctx context.Context, in *Transac
 	pattern := "/api/transaction/{tx}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionTransaction))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) UpdateBox(ctx context.Context, in *UpdateBoxRequest, opts ...http.CallOption) (*UpdateBoxReply, error) {
+	var out UpdateBoxReply
+	pattern := "/api/update_box"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionUpdateBox))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

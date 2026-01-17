@@ -60,6 +60,7 @@ const (
 	Transaction_GetBuyList_FullMethodName           = "/api.requestEth.v1.Transaction/GetBuyList"
 	Transaction_GetRewardList_FullMethodName        = "/api.requestEth.v1.Transaction/GetRewardList"
 	Transaction_GetBuyBoxList_FullMethodName        = "/api.requestEth.v1.Transaction/GetBuyBoxList"
+	Transaction_UpdateBox_FullMethodName            = "/api.requestEth.v1.Transaction/UpdateBox"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -107,6 +108,7 @@ type TransactionClient interface {
 	GetBuyList(ctx context.Context, in *GetBuyListRequest, opts ...grpc.CallOption) (*GetBuyListReply, error)
 	GetRewardList(ctx context.Context, in *GetRewardListRequest, opts ...grpc.CallOption) (*GetRewardListReply, error)
 	GetBuyBoxList(ctx context.Context, in *GetBuyBoxListRequest, opts ...grpc.CallOption) (*GetBuyBoxListReply, error)
+	UpdateBox(ctx context.Context, in *UpdateBoxRequest, opts ...grpc.CallOption) (*UpdateBoxReply, error)
 }
 
 type transactionClient struct {
@@ -486,6 +488,15 @@ func (c *transactionClient) GetBuyBoxList(ctx context.Context, in *GetBuyBoxList
 	return out, nil
 }
 
+func (c *transactionClient) UpdateBox(ctx context.Context, in *UpdateBoxRequest, opts ...grpc.CallOption) (*UpdateBoxReply, error) {
+	out := new(UpdateBoxReply)
+	err := c.cc.Invoke(ctx, Transaction_UpdateBox_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -531,6 +542,7 @@ type TransactionServer interface {
 	GetBuyList(context.Context, *GetBuyListRequest) (*GetBuyListReply, error)
 	GetRewardList(context.Context, *GetRewardListRequest) (*GetRewardListReply, error)
 	GetBuyBoxList(context.Context, *GetBuyBoxListRequest) (*GetBuyBoxListReply, error)
+	UpdateBox(context.Context, *UpdateBoxRequest) (*UpdateBoxReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -660,6 +672,9 @@ func (UnimplementedTransactionServer) GetRewardList(context.Context, *GetRewardL
 }
 func (UnimplementedTransactionServer) GetBuyBoxList(context.Context, *GetBuyBoxListRequest) (*GetBuyBoxListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBuyBoxList not implemented")
+}
+func (UnimplementedTransactionServer) UpdateBox(context.Context, *UpdateBoxRequest) (*UpdateBoxReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBox not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -1412,6 +1427,24 @@ func _Transaction_GetBuyBoxList_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_UpdateBox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBoxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).UpdateBox(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_UpdateBox_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).UpdateBox(ctx, req.(*UpdateBoxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1582,6 +1615,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetBuyBoxList",
 			Handler:    _Transaction_GetBuyBoxList_Handler,
+		},
+		{
+			MethodName: "UpdateBox",
+			Handler:    _Transaction_UpdateBox_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

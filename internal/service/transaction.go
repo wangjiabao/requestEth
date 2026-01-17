@@ -2498,6 +2498,20 @@ func (s *TransactionService) GetBoxTransferEvent(ctx context.Context, req *pb.Ge
 	return &pb.GetBoxTransferEventReply{}, nil
 }
 
+func (s *TransactionService) UpdateBox(ctx context.Context, req *pb.UpdateBoxRequest) (*pb.UpdateBoxReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		s.ac.UpdateBox(ctx, req)
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+	}
+
+	return &pb.UpdateBoxReply{}, nil
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (
@@ -3325,7 +3339,7 @@ func PollSoldIncremental(ctx context.Context, client *ethclient.Client, lastProc
 
 const (
 	// DeployBlockNFT TODO: 改成 BlindBoxNFT 实际部署块高
-	DeployBlockNFT uint64 = 73413516
+	DeployBlockNFT uint64 = 72530801
 )
 
 var (

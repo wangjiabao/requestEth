@@ -96,8 +96,9 @@ type NftMarketPurchase struct {
 	FeeUSDT    float64
 	FeeB       float64
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	CheckStatus uint64
 }
 
 type RewardDetail struct {
@@ -130,8 +131,10 @@ type NftMinted struct {
 	OpenStatus uint8
 	OpenedAt   uint64
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	CheckStatus uint64
+	CheckTime   uint64
 }
 
 type NftMarketListed struct {
@@ -145,8 +148,9 @@ type NftMarketListed struct {
 	TokenID   uint64
 	Timestamp uint64
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	CheckStatus uint64
 }
 
 type NftMarketUnlisted struct {
@@ -161,6 +165,8 @@ type NftMarketUnlisted struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
+	CheckStatus uint64
 }
 
 type NftOpened struct {
@@ -176,8 +182,9 @@ type NftOpened struct {
 	OpenedAt uint64
 	Reward   float64
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	CheckStatus uint64
 }
 
 type NftTransfer struct {
@@ -191,8 +198,9 @@ type NftTransfer struct {
 	ToAddr   string
 	TokenID  uint64
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	CheckStatus uint64
 }
 
 type UserRepo interface {
@@ -223,6 +231,20 @@ type UserRepo interface {
 	GetNftOpenedLast(ctx context.Context) (*NftOpened, error)
 	InsertNftTransfer(ctx context.Context, iData *NftTransfer) error
 	GetNftTransferLast(ctx context.Context) (*NftTransfer, error)
+	GetNftTransferLastNoCheck(ctx context.Context) ([]*NftTransfer, error)
+	GetNftMintedByTokenIds(ctx context.Context, tokenIds []uint64) (map[uint64]*NftMinted, error)
+	UpdateNftMintedToAddress(ctx context.Context, id, idT, checkTime uint64, toAddr string) error
+	GetNftListLastNoCheck(ctx context.Context) ([]*NftMarketListed, error)
+	GetNftUnListLastNoCheck(ctx context.Context) ([]*NftMarketUnlisted, error)
+	GetNftBuyLastNoCheck(ctx context.Context) ([]*NftMarketPurchase, error)
+	GetNftOpenLastNoCheck(ctx context.Context) ([]*NftOpened, error)
+	UpdateNftMintedListStatus(ctx context.Context, id, idT, checkTime uint64) error
+	UpdateNftMintedUnListStatus(ctx context.Context, id, idT, checkTime uint64) error
+	UpdateNftMintedBuyStatus(ctx context.Context, id, idT, checkTime uint64) error
+	UpdateNftMintedOpenStatus(ctx context.Context, id, idT, checkTime uint64) error
+	UpdateUnlistedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
+	UpdateListedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
+	UpdateBuyCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 }
 
 // AppUsecase is an app usecase.
@@ -698,4 +720,220 @@ func (ac *AppUsecase) GetBuyBoxList(ctx context.Context, req *pb.GetBuyBoxListRe
 		Count: uint64(count),
 		List:  res,
 	}, nil
+}
+
+func (ac *AppUsecase) UpdateBox(ctx context.Context, req *pb.UpdateBoxRequest) {
+
+	var (
+		res       []*NftTransfer
+		resTwo    []*NftMarketListed
+		resThree  []*NftMarketUnlisted
+		resFour   []*NftMarketPurchase
+		resFive   []*NftOpened
+		resMinted map[uint64]*NftMinted
+		err       error
+	)
+
+	tokenIdsMap := make(map[uint64]uint64, 0)
+
+	// 交易
+	res, err = ac.userRepo.GetNftTransferLastNoCheck(ctx)
+	if nil != err {
+		return
+	}
+
+	for _, v := range res {
+		tokenIdsMap[v.TokenID] = v.TokenID
+	}
+
+	// 上架
+	resTwo, err = ac.userRepo.GetNftListLastNoCheck(ctx)
+	if nil != err {
+		return
+	}
+
+	for _, v := range resTwo {
+		tokenIdsMap[v.TokenID] = v.TokenID
+	}
+
+	// 下
+	resThree, err = ac.userRepo.GetNftUnListLastNoCheck(ctx)
+	if nil != err {
+		return
+	}
+
+	for _, v := range resThree {
+		tokenIdsMap[v.TokenID] = v.TokenID
+	}
+
+	// 买
+	resFour, err = ac.userRepo.GetNftBuyLastNoCheck(ctx)
+	if nil != err {
+		return
+	}
+
+	for _, v := range resFour {
+		tokenIdsMap[v.TokenID] = v.TokenID
+	}
+
+	// 开
+	resFive, err = ac.userRepo.GetNftOpenLastNoCheck(ctx)
+	if nil != err {
+		return
+	}
+
+	for _, v := range resFive {
+		tokenIdsMap[v.TokenID] = v.TokenID
+	}
+
+	// 整合
+	tokenIds := make([]uint64, 0)
+	for _, v := range tokenIdsMap {
+		tokenIds = append(tokenIds, v)
+	}
+	if 0 >= len(tokenIds) {
+		return
+	}
+
+	resMinted, err = ac.userRepo.GetNftMintedByTokenIds(ctx, tokenIds)
+	if nil != err || 0 >= len(resMinted) {
+		return
+	}
+
+	for _, v := range res {
+		if _, ok := resMinted[v.TokenID]; !ok {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].BlockTime {
+			continue
+		}
+
+		//if v.BlockTime <= resMinted[v.TokenID].CheckTime {
+		//	fmt.Println("不是最新状态", v, resMinted[v.TokenID])
+		//	continue
+		//}
+
+		if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+			err = ac.userRepo.UpdateNftMintedToAddress(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime, v.ToAddr)
+			if nil != err {
+				return err
+			}
+
+			return nil
+		}); nil != err {
+			fmt.Println(err, "写入mysql错误")
+			return
+		}
+
+	}
+
+	for _, v := range resTwo {
+		if _, ok := resMinted[v.TokenID]; !ok {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].BlockTime {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].CheckTime {
+			ac.userRepo.UpdateListedCheckStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			fmt.Println("不是最新状态2", v, resMinted[v.TokenID])
+			continue
+		}
+
+		if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+			err = ac.userRepo.UpdateNftMintedListStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			if nil != err {
+				return err
+			}
+
+			return nil
+		}); nil != err {
+			fmt.Println(err, "写入mysql错误")
+			ac.userRepo.UpdateListedCheckStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			return
+		}
+	}
+
+	for _, v := range resThree {
+		if _, ok := resMinted[v.TokenID]; !ok {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].BlockTime {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].CheckTime {
+			ac.userRepo.UpdateUnlistedCheckStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			fmt.Println("不是最新状态3", v, resMinted[v.TokenID])
+			continue
+		}
+
+		if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+			err = ac.userRepo.UpdateNftMintedUnListStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			if nil != err {
+				return err
+			}
+
+			return nil
+		}); nil != err {
+			ac.userRepo.UpdateUnlistedCheckStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			fmt.Println(err, "写入mysql错误")
+			return
+		}
+	}
+
+	for _, v := range resFour {
+		if _, ok := resMinted[v.TokenID]; !ok {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].BlockTime {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].CheckTime {
+			ac.userRepo.UpdateBuyCheckStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			fmt.Println("不是最新状态4", v, resMinted[v.TokenID])
+			continue
+		}
+
+		if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+			err = ac.userRepo.UpdateNftMintedBuyStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			if nil != err {
+				return err
+			}
+
+			return nil
+		}); nil != err {
+			ac.userRepo.UpdateBuyCheckStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			fmt.Println(err, "写入mysql错误")
+			return
+		}
+	}
+
+	for _, v := range resFive {
+		if _, ok := resMinted[v.TokenID]; !ok {
+			continue
+		}
+
+		if v.BlockTime < resMinted[v.TokenID].BlockTime {
+			continue
+		}
+
+		if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+			err = ac.userRepo.UpdateNftMintedOpenStatus(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime)
+			if nil != err {
+				return err
+			}
+
+			return nil
+		}); nil != err {
+			fmt.Println(err, "写入mysql错误")
+			return
+		}
+	}
 }

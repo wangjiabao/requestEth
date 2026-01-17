@@ -264,6 +264,12 @@ service Transaction {
       get: "/api/get_buy_box_list"
     };
   }
+
+  rpc UpdateBox (UpdateBoxRequest) returns (UpdateBoxReply) {
+    option (google.api.http) = {
+      get: "/api/update_box"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -683,4 +689,10 @@ message GetBuyBoxListReply {
     double feeB = 5; // 手续费b
     uint64 blockTime = 4; // 时间
   }
+}
+
+message UpdateBoxRequest {
+}
+
+message UpdateBoxReply {
 }

@@ -128,8 +128,9 @@ type NftMarketPurchase struct {
 	FeeUSDT    float64 `gorm:"column:fee_usdt;type:decimal(65,18);not null"`
 	FeeB       float64 `gorm:"column:fee_b;type:decimal(65,18);not null"`
 
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"` // 你表没有也无所谓
+	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime"` // 你表没有也无所谓
+	CheckStatus uint64    `gorm:"not null"`
 }
 
 type NftMinted struct {
@@ -151,8 +152,10 @@ type NftMinted struct {
 	OpenStatus uint8  `gorm:"column:open_status;not null;default:0" json:"open_status"`
 	OpenedAt   uint64 `gorm:"column:opened_at;not null;default:0" json:"opened_at"`
 
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
+	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
+	CheckStatus uint64    `gorm:"not null"`
+	CheckTime   uint64    `gorm:"not null"`
 }
 
 type NftMarketListed struct {
@@ -166,8 +169,9 @@ type NftMarketListed struct {
 	TokenID   uint64 `gorm:"column:token_id;not null"`
 	Timestamp uint64 `gorm:"column:timestamp;not null;default:0"`
 
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CheckStatus uint64    `gorm:"not null"`
 }
 
 type NftMarketUnlisted struct {
@@ -180,8 +184,9 @@ type NftMarketUnlisted struct {
 	Operator string `gorm:"column:operator;type:varchar(42);not null"`
 	TokenID  uint64 `gorm:"column:token_id;not null"`
 
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CheckStatus uint64    `gorm:"not null"`
 }
 
 type NftOpened struct {
@@ -197,8 +202,9 @@ type NftOpened struct {
 	OpenedAt uint64  `gorm:"column:opened_at;not null;default:0"`
 	Reward   float64 `gorm:"column:reward;type:decimal(65,18);not null;default:0"`
 
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CheckStatus uint64    `gorm:"not null"`
 }
 
 type NftTransfer struct {
@@ -212,8 +218,9 @@ type NftTransfer struct {
 	ToAddr   string `gorm:"column:to_addr;type:varchar(42);not null"`
 	TokenID  uint64 `gorm:"column:token_id;not null"`
 
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt   time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CheckStatus uint64    `gorm:"not null"`
 }
 
 type UserRepo struct {
@@ -1063,4 +1070,366 @@ func (u *UserRepo) GetNftTransferLast(ctx context.Context) (*biz.NftTransfer, er
 		CreatedAt: v.CreatedAt,
 		UpdatedAt: v.UpdatedAt,
 	}, nil
+}
+
+func (u *UserRepo) GetNftTransferLastNoCheck(ctx context.Context) ([]*biz.NftTransfer, error) {
+	var vL []*NftTransfer
+
+	res := make([]*biz.NftTransfer, 0)
+	if err := u.data.DB(ctx).Table("nft_transfer").Where("check_status=?", 0).Order("id asc").Find(&vL).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	for _, v := range vL {
+		res = append(res, &biz.NftTransfer{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			FromAddr: v.FromAddr,
+			ToAddr:   v.ToAddr,
+			TokenID:  v.TokenID,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil
+}
+
+func (u *UserRepo) GetNftListLastNoCheck(ctx context.Context) ([]*biz.NftMarketListed, error) {
+	var vL []*NftMarketListed
+
+	res := make([]*biz.NftMarketListed, 0)
+	if err := u.data.DB(ctx).Table("nft_market_listed").Where("check_status=?", 0).Order("id asc").Find(&vL).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	for _, v := range vL {
+		res = append(res, &biz.NftMarketListed{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			Seller:    v.Seller,
+			TokenID:   v.TokenID,
+			Timestamp: v.Timestamp,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil
+}
+
+func (u *UserRepo) GetNftUnListLastNoCheck(ctx context.Context) ([]*biz.NftMarketUnlisted, error) {
+	var vL []*NftMarketUnlisted
+
+	res := make([]*biz.NftMarketUnlisted, 0)
+	if err := u.data.DB(ctx).Table("nft_market_unlisted").Where("check_status=?", 0).Order("id asc").Find(&vL).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	for _, v := range vL {
+		res = append(res, &biz.NftMarketUnlisted{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			Operator: v.Operator,
+			TokenID:  v.TokenID,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil
+}
+
+func (u *UserRepo) GetNftBuyLastNoCheck(ctx context.Context) ([]*biz.NftMarketPurchase, error) {
+	var vL []*NftMarketPurchase
+
+	res := make([]*biz.NftMarketPurchase, 0)
+	if err := u.data.DB(ctx).Table("nft_market_purchase").Where("check_status=?", 0).Order("id asc").Find(&vL).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	for _, v := range vL {
+		res = append(res, &biz.NftMarketPurchase{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			Buyer:   v.Buyer,
+			Seller:  v.Seller,
+			TokenID: v.TokenID,
+
+			PriceUSDT:  v.PriceUSDT,
+			FeePaidInB: v.FeePaidInB,
+			FeeUSDT:    v.FeeUSDT,
+			FeeB:       v.FeeB,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil
+}
+
+func (u *UserRepo) GetNftOpenLastNoCheck(ctx context.Context) ([]*biz.NftOpened, error) {
+	var vL []*NftOpened
+
+	res := make([]*biz.NftOpened, 0)
+	if err := u.data.DB(ctx).Table("nft_opened").Where("check_status=?", 0).Order("id asc").Find(&vL).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	for _, v := range vL {
+		res = append(res, &biz.NftOpened{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			UserAddr: v.UserAddr,
+			TokenID:  v.TokenID,
+
+			OpenedAt: v.OpenedAt,
+			Reward:   v.Reward,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil
+}
+
+func (u *UserRepo) GetNftMintedByTokenIds(ctx context.Context, tokenIds []uint64) (map[uint64]*biz.NftMinted, error) {
+	var vL []*NftMinted
+
+	res := make(map[uint64]*biz.NftMinted, 0)
+	if err := u.data.DB(ctx).Table("nft_minted").Where("token_id in(?)", tokenIds).Find(&vL).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, nil
+		}
+		return nil, errors.New(500, "NFT_TRANSFER_ERROR", err.Error())
+	}
+
+	for _, v := range vL {
+		res[v.TokenID] = &biz.NftMinted{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			ToAddr:  v.ToAddr,
+			TokenID: v.TokenID,
+
+			Tier:     v.Tier,
+			UsdtPaid: v.UsdtPaid,
+
+			Status:   v.Status,
+			ListedAt: v.ListedAt,
+
+			OpenStatus: v.OpenStatus,
+			OpenedAt:   v.OpenedAt,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+			CheckTime: v.CheckTime,
+		}
+	}
+
+	return res, nil
+}
+
+// UpdateNftMintedToAddress .
+func (u *UserRepo) UpdateNftMintedToAddress(ctx context.Context, id, idT, checkTime uint64, toAddr string) error {
+	res := u.data.DB(ctx).Table("nft_transfer").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 1,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_T_ERROR", "修改失败")
+	}
+
+	//.Where("check_time<=?", checkTime).
+	resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).
+		Updates(map[string]interface{}{
+			"to_addr": toAddr,
+			//"check_time": checkTime,
+			"updated_at": time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
+		return errors.New(500, "UPDATE_MINTED_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+// UpdateNftMintedListStatus .
+func (u *UserRepo) UpdateNftMintedListStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_market_listed").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 1,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_L_ERROR", "修改失败")
+	}
+
+	//.Where("check_time<=?", checkTime).
+	resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).Where("check_time<?", checkTime).
+		Updates(map[string]interface{}{
+			"check_time": checkTime,
+			"status":     1,
+			"listed_at":  checkTime,
+			"updated_at": time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
+		return errors.New(500, "UPDATE_MINTED_L_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+// UpdateNftMintedUnListStatus .
+func (u *UserRepo) UpdateNftMintedUnListStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_market_unlisted").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 1,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_L_ERROR", "修改失败")
+	}
+
+	//.Where("check_time<=?", checkTime).
+	resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).Where("check_time<?", checkTime).
+		Updates(map[string]interface{}{
+			"check_time": checkTime,
+			"status":     0,
+			"listed_at":  0,
+			"updated_at": time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
+		return errors.New(500, "UPDATE_MINTED_U_L_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+func (u *UserRepo) UpdateUnlistedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_market_unlisted").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 2,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_CUL_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+func (u *UserRepo) UpdateListedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_market_listed").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 2,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_CL_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+func (u *UserRepo) UpdateBuyCheckStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_market_purchase").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 2,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_CB_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+// UpdateNftMintedBuyStatus .
+func (u *UserRepo) UpdateNftMintedBuyStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_market_purchase").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 1,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_L_ERROR", "修改失败")
+	}
+
+	//.Where("check_time<=?", checkTime).
+	resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).Where("check_time<?", checkTime).
+		Updates(map[string]interface{}{
+			"check_time": checkTime,
+			"status":     0,
+			"listed_at":  0,
+			"updated_at": time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
+		return errors.New(500, "UPDATE_MINTED_B_ERROR", "修改失败")
+	}
+
+	return nil
+}
+
+// UpdateNftMintedOpenStatus .
+func (u *UserRepo) UpdateNftMintedOpenStatus(ctx context.Context, id, idT, checkTime uint64) error {
+	res := u.data.DB(ctx).Table("nft_opened").Where("id=?", idT).
+		Updates(map[string]interface{}{
+			"check_status": 1,
+			"updated_at":   time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_L_ERROR", "修改失败")
+	}
+
+	//.Where("check_time<=?", checkTime).
+	resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).
+		Updates(map[string]interface{}{
+			"open_status": 1,
+			"opened_at":   checkTime,
+			"updated_at":  time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
+		return errors.New(500, "UPDATE_MINTED_O_ERROR", "修改失败")
+	}
+
+	return nil
 }
