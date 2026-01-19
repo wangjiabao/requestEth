@@ -218,7 +218,7 @@ type UserRepo interface {
 	GetRewardNotifiedByIds(ctx context.Context, ids []uint64) (map[uint64]*RewardNotified, error)
 	InsertRewardNotified(ctx context.Context, iData *RewardNotified) error
 	GetUserRewardByUserIdPage(ctx context.Context, b *Pagination, address string, reason uint64) ([]*RewardDetail, error, int64)
-	GetNftMarketPurchaseByAddressPage(ctx context.Context, b *Pagination, address string, side uint64) ([]*NftMarketPurchase, error, int64)
+	GetNftMarketPurchaseByAddressPage(ctx context.Context, b *Pagination, address string, addressTwo []string, side uint64) ([]*NftMarketPurchase, error, int64)
 	GetNftMarketPurchaseLast(ctx context.Context) (*NftMarketPurchase, error)
 	InsertNftMarketPurchase(ctx context.Context, iData *NftMarketPurchase) error
 	InsertNftMinted(ctx context.Context, iData *NftMinted) error
@@ -245,6 +245,8 @@ type UserRepo interface {
 	UpdateUnlistedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	UpdateListedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	UpdateBuyCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
+	GetNftMintedByAddressPage(ctx context.Context, b *Pagination, address []string, status uint64, order uint64, tier uint64) ([]*NftMinted, error, int64)
+	GetNftMintedPage(ctx context.Context, b *Pagination, order uint64, orderTwo uint64, tier uint64) ([]*NftMinted, error, int64)
 }
 
 // AppUsecase is an app usecase.
@@ -697,7 +699,7 @@ func (ac *AppUsecase) GetBuyBoxList(ctx context.Context, req *pb.GetBuyBoxListRe
 	records, err, count = ac.userRepo.GetNftMarketPurchaseByAddressPage(ctx, &Pagination{
 		PageNum:  int(req.Page),
 		PageSize: 20,
-	}, req.Address, 1)
+	}, req.Address, nil, 1)
 	if nil != err {
 		return &pb.GetBuyBoxListReply{
 			Count: uint64(count),
@@ -936,4 +938,49 @@ func (ac *AppUsecase) UpdateBox(ctx context.Context, req *pb.UpdateBoxRequest) {
 			return
 		}
 	}
+}
+
+func (ac *AppUsecase) GetAddressBox(ctx context.Context, address []string, req *pb.GetAddressBoxRequest) ([]*NftMinted, int64, error) {
+	var (
+		minted []*NftMinted
+		count  int64
+		err    error
+	)
+
+	minted, err, count = ac.userRepo.GetNftMintedByAddressPage(ctx, &Pagination{
+		PageNum:  int(req.Page),
+		PageSize: 10,
+	}, address, req.Num, req.NumThree, req.NumTwo)
+
+	return minted, count, err
+}
+
+func (ac *AppUsecase) GetNftMintedPage(ctx context.Context, req *pb.GetMarketListRequest) ([]*NftMinted, int64, error) {
+	var (
+		minted []*NftMinted
+		count  int64
+		err    error
+	)
+
+	minted, err, count = ac.userRepo.GetNftMintedPage(ctx, &Pagination{
+		PageNum:  int(req.Page),
+		PageSize: 10,
+	}, req.Num, req.NumThree, req.NumTwo)
+
+	return minted, count, err
+}
+
+func (ac *AppUsecase) GetSellBoxList(ctx context.Context, address []string, req *pb.GetSellBoxListRequest) ([]*NftMarketPurchase, int64, error) {
+	var (
+		records []*NftMarketPurchase
+		count   int64
+		err     error
+	)
+
+	records, err, count = ac.userRepo.GetNftMarketPurchaseByAddressPage(ctx, &Pagination{
+		PageNum:  int(req.Page),
+		PageSize: 10,
+	}, req.Address, address, 3)
+
+	return records, count, err
 }

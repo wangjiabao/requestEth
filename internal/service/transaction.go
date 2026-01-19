@@ -2512,6 +2512,193 @@ func (s *TransactionService) UpdateBox(ctx context.Context, req *pb.UpdateBoxReq
 	return &pb.UpdateBoxReply{}, nil
 }
 
+func (s *TransactionService) GetAddressBox(ctx context.Context, req *pb.GetAddressBoxRequest) (*pb.GetAddressBoxReply, error) {
+	urls := []string{
+		"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+	}
+
+	var (
+		count int64
+	)
+	res := make([]*pb.GetAddressBoxReply_List, 0)
+	tmpTwo := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x36e79a79829f3a0dad3f928d1ea8c28965b68237")
+		instance, err := NewFactory(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		if "-1" == tmpTwo {
+			two, errTwo := instance.VaultOf(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errTwo != nil {
+				fmt.Println("GetAll error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		addresses := make([]string, 0)
+		addresses = append(addresses, req.Address)
+		if 10 < len(tmpTwo) {
+			addresses = append(addresses, tmpTwo)
+		}
+
+		var (
+			minted []*biz.NftMinted
+		)
+		minted, count, err = s.ac.GetAddressBox(ctx, addresses, req)
+		for _, v := range minted {
+			tmpPriceUsdtNow := float64(0)
+			tokenAddressTmp := common.HexToAddress("0xE447b0391d3F03befeC0dC09E25c049132618fd9")
+			instanceTmp, _ := NewNft(tokenAddressTmp, client)
+			if nil != instanceTmp {
+				var (
+					tmpRes *big.Int
+				)
+				tmpRes, _ = instanceTmp.SecondaryBuyPrice(&bind.CallOpts{}, new(big.Int).SetUint64(v.TokenID))
+				if nil != tmpRes {
+					tmpPriceUsdtNow = BigIntToFloat64(tmpRes, 18)
+				}
+			}
+
+			res = append(res, &pb.GetAddressBoxReply_List{
+				TokenId:      v.TokenID,
+				PriceUsdt:    v.UsdtPaid,
+				PriceUsdtNow: tmpPriceUsdtNow,
+				BlockTime:    v.BlockTime,
+				ListTime:     v.ListedAt,
+				Tier:         v.Tier,
+			})
+		}
+	}
+
+	return &pb.GetAddressBoxReply{
+		Count: uint64(count),
+		List:  res,
+	}, nil
+}
+
+func (s *TransactionService) GetMarketList(ctx context.Context, req *pb.GetMarketListRequest) (*pb.GetMarketListReply, error) {
+	urls := []string{
+		"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+	}
+
+	var (
+		count int64
+	)
+	res := make([]*pb.GetMarketListReply_List, 0)
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		var (
+			minted []*biz.NftMinted
+		)
+		minted, count, err = s.ac.GetNftMintedPage(ctx, req)
+		for _, v := range minted {
+			tmpPriceUsdtNow := float64(0)
+			tokenAddressTmp := common.HexToAddress("0xE447b0391d3F03befeC0dC09E25c049132618fd9")
+			instanceTmp, _ := NewNft(tokenAddressTmp, client)
+			if nil != instanceTmp {
+				var (
+					tmpRes *big.Int
+				)
+				tmpRes, _ = instanceTmp.SecondaryBuyPrice(&bind.CallOpts{}, new(big.Int).SetUint64(v.TokenID))
+				if nil != tmpRes {
+					tmpPriceUsdtNow = BigIntToFloat64(tmpRes, 18)
+				}
+			}
+
+			res = append(res, &pb.GetMarketListReply_List{
+				TokenId:      v.TokenID,
+				PriceUsdt:    v.UsdtPaid,
+				PriceUsdtNow: tmpPriceUsdtNow,
+				BlockTime:    v.BlockTime,
+				ListTime:     v.ListedAt,
+				Tier:         v.Tier,
+			})
+		}
+	}
+
+	return &pb.GetMarketListReply{
+		Count: uint64(count),
+		List:  res,
+	}, nil
+}
+
+func (s *TransactionService) GetSellBoxList(ctx context.Context, req *pb.GetSellBoxListRequest) (*pb.GetSellBoxListReply, error) {
+	urls := []string{
+		"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+	}
+
+	var (
+		count int64
+	)
+	res := make([]*pb.GetSellBoxListReply_List, 0)
+	tmpTwo := "-1"
+	for _, urlTmp := range urls {
+		client, err := ethclient.Dial(urlTmp)
+		if err != nil {
+			fmt.Println("client error:", err)
+			continue
+		}
+
+		tokenAddress := common.HexToAddress("0x36e79a79829f3a0dad3f928d1ea8c28965b68237")
+		instance, err := NewFactory(tokenAddress, client)
+		if err != nil {
+			fmt.Println("NewPair error:", err)
+			continue
+		}
+
+		if "-1" == tmpTwo {
+			two, errTwo := instance.VaultOf(&bind.CallOpts{}, common.HexToAddress(req.Address))
+			if errTwo != nil {
+				fmt.Println("GetAll error:", err)
+				continue
+			}
+
+			tmpTwo = two.String()
+		}
+
+		addresses := make([]string, 0)
+		addresses = append(addresses, req.Address)
+		if 10 < len(tmpTwo) {
+			addresses = append(addresses, tmpTwo)
+		}
+
+		var (
+			minted []*biz.NftMarketPurchase
+		)
+		minted, count, err = s.ac.GetSellBoxList(ctx, addresses, req)
+		for _, v := range minted {
+			res = append(res, &pb.GetSellBoxListReply_List{
+				TokenId:   v.TokenID,
+				PriceUsdt: v.PriceUSDT,
+				FeeUsdt:   v.FeeUSDT,
+				FeeB:      v.FeeB,
+				BlockTime: v.BlockTime,
+			})
+		}
+	}
+
+	return &pb.GetSellBoxListReply{
+		Count: uint64(count),
+		List:  res,
+	}, nil
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const (

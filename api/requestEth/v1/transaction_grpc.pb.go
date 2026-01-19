@@ -61,6 +61,9 @@ const (
 	Transaction_GetRewardList_FullMethodName        = "/api.requestEth.v1.Transaction/GetRewardList"
 	Transaction_GetBuyBoxList_FullMethodName        = "/api.requestEth.v1.Transaction/GetBuyBoxList"
 	Transaction_UpdateBox_FullMethodName            = "/api.requestEth.v1.Transaction/UpdateBox"
+	Transaction_GetAddressBox_FullMethodName        = "/api.requestEth.v1.Transaction/GetAddressBox"
+	Transaction_GetSellBoxList_FullMethodName       = "/api.requestEth.v1.Transaction/GetSellBoxList"
+	Transaction_GetMarketList_FullMethodName        = "/api.requestEth.v1.Transaction/GetMarketList"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -109,6 +112,9 @@ type TransactionClient interface {
 	GetRewardList(ctx context.Context, in *GetRewardListRequest, opts ...grpc.CallOption) (*GetRewardListReply, error)
 	GetBuyBoxList(ctx context.Context, in *GetBuyBoxListRequest, opts ...grpc.CallOption) (*GetBuyBoxListReply, error)
 	UpdateBox(ctx context.Context, in *UpdateBoxRequest, opts ...grpc.CallOption) (*UpdateBoxReply, error)
+	GetAddressBox(ctx context.Context, in *GetAddressBoxRequest, opts ...grpc.CallOption) (*GetAddressBoxReply, error)
+	GetSellBoxList(ctx context.Context, in *GetSellBoxListRequest, opts ...grpc.CallOption) (*GetSellBoxListReply, error)
+	GetMarketList(ctx context.Context, in *GetMarketListRequest, opts ...grpc.CallOption) (*GetMarketListReply, error)
 }
 
 type transactionClient struct {
@@ -497,6 +503,33 @@ func (c *transactionClient) UpdateBox(ctx context.Context, in *UpdateBoxRequest,
 	return out, nil
 }
 
+func (c *transactionClient) GetAddressBox(ctx context.Context, in *GetAddressBoxRequest, opts ...grpc.CallOption) (*GetAddressBoxReply, error) {
+	out := new(GetAddressBoxReply)
+	err := c.cc.Invoke(ctx, Transaction_GetAddressBox_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetSellBoxList(ctx context.Context, in *GetSellBoxListRequest, opts ...grpc.CallOption) (*GetSellBoxListReply, error) {
+	out := new(GetSellBoxListReply)
+	err := c.cc.Invoke(ctx, Transaction_GetSellBoxList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) GetMarketList(ctx context.Context, in *GetMarketListRequest, opts ...grpc.CallOption) (*GetMarketListReply, error) {
+	out := new(GetMarketListReply)
+	err := c.cc.Invoke(ctx, Transaction_GetMarketList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -543,6 +576,9 @@ type TransactionServer interface {
 	GetRewardList(context.Context, *GetRewardListRequest) (*GetRewardListReply, error)
 	GetBuyBoxList(context.Context, *GetBuyBoxListRequest) (*GetBuyBoxListReply, error)
 	UpdateBox(context.Context, *UpdateBoxRequest) (*UpdateBoxReply, error)
+	GetAddressBox(context.Context, *GetAddressBoxRequest) (*GetAddressBoxReply, error)
+	GetSellBoxList(context.Context, *GetSellBoxListRequest) (*GetSellBoxListReply, error)
+	GetMarketList(context.Context, *GetMarketListRequest) (*GetMarketListReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -675,6 +711,15 @@ func (UnimplementedTransactionServer) GetBuyBoxList(context.Context, *GetBuyBoxL
 }
 func (UnimplementedTransactionServer) UpdateBox(context.Context, *UpdateBoxRequest) (*UpdateBoxReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBox not implemented")
+}
+func (UnimplementedTransactionServer) GetAddressBox(context.Context, *GetAddressBoxRequest) (*GetAddressBoxReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAddressBox not implemented")
+}
+func (UnimplementedTransactionServer) GetSellBoxList(context.Context, *GetSellBoxListRequest) (*GetSellBoxListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSellBoxList not implemented")
+}
+func (UnimplementedTransactionServer) GetMarketList(context.Context, *GetMarketListRequest) (*GetMarketListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMarketList not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -1445,6 +1490,60 @@ func _Transaction_UpdateBox_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetAddressBox_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAddressBoxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetAddressBox(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetAddressBox_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetAddressBox(ctx, req.(*GetAddressBoxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetSellBoxList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSellBoxListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetSellBoxList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetSellBoxList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetSellBoxList(ctx, req.(*GetSellBoxListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetMarketList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMarketListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetMarketList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetMarketList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetMarketList(ctx, req.(*GetMarketListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1619,6 +1718,18 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateBox",
 			Handler:    _Transaction_UpdateBox_Handler,
+		},
+		{
+			MethodName: "GetAddressBox",
+			Handler:    _Transaction_GetAddressBox_Handler,
+		},
+		{
+			MethodName: "GetSellBoxList",
+			Handler:    _Transaction_GetSellBoxList_Handler,
+		},
+		{
+			MethodName: "GetMarketList",
+			Handler:    _Transaction_GetMarketList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -24,6 +24,7 @@ const OperationTransactionAddWhite = "/api.requestEth.v1.Transaction/AddWhite"
 const OperationTransactionBuyAICAT = "/api.requestEth.v1.Transaction/BuyAICAT"
 const OperationTransactionEthBalance = "/api.requestEth.v1.Transaction/EthBalance"
 const OperationTransactionGenerateKey = "/api.requestEth.v1.Transaction/GenerateKey"
+const OperationTransactionGetAddressBox = "/api.requestEth.v1.Transaction/GetAddressBox"
 const OperationTransactionGetAll = "/api.requestEth.v1.Transaction/GetAll"
 const OperationTransactionGetAllTwo = "/api.requestEth.v1.Transaction/GetAllTwo"
 const OperationTransactionGetArray = "/api.requestEth.v1.Transaction/GetArray"
@@ -46,8 +47,10 @@ const OperationTransactionGetDailyFee = "/api.requestEth.v1.Transaction/GetDaily
 const OperationTransactionGetExchangeEvent = "/api.requestEth.v1.Transaction/GetExchangeEvent"
 const OperationTransactionGetExchangeList = "/api.requestEth.v1.Transaction/GetExchangeList"
 const OperationTransactionGetLpByOrderId = "/api.requestEth.v1.Transaction/GetLpByOrderId"
+const OperationTransactionGetMarketList = "/api.requestEth.v1.Transaction/GetMarketList"
 const OperationTransactionGetReserves = "/api.requestEth.v1.Transaction/GetReserves"
 const OperationTransactionGetRewardList = "/api.requestEth.v1.Transaction/GetRewardList"
+const OperationTransactionGetSellBoxList = "/api.requestEth.v1.Transaction/GetSellBoxList"
 const OperationTransactionGetSellEvent = "/api.requestEth.v1.Transaction/GetSellEvent"
 const OperationTransactionGetUserLp = "/api.requestEth.v1.Transaction/GetUserLp"
 const OperationTransactionRemoveLiquidity = "/api.requestEth.v1.Transaction/RemoveLiquidity"
@@ -68,6 +71,7 @@ type TransactionHTTPServer interface {
 	BuyAICAT(context.Context, *BuyAICATRequest) (*BuyAICATReply, error)
 	EthBalance(context.Context, *EthBalanceRequest) (*EthBalanceReply, error)
 	GenerateKey(context.Context, *GenerateKeyRequest) (*GenerateKeyReply, error)
+	GetAddressBox(context.Context, *GetAddressBoxRequest) (*GetAddressBoxReply, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllReply, error)
 	GetAllTwo(context.Context, *GetAllTwoRequest) (*GetAllTwoReply, error)
 	GetArray(context.Context, *GetArrayRequest) (*GetArrayReply, error)
@@ -90,8 +94,10 @@ type TransactionHTTPServer interface {
 	GetExchangeEvent(context.Context, *GetExchangeEventRequest) (*GetExchangeEventReply, error)
 	GetExchangeList(context.Context, *GetExchangeListRequest) (*GetExchangeListReply, error)
 	GetLpByOrderId(context.Context, *GetLpByOrderIdRequest) (*GetLpByOrderIdReply, error)
+	GetMarketList(context.Context, *GetMarketListRequest) (*GetMarketListReply, error)
 	GetReserves(context.Context, *GetReservesRequest) (*GetReservesReply, error)
 	GetRewardList(context.Context, *GetRewardListRequest) (*GetRewardListReply, error)
+	GetSellBoxList(context.Context, *GetSellBoxListRequest) (*GetSellBoxListReply, error)
 	GetSellEvent(context.Context, *GetSellEventRequest) (*GetSellEventReply, error)
 	GetUserLp(context.Context, *GetUserLpRequest) (*GetUserLpReply, error)
 	RemoveLiquidity(context.Context, *RemoveLiquidityRequest) (*RemoveLiquidityReply, error)
@@ -151,6 +157,9 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_reward_list", _Transaction_GetRewardList0_HTTP_Handler(srv))
 	r.GET("/api/get_buy_box_list", _Transaction_GetBuyBoxList0_HTTP_Handler(srv))
 	r.GET("/api/update_box", _Transaction_UpdateBox0_HTTP_Handler(srv))
+	r.GET("/api/get_address_box", _Transaction_GetAddressBox0_HTTP_Handler(srv))
+	r.GET("/api/get_sell_box_list", _Transaction_GetSellBoxList0_HTTP_Handler(srv))
+	r.GET("/api/get_market_box_list", _Transaction_GetMarketList0_HTTP_Handler(srv))
 }
 
 func _Transaction_SendTransaction0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
@@ -981,12 +990,70 @@ func _Transaction_UpdateBox0_HTTP_Handler(srv TransactionHTTPServer) func(ctx ht
 	}
 }
 
+func _Transaction_GetAddressBox0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetAddressBoxRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetAddressBox)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAddressBox(ctx, req.(*GetAddressBoxRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAddressBoxReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetSellBoxList0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetSellBoxListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetSellBoxList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSellBoxList(ctx, req.(*GetSellBoxListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSellBoxListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Transaction_GetMarketList0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetMarketListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetMarketList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMarketList(ctx, req.(*GetMarketListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetMarketListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TransactionHTTPClient interface {
 	AddLiquidity(ctx context.Context, req *AddLiquidityRequest, opts ...http.CallOption) (rsp *AddLiquidityReply, err error)
 	AddWhite(ctx context.Context, req *AddWhiteRequest, opts ...http.CallOption) (rsp *AddWhiteReply, err error)
 	BuyAICAT(ctx context.Context, req *BuyAICATRequest, opts ...http.CallOption) (rsp *BuyAICATReply, err error)
 	EthBalance(ctx context.Context, req *EthBalanceRequest, opts ...http.CallOption) (rsp *EthBalanceReply, err error)
 	GenerateKey(ctx context.Context, req *GenerateKeyRequest, opts ...http.CallOption) (rsp *GenerateKeyReply, err error)
+	GetAddressBox(ctx context.Context, req *GetAddressBoxRequest, opts ...http.CallOption) (rsp *GetAddressBoxReply, err error)
 	GetAll(ctx context.Context, req *GetAllRequest, opts ...http.CallOption) (rsp *GetAllReply, err error)
 	GetAllTwo(ctx context.Context, req *GetAllTwoRequest, opts ...http.CallOption) (rsp *GetAllTwoReply, err error)
 	GetArray(ctx context.Context, req *GetArrayRequest, opts ...http.CallOption) (rsp *GetArrayReply, err error)
@@ -1009,8 +1076,10 @@ type TransactionHTTPClient interface {
 	GetExchangeEvent(ctx context.Context, req *GetExchangeEventRequest, opts ...http.CallOption) (rsp *GetExchangeEventReply, err error)
 	GetExchangeList(ctx context.Context, req *GetExchangeListRequest, opts ...http.CallOption) (rsp *GetExchangeListReply, err error)
 	GetLpByOrderId(ctx context.Context, req *GetLpByOrderIdRequest, opts ...http.CallOption) (rsp *GetLpByOrderIdReply, err error)
+	GetMarketList(ctx context.Context, req *GetMarketListRequest, opts ...http.CallOption) (rsp *GetMarketListReply, err error)
 	GetReserves(ctx context.Context, req *GetReservesRequest, opts ...http.CallOption) (rsp *GetReservesReply, err error)
 	GetRewardList(ctx context.Context, req *GetRewardListRequest, opts ...http.CallOption) (rsp *GetRewardListReply, err error)
+	GetSellBoxList(ctx context.Context, req *GetSellBoxListRequest, opts ...http.CallOption) (rsp *GetSellBoxListReply, err error)
 	GetSellEvent(ctx context.Context, req *GetSellEventRequest, opts ...http.CallOption) (rsp *GetSellEventReply, err error)
 	GetUserLp(ctx context.Context, req *GetUserLpRequest, opts ...http.CallOption) (rsp *GetUserLpReply, err error)
 	RemoveLiquidity(ctx context.Context, req *RemoveLiquidityRequest, opts ...http.CallOption) (rsp *RemoveLiquidityReply, err error)
@@ -1091,6 +1160,19 @@ func (c *TransactionHTTPClientImpl) GenerateKey(ctx context.Context, in *Generat
 	pattern := "/api/generate_key"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGenerateKey))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetAddressBox(ctx context.Context, in *GetAddressBoxRequest, opts ...http.CallOption) (*GetAddressBoxReply, error) {
+	var out GetAddressBoxReply
+	pattern := "/api/get_address_box"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetAddressBox))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -1385,6 +1467,19 @@ func (c *TransactionHTTPClientImpl) GetLpByOrderId(ctx context.Context, in *GetL
 	return &out, err
 }
 
+func (c *TransactionHTTPClientImpl) GetMarketList(ctx context.Context, in *GetMarketListRequest, opts ...http.CallOption) (*GetMarketListReply, error) {
+	var out GetMarketListReply
+	pattern := "/api/get_market_box_list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetMarketList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *TransactionHTTPClientImpl) GetReserves(ctx context.Context, in *GetReservesRequest, opts ...http.CallOption) (*GetReservesReply, error) {
 	var out GetReservesReply
 	pattern := "/api/get_reserves"
@@ -1403,6 +1498,19 @@ func (c *TransactionHTTPClientImpl) GetRewardList(ctx context.Context, in *GetRe
 	pattern := "/api/get_reward_list"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetRewardList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetSellBoxList(ctx context.Context, in *GetSellBoxListRequest, opts ...http.CallOption) (*GetSellBoxListReply, error) {
+	var out GetSellBoxListReply
+	pattern := "/api/get_sell_box_list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetSellBoxList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

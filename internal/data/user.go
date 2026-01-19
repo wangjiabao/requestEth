@@ -740,6 +740,7 @@ func (u *UserRepo) GetNftMarketPurchaseByAddressPage(
 	ctx context.Context,
 	b *biz.Pagination,
 	address string,
+	addressTwo []string,
 	side uint64,
 ) ([]*biz.NftMarketPurchase, error, int64) {
 
@@ -757,6 +758,8 @@ func (u *UserRepo) GetNftMarketPurchaseByAddressPage(
 			instance = instance.Where("buyer = ?", address)
 		} else if side == 2 {
 			instance = instance.Where("seller = ?", address)
+		} else if side == 3 {
+			instance = instance.Where("seller in (?)", addressTwo)
 		} else {
 			instance = instance.Where("(buyer = ? OR seller = ?)", address, address)
 		}
@@ -1432,4 +1435,143 @@ func (u *UserRepo) UpdateNftMintedOpenStatus(ctx context.Context, id, idT, check
 	}
 
 	return nil
+}
+
+// GetNftMintedPage .
+func (u *UserRepo) GetNftMintedPage(
+	ctx context.Context,
+	b *biz.Pagination,
+	order uint64,
+	orderTwo uint64,
+	tier uint64,
+) ([]*biz.NftMinted, error, int64) {
+
+	var (
+		count int64
+		rows  []*NftMinted
+	)
+
+	res := make([]*biz.NftMinted, 0)
+
+	instance := u.data.DB(ctx).Table("nft_minted").Where("status=?", 1).Where("open_status=?", 0)
+
+	if 0 < tier {
+		instance = instance.Where("tier=?", tier)
+	}
+
+	instance = instance.Count(&count)
+
+	if 0 < order {
+		instance = instance.Order("id asc")
+	} else {
+		instance = instance.Order("id desc")
+	}
+
+	if 0 < orderTwo {
+		instance = instance.Order("tier asc")
+	} else {
+		instance = instance.Order("tier desc")
+	}
+
+	if err := instance.Scopes(Paginate(b.PageNum, b.PageSize)).Find(&rows).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, errors.NotFound("NFT_MINTED_NOT_FOUND", "minted not found"), 0
+		}
+		return nil, errors.New(500, "NFT_MINTED_ERROR", err.Error()), 0
+	}
+
+	for _, v := range rows {
+		res = append(res, &biz.NftMinted{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			ToAddr:  v.ToAddr,
+			TokenID: v.TokenID,
+
+			Tier:     v.Tier,
+			UsdtPaid: v.UsdtPaid,
+
+			Status:   v.Status,
+			ListedAt: v.ListedAt,
+
+			OpenStatus: v.OpenStatus,
+			OpenedAt:   v.OpenedAt,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil, count
+}
+
+// GetNftMintedByAddressPage .
+func (u *UserRepo) GetNftMintedByAddressPage(
+	ctx context.Context,
+	b *biz.Pagination,
+	address []string,
+	status uint64,
+	order uint64,
+	tier uint64,
+) ([]*biz.NftMinted, error, int64) {
+
+	var (
+		count int64
+		rows  []*NftMinted
+	)
+
+	res := make([]*biz.NftMinted, 0)
+
+	instance := u.data.DB(ctx).Table("nft_minted").Where("to_addr in(?)", address).Where("open_status=?", 0)
+
+	if 0 < status {
+		instance = instance.Where("status=?", status)
+	}
+
+	if 0 < tier {
+		instance = instance.Where("tier=?", tier)
+	}
+
+	instance = instance.Count(&count)
+
+	if 0 < order {
+		instance = instance.Order("id asc")
+	} else {
+		instance = instance.Order("id desc")
+	}
+
+	if err := instance.Scopes(Paginate(b.PageNum, b.PageSize)).Find(&rows).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, errors.NotFound("NFT_MINTED_NOT_FOUND", "minted not found"), 0
+		}
+		return nil, errors.New(500, "NFT_MINTED_ERROR", err.Error()), 0
+	}
+
+	for _, v := range rows {
+		res = append(res, &biz.NftMinted{
+			ID:          v.ID,
+			BlockNumber: v.BlockNumber,
+			BlockTime:   v.BlockTime,
+			LogIndex:    v.LogIndex,
+
+			ToAddr:  v.ToAddr,
+			TokenID: v.TokenID,
+
+			Tier:     v.Tier,
+			UsdtPaid: v.UsdtPaid,
+
+			Status:   v.Status,
+			ListedAt: v.ListedAt,
+
+			OpenStatus: v.OpenStatus,
+			OpenedAt:   v.OpenedAt,
+
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil, count
 }

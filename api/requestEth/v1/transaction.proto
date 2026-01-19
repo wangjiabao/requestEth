@@ -270,6 +270,24 @@ service Transaction {
       get: "/api/update_box"
     };
   }
+
+  rpc GetAddressBox (GetAddressBoxRequest) returns (GetAddressBoxReply) {
+    option (google.api.http) = {
+      get: "/api/get_address_box"
+    };
+  }
+
+  rpc GetSellBoxList (GetSellBoxListRequest) returns (GetSellBoxListReply) {
+    option (google.api.http) = {
+      get: "/api/get_sell_box_list"
+    };
+  }
+
+  rpc GetMarketList (GetMarketListRequest) returns (GetMarketListReply) {
+    option (google.api.http) = {
+      get: "/api/get_market_box_list"
+    };
+  }
 }
 
 message GetReservesRequest {
@@ -691,8 +709,66 @@ message GetBuyBoxListReply {
   }
 }
 
+message GetSellBoxListRequest {
+  string address = 3;
+  uint64 page = 1;
+}
+
+message GetSellBoxListReply {
+  uint64 count = 2; // 总数，每页10
+  repeated List list = 1;
+  message List {
+    uint64 tokenId = 2; // tokenId
+    double priceUsdt = 3; // 售出金额
+    double feeUsdt = 6; // 手续费u
+    double feeB = 5; // 手续费b
+    uint64 blockTime = 4; // 时间
+  }
+}
+
 message UpdateBoxRequest {
 }
 
 message UpdateBoxReply {
+}
+
+message GetAddressBoxRequest {
+  string address = 3;
+  uint64 page = 1;
+  uint64 num = 2; // 0全部，1上架中
+  uint64 numTwo = 5; // 0全部，1表示20, 2表示50, 3表示100
+  uint64 numThree = 4; // 0倒叙，1正序
+}
+
+message GetAddressBoxReply {
+  uint64 count = 2; // 总数，每页10
+  repeated List list = 1;
+  message List {
+    uint64 tokenId = 2; // tokenId
+    double priceUsdt = 3; // 金额
+    uint64 tier = 7; // 1表示20 ，2表示50，3表示100
+    double priceUsdtNow = 4; // 目前增长金额
+    uint64 blockTime = 5; // 铸造时间
+    uint64 listTime = 6; // 上架时间
+  }
+}
+
+message GetMarketListRequest {
+  uint64 page = 1;
+  uint64 numTwo = 5; // 0全部，1表示20, 2表示50, 3表示100
+  uint64 num = 4; // 时间，0倒叙，1顺序
+  uint64 numThree = 3; // 价格，0倒叙，1顺序
+}
+
+message GetMarketListReply {
+  uint64 count = 2; // 总数，每页10
+  repeated List list = 1;
+  message List {
+    uint64 tokenId = 2; // tokenId
+    double priceUsdt = 3; // 金额
+    uint64 tier = 7; // 1表示20 ，2表示50，3表示100
+    double priceUsdtNow = 4; // 目前增长金额
+    uint64 blockTime = 5; // 铸造时间
+    uint64 listTime = 6; // 上架时间
+  }
 }
