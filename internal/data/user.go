@@ -1271,7 +1271,7 @@ func (u *UserRepo) GetNftMintedByTokenIds(ctx context.Context, tokenIds []uint64
 }
 
 // UpdateNftMintedToAddress .
-func (u *UserRepo) UpdateNftMintedToAddress(ctx context.Context, id, idT, checkTime uint64, toAddr string) error {
+func (u *UserRepo) UpdateNftMintedToAddress(ctx context.Context, id, idT, check uint64, toAddr string) error {
 	res := u.data.DB(ctx).Table("nft_transfer").Where("id=?", idT).
 		Updates(map[string]interface{}{
 			"check_status": 1,
@@ -1281,15 +1281,17 @@ func (u *UserRepo) UpdateNftMintedToAddress(ctx context.Context, id, idT, checkT
 		return errors.New(500, "UPDATE_T_ERROR", "修改失败")
 	}
 
-	//.Where("check_time<=?", checkTime).
-	resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).
-		Updates(map[string]interface{}{
-			"to_addr": toAddr,
-			//"check_time": checkTime,
-			"updated_at": time.Now().Format("2006-01-02 15:04:05"),
-		})
-	if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
-		return errors.New(500, "UPDATE_MINTED_ERROR", "修改失败")
+	if 1 == check {
+		//.Where("check_time<=?", checkTime).
+		resTwo := u.data.DB(ctx).Table("nft_minted").Where("id=?", id).
+			Updates(map[string]interface{}{
+				"to_addr": toAddr,
+				//"check_time": checkTime,
+				"updated_at": time.Now().Format("2006-01-02 15:04:05"),
+			})
+		if resTwo.Error != nil || 0 >= resTwo.RowsAffected {
+			return errors.New(500, "UPDATE_MINTED_ERROR", "修改失败")
+		}
 	}
 
 	return nil

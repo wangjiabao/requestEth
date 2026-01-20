@@ -233,7 +233,7 @@ type UserRepo interface {
 	GetNftTransferLast(ctx context.Context) (*NftTransfer, error)
 	GetNftTransferLastNoCheck(ctx context.Context) ([]*NftTransfer, error)
 	GetNftMintedByTokenIds(ctx context.Context, tokenIds []uint64) (map[uint64]*NftMinted, error)
-	UpdateNftMintedToAddress(ctx context.Context, id, idT, checkTime uint64, toAddr string) error
+	UpdateNftMintedToAddress(ctx context.Context, id, idT, check uint64, toAddr string) error
 	GetNftListLastNoCheck(ctx context.Context) ([]*NftMarketListed, error)
 	GetNftUnListLastNoCheck(ctx context.Context) ([]*NftMarketUnlisted, error)
 	GetNftBuyLastNoCheck(ctx context.Context) ([]*NftMarketPurchase, error)
@@ -816,8 +816,14 @@ func (ac *AppUsecase) UpdateBox(ctx context.Context, req *pb.UpdateBoxRequest) {
 		//	continue
 		//}
 
+		// 上级不改变持有人
+		tmpCheck := uint64(1)
+		if "0xE447b0391d3F03befeC0dC09E25c049132618fd9" == v.ToAddr {
+			tmpCheck = 0
+		}
+
 		if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
-			err = ac.userRepo.UpdateNftMintedToAddress(ctx, resMinted[v.TokenID].ID, v.ID, v.BlockTime, v.ToAddr)
+			err = ac.userRepo.UpdateNftMintedToAddress(ctx, resMinted[v.TokenID].ID, v.ID, tmpCheck, v.ToAddr)
 			if nil != err {
 				return err
 			}

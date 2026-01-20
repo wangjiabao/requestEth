@@ -1716,7 +1716,7 @@ func (s *TransactionService) SetRewardTwo(ctx context.Context, req *pb.SetReward
 
 func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetBoxRewardEventRequest) (*pb.GetBoxRewardEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -1759,6 +1759,11 @@ func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetB
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -1789,8 +1794,6 @@ func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetB
 					fmt.Println("insert reward list err", err)
 				}
 			}
-
-			return &pb.GetBoxRewardEventReply{}, nil
 		}
 	}
 
@@ -1799,7 +1802,7 @@ func (s *TransactionService) GetBoxRewardEvent(ctx context.Context, req *pb.GetB
 
 func (s *TransactionService) GetExchangeEvent(ctx context.Context, req *pb.GetExchangeEventRequest) (*pb.GetExchangeEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -1839,6 +1842,11 @@ func (s *TransactionService) GetExchangeEvent(ctx context.Context, req *pb.GetEx
 			if err != nil {
 				fmt.Println(err)
 				// 换下一个 RPC
+				continue
+			}
+
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
 				continue
 			}
 
@@ -1885,7 +1893,7 @@ func (s *TransactionService) GetExchangeEvent(ctx context.Context, req *pb.GetEx
 
 func (s *TransactionService) GetBuyEvent(ctx context.Context, req *pb.GetBuyEventRequest) (*pb.GetBuyEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -1928,6 +1936,11 @@ func (s *TransactionService) GetBuyEvent(ctx context.Context, req *pb.GetBuyEven
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -1964,7 +1977,7 @@ func (s *TransactionService) GetBuyEvent(ctx context.Context, req *pb.GetBuyEven
 
 func (s *TransactionService) GetSellEvent(ctx context.Context, req *pb.GetSellEventRequest) (*pb.GetSellEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -2007,6 +2020,11 @@ func (s *TransactionService) GetSellEvent(ctx context.Context, req *pb.GetSellEv
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -2043,7 +2061,7 @@ func (s *TransactionService) GetSellEvent(ctx context.Context, req *pb.GetSellEv
 
 func (s *TransactionService) GetBoxBuyEvent(ctx context.Context, req *pb.GetBoxBuyEventRequest) (*pb.GetBoxBuyEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -2086,6 +2104,11 @@ func (s *TransactionService) GetBoxBuyEvent(ctx context.Context, req *pb.GetBoxB
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -2125,7 +2148,7 @@ func (s *TransactionService) GetBoxBuyEvent(ctx context.Context, req *pb.GetBoxB
 
 func (s *TransactionService) GetBoxMintEvent(ctx context.Context, req *pb.GetBoxMintEventRequest) (*pb.GetBoxMintEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -2168,6 +2191,11 @@ func (s *TransactionService) GetBoxMintEvent(ctx context.Context, req *pb.GetBox
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -2204,7 +2232,7 @@ func (s *TransactionService) GetBoxMintEvent(ctx context.Context, req *pb.GetBox
 
 func (s *TransactionService) GetBoxListEvent(ctx context.Context, req *pb.GetBoxListEventRequest) (*pb.GetBoxListEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -2247,6 +2275,11 @@ func (s *TransactionService) GetBoxListEvent(ctx context.Context, req *pb.GetBox
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -2278,7 +2311,7 @@ func (s *TransactionService) GetBoxListEvent(ctx context.Context, req *pb.GetBox
 
 func (s *TransactionService) GetBoxUnListEvent(ctx context.Context, req *pb.GetBoxUnListEventRequest) (*pb.GetBoxUnListEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -2321,6 +2354,11 @@ func (s *TransactionService) GetBoxUnListEvent(ctx context.Context, req *pb.GetB
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -2351,7 +2389,7 @@ func (s *TransactionService) GetBoxUnListEvent(ctx context.Context, req *pb.GetB
 
 func (s *TransactionService) GetBoxOpenEvent(ctx context.Context, req *pb.GetBoxOpenEventRequest) (*pb.GetBoxOpenEventReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		urls := []string{
 			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
 		}
@@ -2391,6 +2429,11 @@ func (s *TransactionService) GetBoxOpenEvent(ctx context.Context, req *pb.GetBox
 			if err != nil {
 				fmt.Println(err)
 				// 换下一个 RPC
+				continue
+			}
+
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
 				continue
 			}
 
@@ -2469,6 +2512,11 @@ func (s *TransactionService) GetBoxTransferEvent(ctx context.Context, req *pb.Ge
 				continue
 			}
 
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
 			if last >= newLast {
 				continue
 			}
@@ -2490,9 +2538,9 @@ func (s *TransactionService) GetBoxTransferEvent(ctx context.Context, req *pb.Ge
 					fmt.Println("insert tran box err", err)
 				}
 			}
-
-			return &pb.GetBoxTransferEventReply{}, nil
 		}
+
+		time.Sleep(4 * time.Second)
 	}
 
 	return &pb.GetBoxTransferEventReply{}, nil
@@ -2500,13 +2548,15 @@ func (s *TransactionService) GetBoxTransferEvent(ctx context.Context, req *pb.Ge
 
 func (s *TransactionService) UpdateBox(ctx context.Context, req *pb.UpdateBoxRequest) (*pb.UpdateBoxReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 19; i++ {
 		s.ac.UpdateBox(ctx, req)
 
 		now := time.Now().UTC()
 		if end.Before(now) {
 			break
 		}
+
+		time.Sleep(3 * time.Second)
 	}
 
 	return &pb.UpdateBoxReply{}, nil
