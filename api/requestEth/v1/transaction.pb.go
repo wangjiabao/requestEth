@@ -3998,7 +3998,7 @@ type GetAddressBoxRequest struct {
 
 	Address    string `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
 	Page       uint64 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	Num        uint64 `protobuf:"varint,2,opt,name=num,proto3" json:"num,omitempty"`           // 0全部，1上架中
+	Num        uint64 `protobuf:"varint,2,opt,name=num,proto3" json:"num,omitempty"`           // 0未上架，1上架中，2全部
 	NumTwo     uint64 `protobuf:"varint,5,opt,name=numTwo,proto3" json:"numTwo,omitempty"`     // 0全部，1表示20, 2表示50, 3表示100
 	NumThree   uint64 `protobuf:"varint,4,opt,name=numThree,proto3" json:"numThree,omitempty"` // 0倒叙，1正序
 	OpenStatus uint64 `protobuf:"varint,6,opt,name=openStatus,proto3" json:"openStatus,omitempty"`

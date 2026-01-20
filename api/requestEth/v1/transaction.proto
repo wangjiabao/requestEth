@@ -735,7 +735,7 @@ message UpdateBoxReply {
 message GetAddressBoxRequest {
   string address = 3;
   uint64 page = 1;
-  uint64 num = 2; // 0全部，1上架中
+  uint64 num = 2; // 0未上架，1上架中，2全部
   uint64 numTwo = 5; // 0全部，1表示20, 2表示50, 3表示100
   uint64 numThree = 4; // 0倒叙，1正序
   uint64 openStatus = 6;
