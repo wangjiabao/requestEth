@@ -1535,7 +1535,7 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 	}
 
 	if 2 > status {
-		if 1 == openStatus {
+		if 1 == status {
 			instance = instance.Where("status=?", 1)
 		} else {
 			instance = instance.Where("status=?", 0)
