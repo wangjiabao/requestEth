@@ -750,6 +750,7 @@ message GetAddressBoxReply {
     double priceUsdtNow = 4; // 目前增长金额
     uint64 blockTime = 5; // 铸造时间
     uint64 listTime = 6; // 上架时间
+    uint64 openStatus = 8;
   }
 }
 

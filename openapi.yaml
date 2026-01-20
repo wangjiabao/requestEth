@@ -1139,6 +1139,8 @@ components:
                     type: string
                 listTime:
                     type: string
+                openStatus:
+                    type: string
         GetAllReply:
             type: object
             properties:
