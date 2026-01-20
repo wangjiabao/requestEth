@@ -245,7 +245,7 @@ type UserRepo interface {
 	UpdateUnlistedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	UpdateListedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	UpdateBuyCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
-	GetNftMintedByAddressPage(ctx context.Context, b *Pagination, address []string, status uint64, order uint64, tier uint64) ([]*NftMinted, error, int64)
+	GetNftMintedByAddressPage(ctx context.Context, b *Pagination, address []string, status uint64, order uint64, tier uint64, openStatus uint64) ([]*NftMinted, error, int64)
 	GetNftMintedPage(ctx context.Context, b *Pagination, order uint64, orderTwo uint64, tier uint64) ([]*NftMinted, error, int64)
 }
 
@@ -950,7 +950,7 @@ func (ac *AppUsecase) GetAddressBox(ctx context.Context, address []string, req *
 	minted, err, count = ac.userRepo.GetNftMintedByAddressPage(ctx, &Pagination{
 		PageNum:  int(req.Page),
 		PageSize: 10,
-	}, address, req.Num, req.NumThree, req.NumTwo)
+	}, address, req.Num, req.NumThree, req.NumTwo, req.OpenStatus)
 
 	return minted, count, err
 }

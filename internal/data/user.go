@@ -1515,6 +1515,7 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 	status uint64,
 	order uint64,
 	tier uint64,
+	openStatus uint64,
 ) ([]*biz.NftMinted, error, int64) {
 
 	var (
@@ -1524,7 +1525,14 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 
 	res := make([]*biz.NftMinted, 0)
 
-	instance := u.data.DB(ctx).Table("nft_minted").Where("to_addr in(?)", address).Where("open_status=?", 0)
+	instance := u.data.DB(ctx).Table("nft_minted").Where("to_addr in(?)", address)
+	if 2 > openStatus {
+		if 1 == openStatus {
+			instance = instance.Where("open_status=?", 1)
+		} else {
+			instance = instance.Where("open_status=?", 0)
+		}
+	}
 
 	if 0 < status {
 		instance = instance.Where("status=?", status)
