@@ -752,6 +752,7 @@ message GetAddressBoxReply {
     uint64 blockTime = 5; // 铸造时间
     uint64 listTime = 6; // 上架时间
     uint64 openStatus = 8;
+    uint64 openTime = 9;
   }
 }
 

@@ -2628,6 +2628,7 @@ func (s *TransactionService) GetAddressBox(ctx context.Context, req *pb.GetAddre
 				ListTime:     v.ListedAt,
 				Tier:         v.Tier,
 				OpenStatus:   uint64(v.OpenStatus),
+				OpenTime:     v.OpenedAt,
 			})
 		}
 	}
