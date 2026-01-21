@@ -2593,7 +2593,9 @@ func (s *TransactionService) GetAddressBox(ctx context.Context, req *pb.GetAddre
 				continue
 			}
 
-			tmpTwo = two.String()
+			if "0x0000000000000000000000000000000000000000" != two.String() {
+				tmpTwo = two.String()
+			}
 		}
 
 		addresses := make([]string, 0)
@@ -2721,7 +2723,9 @@ func (s *TransactionService) GetSellBoxList(ctx context.Context, req *pb.GetSell
 				continue
 			}
 
-			tmpTwo = two.String()
+			if "0x0000000000000000000000000000000000000000" != two.String() {
+				tmpTwo = two.String()
+			}
 		}
 
 		addresses := make([]string, 0)
