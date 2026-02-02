@@ -223,6 +223,21 @@ type NftTransfer struct {
 	CheckStatus uint64    `gorm:"not null"`
 }
 
+type UserRegistered struct {
+	ID uint64 `gorm:"column:id;primaryKey;autoIncrement"`
+
+	BlockNumber uint64 `gorm:"column:block_number;not null"`
+	BlockTime   uint64 `gorm:"column:block_time;not null"`
+	LogIndex    uint   `gorm:"column:log_index;not null;default:0"`
+
+	UserAddr   string `gorm:"column:user_addr;type:varchar(42);not null"`
+	ParentAddr string `gorm:"column:parent_addr;type:varchar(42);not null"`
+	TopAddr    string `gorm:"column:top_addr;type:varchar(42);not null"`
+
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+}
+
 type UserRepo struct {
 	data *Data
 	log  *log.Helper
@@ -1588,4 +1603,172 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 	}
 
 	return res, nil, count
+}
+
+func (u *UserRepo) InsertUserRegistered(ctx context.Context, iData *biz.UserRegistered) error {
+	var s UserRegistered
+
+	s.BlockNumber = iData.BlockNumber
+	s.BlockTime = iData.BlockTime
+	s.LogIndex = iData.LogIndex
+
+	s.UserAddr = iData.UserAddr
+	s.ParentAddr = iData.ParentAddr
+	s.TopAddr = iData.TopAddr
+
+	if err := u.data.DB(ctx).Table("user_registered").Create(&s).Error; err != nil {
+		return errors.New(500, "CREATE_USER_REGISTERED_ERROR", "信息创建失败")
+	}
+	return nil
+}
+
+func (u *UserRepo) GetUserRegisteredLast(ctx context.Context) (*biz.UserRegistered, error) {
+	var v UserRegistered
+
+	if err := u.data.DB(ctx).Table("user_registered").Order("id desc").First(&v).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, errors.New(500, "USER_REGISTERED_ERROR", err.Error())
+	}
+
+	return &biz.UserRegistered{
+		ID:          v.ID,
+		BlockNumber: v.BlockNumber,
+		BlockTime:   v.BlockTime,
+		LogIndex:    v.LogIndex,
+
+		UserAddr:   v.UserAddr,
+		ParentAddr: v.ParentAddr,
+		TopAddr:    v.TopAddr,
+
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+	}, nil
+}
+
+// GetUserRCount .
+func (u *UserRepo) GetUserRCount(ctx context.Context) int64 {
+	var (
+		count int64
+	)
+
+	u.data.db.Table("user_registered").Count(&count)
+	return count
+}
+
+// GetUserRCountBySe .
+func (u *UserRepo) GetUserRCountBySe(ctx context.Context, start, end uint64) int64 {
+	var (
+		count int64
+	)
+
+	u.data.db.Table("user_registered").Where("block_time >= ?", start).Where("block_time <= ?", end).Count(&count)
+	return count
+}
+
+// GetMintNftCountBySe .
+func (u *UserRepo) GetMintNftCountBySe(ctx context.Context, start, end uint64) int64 {
+	var (
+		count int64
+	)
+
+	u.data.db.Table("nft_minted").Where("block_time >= ?", start).Where("block_time <= ?", end).Count(&count)
+	return count
+}
+
+// GetMintNftUsdtPaidSumBySe 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
+func (u *UserRepo) GetMintNftUsdtPaidSumBySe(ctx context.Context, start, end uint64) string {
+	var sum string
+	u.data.db.Table("nft_minted").
+		Select("COALESCE(SUM(usdt_paid), 0)").
+		Where("block_time >= ?", start).
+		Where("block_time <= ?", end).
+		Scan(&sum)
+	return sum
+}
+
+// GetMintNftCount .
+func (u *UserRepo) GetMintNftCount(paidType uint64) int64 {
+	var (
+		count int64
+	)
+
+	instance := u.data.db.Table("nft_minted")
+	if 0 < paidType {
+		instance = instance.Where("tier", paidType)
+	}
+	instance.Count(&count)
+	return count
+}
+
+// GetMintNftUsdtPaidSum 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
+func (u *UserRepo) GetMintNftUsdtPaidSum(paidType uint64) string {
+	var sum string
+	instance := u.data.db.Table("nft_minted")
+	if 0 < paidType {
+		instance = instance.Where("tier", paidType)
+	}
+
+	instance.Select("COALESCE(SUM(usdt_paid), 0)").Scan(&sum)
+	return sum
+}
+
+// GetNftBuyCountBySe .
+func (u *UserRepo) GetNftBuyCountBySe(ctx context.Context, start, end uint64) int64 {
+	var (
+		count int64
+	)
+
+	u.data.db.Table("nft_market_purchase").Where("block_time >= ?", start).Where("block_time <= ?", end).Count(&count)
+	return count
+}
+
+// GetNftBuySumBySe 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
+func (u *UserRepo) GetNftBuySumBySe(ctx context.Context, start, end uint64) string {
+	var sum string
+	u.data.db.Table("nft_market_purchase").
+		Select("COALESCE(SUM(price_usdt), 0)").
+		Where("block_time >= ?", start).
+		Where("block_time <= ?", end).
+		Scan(&sum)
+	return sum
+}
+
+// GetNftBuyCount .
+func (u *UserRepo) GetNftBuyCount() int64 {
+	var (
+		count int64
+	)
+
+	u.data.db.Table("nft_market_purchase").Count(&count)
+	return count
+}
+
+// GetNftBuySum 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
+func (u *UserRepo) GetNftBuySum() string {
+	var sum string
+	u.data.db.Table("nft_market_purchase").
+		Select("COALESCE(SUM(price_usdt), 0)").
+		Scan(&sum)
+	return sum
+}
+
+// GetNftOpenCountBySe .
+func (u *UserRepo) GetNftOpenCountBySe(ctx context.Context, start, end uint64) int64 {
+	var (
+		count int64
+	)
+
+	u.data.db.Table("nft_opened").Where("block_time >= ?", start).Where("block_time <= ?", end).Count(&count)
+	return count
+}
+
+// GetNftOpenSumB 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
+func (u *UserRepo) GetNftOpenSum() string {
+	var sum string
+	u.data.db.Table("nft_opened").
+		Select("COALESCE(SUM(reward), 0)").
+		Scan(&sum)
+	return sum
 }

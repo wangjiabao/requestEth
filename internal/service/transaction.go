@@ -2546,6 +2546,85 @@ func (s *TransactionService) GetBoxTransferEvent(ctx context.Context, req *pb.Ge
 	return &pb.GetBoxTransferEventReply{}, nil
 }
 
+func (s *TransactionService) GetUserREvent(ctx context.Context, req *pb.GetUserREventRequest) (*pb.GetUserREventReply, error) {
+	end := time.Now().UTC().Add(50 * time.Second)
+	for i := 1; i <= 10; i++ {
+		urls := []string{
+			"https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2",
+		}
+
+		last := uint64(0)
+
+		var (
+			rLast *biz.UserRegistered
+			errT  error
+		)
+		rLast, errT = s.ac.GetUserRegisteredLast(ctx)
+		if nil != errT {
+			return nil, errT
+		}
+
+		if nil != rLast {
+			last = rLast.BlockNumber
+		}
+
+		now := time.Now().UTC()
+		if end.Before(now) {
+			break
+		}
+
+		var (
+			events  []RegisteredEvent
+			newLast uint64
+		)
+
+		for _, url := range urls {
+			client, err := ethclient.DialContext(ctx, url)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			events, newLast, err = PollRegisteredIncremental(ctx, client, last)
+			if err != nil {
+				fmt.Println(err)
+				// 换下一个 RPC
+				continue
+			}
+
+			if 0 >= len(events) {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
+			if last >= newLast {
+				continue
+			}
+
+			for _, v := range events {
+				if last >= v.BlockNumber {
+					break
+				}
+
+				err = s.ac.InsertUserRegistered(ctx, &biz.UserRegistered{
+					BlockNumber: v.BlockNumber,
+					BlockTime:   v.BlockTime,
+					LogIndex:    v.LogIndex,
+					UserAddr:    v.User.String(),
+					ParentAddr:  v.Parent.String(),
+					TopAddr:     v.Top.String(),
+				})
+				if nil != err {
+					fmt.Println("insert user r err", err)
+				}
+			}
+		}
+
+		time.Sleep(4 * time.Second)
+	}
+
+	return &pb.GetUserREventReply{}, nil
+}
+
 func (s *TransactionService) UpdateBox(ctx context.Context, req *pb.UpdateBoxRequest) (*pb.UpdateBoxReply, error) {
 	end := time.Now().UTC().Add(50 * time.Second)
 	for i := 1; i <= 19; i++ {
@@ -2753,6 +2832,10 @@ func (s *TransactionService) GetSellBoxList(ctx context.Context, req *pb.GetSell
 		Count: uint64(count),
 		List:  res,
 	}, nil
+}
+
+func (s *TransactionService) GetAllInfo(ctx context.Context, req *pb.GetAllInfoRequest) (*pb.GetAllInfoReply, error) {
+	return s.ac.GetAllInfo(ctx, req)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4804,6 +4887,193 @@ func PollTransferIncremental(ctx context.Context, client *ethclient.Client, last
 	}
 
 	evs, err := FetchTransferByRange(ctx, client, NftContract, from, safeTo)
+	if err != nil {
+		return nil, lastProcessedFromDB, err
+	}
+	return evs, safeTo, nil
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const (
+	DeployBlockRegistered uint64 = 72530801 // TODO: 改成触发 Registered 的合约实际部署块高
+)
+
+var (
+	// RegisterContract TODO: 改成触发 Registered 的合约地址
+	RegisterContract = common.HexToAddress("0x135d05e0d1a8083525D64B9C9831579D4B6811d2")
+)
+
+const registeredABI = `[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "address", "name": "user",   "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "parent", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "top",    "type": "address"}
+    ],
+    "name": "Registered",
+    "type": "event"
+  }
+]`
+
+type RegisteredEvent struct {
+	BlockNumber uint64
+	LogIndex    uint
+	BlockTime   uint64 // 秒级（区块时间）
+
+	// indexed
+	User   common.Address
+	Parent common.Address
+	Top    common.Address
+}
+
+func parseRegistered(a abi.ABI, lg types.Log) (RegisteredEvent, error) {
+	ev, ok := a.Events["Registered"]
+	if !ok {
+		return RegisteredEvent{}, fmt.Errorf("event Registered not found in ABI")
+	}
+	// topics: [eventId, user, parent, top]
+	if len(lg.Topics) != 4 {
+		return RegisteredEvent{}, fmt.Errorf("bad topics len=%d", len(lg.Topics))
+	}
+	if lg.Topics[0] != ev.ID {
+		return RegisteredEvent{}, fmt.Errorf("topic0 mismatch")
+	}
+
+	return RegisteredEvent{
+		BlockNumber: lg.BlockNumber,
+		LogIndex:    lg.Index,
+		User:        common.BytesToAddress(lg.Topics[1].Bytes()),
+		Parent:      common.BytesToAddress(lg.Topics[2].Bytes()),
+		Top:         common.BytesToAddress(lg.Topics[3].Bytes()),
+	}, nil
+}
+
+// ✅ 简单重试：最多 5 次（局部变量）
+func filterLogsRetryRegistered(ctx context.Context, client *ethclient.Client, q ethereum.FilterQuery) ([]types.Log, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		logs, err := client.FilterLogs(ctx, q)
+		if err == nil {
+			return logs, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+// ✅ 简单重试：最多 5 次（局部变量）
+func headerByNumberRetryRegistered(ctx context.Context, client *ethclient.Client, bn uint64) (*types.Header, error) {
+	maxTry := 5
+	delay := 400 * time.Millisecond
+
+	var lastErr error
+	for i := 0; i < maxTry; i++ {
+		h, err := client.HeaderByNumber(ctx, new(big.Int).SetUint64(bn))
+		if err == nil {
+			return h, nil
+		}
+		lastErr = err
+		if i != maxTry-1 {
+			time.Sleep(delay)
+		}
+	}
+	return nil, lastErr
+}
+
+func fillBlockTimesRegistered(ctx context.Context, client *ethclient.Client, evs []RegisteredEvent) error {
+	cache := make(map[uint64]uint64, 256)
+	for i := range evs {
+		bn := evs[i].BlockNumber
+		if ts, ok := cache[bn]; ok {
+			evs[i].BlockTime = ts
+			continue
+		}
+
+		h, err := headerByNumberRetryRegistered(ctx, client, bn)
+		if err != nil {
+			return fmt.Errorf("HeaderByNumber(%d): %w", bn, err)
+		}
+
+		cache[bn] = h.Time
+		evs[i].BlockTime = h.Time
+	}
+	return nil
+}
+
+func FetchRegisteredByRange(ctx context.Context, client *ethclient.Client, contract common.Address, fromBlock, toBlock uint64) ([]RegisteredEvent, error) {
+	if toBlock < fromBlock {
+		return []RegisteredEvent{}, nil
+	}
+
+	parsedABI, err := abi.JSON(strings.NewReader(registeredABI))
+	if err != nil {
+		return nil, fmt.Errorf("parse abi: %w", err)
+	}
+	evID := parsedABI.Events["Registered"].ID
+
+	res := make([]RegisteredEvent, 0, 256)
+
+	for start := fromBlock; start <= toBlock; start += QueryStep {
+		end := start + QueryStep - 1
+		if end > toBlock {
+			end = toBlock
+		}
+
+		q := ethereum.FilterQuery{
+			FromBlock: new(big.Int).SetUint64(start),
+			ToBlock:   new(big.Int).SetUint64(end),
+			Addresses: []common.Address{contract},
+			Topics:    [][]common.Hash{{evID}},
+		}
+
+		// ✅ 失败不直接 return：最多重试 5 次
+		logs, err := filterLogsRetryRegistered(ctx, client, q)
+		if err != nil {
+			return nil, fmt.Errorf("FilterLogs [%d,%d]: %w", start, end, err)
+		}
+
+		for _, lg := range logs {
+			ev, err := parseRegistered(parsedABI, lg)
+			if err != nil {
+				return nil, fmt.Errorf("parse log tx=%s idx=%d: %w", lg.TxHash.Hex(), lg.Index, err)
+			}
+			res = append(res, ev)
+		}
+	}
+
+	if err := fillBlockTimesRegistered(ctx, client, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func PollRegisteredIncremental(ctx context.Context, client *ethclient.Client, lastProcessedFromDB uint64) (events []RegisteredEvent, newLastProcessed uint64, err error) {
+	head, err := client.BlockNumber(ctx)
+	if err != nil {
+		return nil, lastProcessedFromDB, fmt.Errorf("BlockNumber: %w", err)
+	}
+	if head <= Confirmations {
+		return nil, lastProcessedFromDB, nil
+	}
+	safeTo := head - Confirmations
+
+	from := lastProcessedFromDB + 1
+	if from < DeployBlockRegistered {
+		from = DeployBlockRegistered
+	}
+	if safeTo < from {
+		return []RegisteredEvent{}, lastProcessedFromDB, nil
+	}
+
+	evs, err := FetchRegisteredByRange(ctx, client, RegisterContract, from, safeTo)
 	if err != nil {
 		return nil, lastProcessedFromDB, err
 	}

@@ -203,6 +203,21 @@ type NftTransfer struct {
 	CheckStatus uint64
 }
 
+type UserRegistered struct {
+	ID uint64
+
+	BlockNumber uint64
+	BlockTime   uint64
+	LogIndex    uint
+
+	UserAddr   string
+	ParentAddr string
+	TopAddr    string
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type UserRepo interface {
 	GetSwapTradeLast(ctx context.Context) (*SwapTrade, error)
 	GetSwapTrade(ctx context.Context, start, end uint64) ([]*SwapTrade, error)
@@ -247,6 +262,20 @@ type UserRepo interface {
 	UpdateBuyCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	GetNftMintedByAddressPage(ctx context.Context, b *Pagination, address []string, status uint64, order uint64, tier uint64, openStatus uint64) ([]*NftMinted, error, int64)
 	GetNftMintedPage(ctx context.Context, b *Pagination, order uint64, orderTwo uint64, tier uint64) ([]*NftMinted, error, int64)
+	GetUserRegisteredLast(ctx context.Context) (*UserRegistered, error)
+	InsertUserRegistered(ctx context.Context, iData *UserRegistered) error
+	GetUserRCount(ctx context.Context) int64
+	GetUserRCountBySe(ctx context.Context, start, end uint64) int64
+	GetMintNftCountBySe(ctx context.Context, start, end uint64) int64
+	GetMintNftUsdtPaidSumBySe(ctx context.Context, start, end uint64) string
+	GetMintNftCount(paidType uint64) int64
+	GetMintNftUsdtPaidSum(paidType uint64) string
+	GetNftBuyCountBySe(ctx context.Context, start, end uint64) int64
+	GetNftBuySumBySe(ctx context.Context, start, end uint64) string
+	GetNftBuySum() string
+	GetNftBuyCount() int64
+	GetNftOpenCountBySe(ctx context.Context, start, end uint64) int64
+	GetNftOpenSum() string
 }
 
 // AppUsecase is an app usecase.
@@ -555,6 +584,39 @@ func (ac *AppUsecase) InsertNftMinted(ctx context.Context, trade *NftMinted) err
 		return nil
 	}); nil != err {
 		fmt.Println(err, "买盲盒写入mysql错误")
+		return err
+	}
+
+	return err
+}
+
+func (ac *AppUsecase) GetUserRegisteredLast(ctx context.Context) (*UserRegistered, error) {
+	var (
+		rLast *UserRegistered
+		err   error
+	)
+	rLast, err = ac.userRepo.GetUserRegisteredLast(ctx)
+	if nil != err || nil == rLast {
+		return nil, err
+	}
+
+	return rLast, nil
+}
+
+func (ac *AppUsecase) InsertUserRegistered(ctx context.Context, trade *UserRegistered) error {
+	var (
+		err error
+	)
+
+	if err = ac.tx.ExecTx(ctx, func(ctx context.Context) error { // 事务
+		err = ac.userRepo.InsertUserRegistered(ctx, trade)
+		if nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err {
+		fmt.Println(err, "注册写入mysql错误")
 		return err
 	}
 
@@ -989,4 +1051,27 @@ func (ac *AppUsecase) GetSellBoxList(ctx context.Context, address []string, req 
 	}, req.Address, address, 3)
 
 	return records, count, err
+}
+
+func (ac *AppUsecase) GetAllInfo(ctx context.Context, req *pb.GetAllInfoRequest) (*pb.GetAllInfoReply, error) {
+
+	return &pb.GetAllInfoReply{
+		UserCount:        uint64(ac.userRepo.GetUserRCount(ctx)),
+		TodayUserCount:   uint64(ac.userRepo.GetUserRCountBySe(ctx, req.Start, req.End)),
+		TodayMintedCount: uint64(ac.userRepo.GetMintNftCountBySe(ctx, req.Start, req.End)),
+		TodayMintedSum:   ac.userRepo.GetMintNftUsdtPaidSumBySe(ctx, req.Start, req.End),
+		MintedCount:      uint64(ac.userRepo.GetMintNftCount(0)),
+		MintedSum:        ac.userRepo.GetMintNftUsdtPaidSum(0),
+		MintedCountOne:   uint64(ac.userRepo.GetMintNftCount(1)),
+		MintedSumOne:     ac.userRepo.GetMintNftUsdtPaidSum(1),
+		MintedCountTwo:   uint64(ac.userRepo.GetMintNftCount(2)),
+		MintedSumTwo:     ac.userRepo.GetMintNftUsdtPaidSum(2),
+		MintedCountThree: uint64(ac.userRepo.GetMintNftCount(3)),
+		MintedSumThree:   ac.userRepo.GetMintNftUsdtPaidSum(3),
+		BuyCount:         uint64(ac.userRepo.GetNftBuyCount()),
+		BuySum:           ac.userRepo.GetNftBuySum(),
+		TodayBuyCount:    uint64(ac.userRepo.GetNftBuyCountBySe(ctx, req.Start, req.End)),
+		TodayBuySum:      ac.userRepo.GetNftBuySumBySe(ctx, req.Start, req.End),
+		OpenReward:       ac.userRepo.GetNftOpenSum(),
+	}, nil
 }

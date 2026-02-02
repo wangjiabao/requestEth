@@ -56,6 +56,7 @@ const (
 	Transaction_GetBoxUnListEvent_FullMethodName    = "/api.requestEth.v1.Transaction/GetBoxUnListEvent"
 	Transaction_GetBoxOpenEvent_FullMethodName      = "/api.requestEth.v1.Transaction/GetBoxOpenEvent"
 	Transaction_GetBoxTransferEvent_FullMethodName  = "/api.requestEth.v1.Transaction/GetBoxTransferEvent"
+	Transaction_GetUserREvent_FullMethodName        = "/api.requestEth.v1.Transaction/GetUserREvent"
 	Transaction_GetExchangeList_FullMethodName      = "/api.requestEth.v1.Transaction/GetExchangeList"
 	Transaction_GetBuyList_FullMethodName           = "/api.requestEth.v1.Transaction/GetBuyList"
 	Transaction_GetRewardList_FullMethodName        = "/api.requestEth.v1.Transaction/GetRewardList"
@@ -64,6 +65,7 @@ const (
 	Transaction_GetAddressBox_FullMethodName        = "/api.requestEth.v1.Transaction/GetAddressBox"
 	Transaction_GetSellBoxList_FullMethodName       = "/api.requestEth.v1.Transaction/GetSellBoxList"
 	Transaction_GetMarketList_FullMethodName        = "/api.requestEth.v1.Transaction/GetMarketList"
+	Transaction_GetAllInfo_FullMethodName           = "/api.requestEth.v1.Transaction/GetAllInfo"
 )
 
 // TransactionClient is the client API for Transaction service.
@@ -107,6 +109,7 @@ type TransactionClient interface {
 	GetBoxUnListEvent(ctx context.Context, in *GetBoxUnListEventRequest, opts ...grpc.CallOption) (*GetBoxUnListEventReply, error)
 	GetBoxOpenEvent(ctx context.Context, in *GetBoxOpenEventRequest, opts ...grpc.CallOption) (*GetBoxOpenEventReply, error)
 	GetBoxTransferEvent(ctx context.Context, in *GetBoxTransferEventRequest, opts ...grpc.CallOption) (*GetBoxTransferEventReply, error)
+	GetUserREvent(ctx context.Context, in *GetUserREventRequest, opts ...grpc.CallOption) (*GetUserREventReply, error)
 	GetExchangeList(ctx context.Context, in *GetExchangeListRequest, opts ...grpc.CallOption) (*GetExchangeListReply, error)
 	GetBuyList(ctx context.Context, in *GetBuyListRequest, opts ...grpc.CallOption) (*GetBuyListReply, error)
 	GetRewardList(ctx context.Context, in *GetRewardListRequest, opts ...grpc.CallOption) (*GetRewardListReply, error)
@@ -115,6 +118,7 @@ type TransactionClient interface {
 	GetAddressBox(ctx context.Context, in *GetAddressBoxRequest, opts ...grpc.CallOption) (*GetAddressBoxReply, error)
 	GetSellBoxList(ctx context.Context, in *GetSellBoxListRequest, opts ...grpc.CallOption) (*GetSellBoxListReply, error)
 	GetMarketList(ctx context.Context, in *GetMarketListRequest, opts ...grpc.CallOption) (*GetMarketListReply, error)
+	GetAllInfo(ctx context.Context, in *GetAllInfoRequest, opts ...grpc.CallOption) (*GetAllInfoReply, error)
 }
 
 type transactionClient struct {
@@ -458,6 +462,15 @@ func (c *transactionClient) GetBoxTransferEvent(ctx context.Context, in *GetBoxT
 	return out, nil
 }
 
+func (c *transactionClient) GetUserREvent(ctx context.Context, in *GetUserREventRequest, opts ...grpc.CallOption) (*GetUserREventReply, error) {
+	out := new(GetUserREventReply)
+	err := c.cc.Invoke(ctx, Transaction_GetUserREvent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *transactionClient) GetExchangeList(ctx context.Context, in *GetExchangeListRequest, opts ...grpc.CallOption) (*GetExchangeListReply, error) {
 	out := new(GetExchangeListReply)
 	err := c.cc.Invoke(ctx, Transaction_GetExchangeList_FullMethodName, in, out, opts...)
@@ -530,6 +543,15 @@ func (c *transactionClient) GetMarketList(ctx context.Context, in *GetMarketList
 	return out, nil
 }
 
+func (c *transactionClient) GetAllInfo(ctx context.Context, in *GetAllInfoRequest, opts ...grpc.CallOption) (*GetAllInfoReply, error) {
+	out := new(GetAllInfoReply)
+	err := c.cc.Invoke(ctx, Transaction_GetAllInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
@@ -571,6 +593,7 @@ type TransactionServer interface {
 	GetBoxUnListEvent(context.Context, *GetBoxUnListEventRequest) (*GetBoxUnListEventReply, error)
 	GetBoxOpenEvent(context.Context, *GetBoxOpenEventRequest) (*GetBoxOpenEventReply, error)
 	GetBoxTransferEvent(context.Context, *GetBoxTransferEventRequest) (*GetBoxTransferEventReply, error)
+	GetUserREvent(context.Context, *GetUserREventRequest) (*GetUserREventReply, error)
 	GetExchangeList(context.Context, *GetExchangeListRequest) (*GetExchangeListReply, error)
 	GetBuyList(context.Context, *GetBuyListRequest) (*GetBuyListReply, error)
 	GetRewardList(context.Context, *GetRewardListRequest) (*GetRewardListReply, error)
@@ -579,6 +602,7 @@ type TransactionServer interface {
 	GetAddressBox(context.Context, *GetAddressBoxRequest) (*GetAddressBoxReply, error)
 	GetSellBoxList(context.Context, *GetSellBoxListRequest) (*GetSellBoxListReply, error)
 	GetMarketList(context.Context, *GetMarketListRequest) (*GetMarketListReply, error)
+	GetAllInfo(context.Context, *GetAllInfoRequest) (*GetAllInfoReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -697,6 +721,9 @@ func (UnimplementedTransactionServer) GetBoxOpenEvent(context.Context, *GetBoxOp
 func (UnimplementedTransactionServer) GetBoxTransferEvent(context.Context, *GetBoxTransferEventRequest) (*GetBoxTransferEventReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBoxTransferEvent not implemented")
 }
+func (UnimplementedTransactionServer) GetUserREvent(context.Context, *GetUserREventRequest) (*GetUserREventReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserREvent not implemented")
+}
 func (UnimplementedTransactionServer) GetExchangeList(context.Context, *GetExchangeListRequest) (*GetExchangeListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetExchangeList not implemented")
 }
@@ -720,6 +747,9 @@ func (UnimplementedTransactionServer) GetSellBoxList(context.Context, *GetSellBo
 }
 func (UnimplementedTransactionServer) GetMarketList(context.Context, *GetMarketListRequest) (*GetMarketListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMarketList not implemented")
+}
+func (UnimplementedTransactionServer) GetAllInfo(context.Context, *GetAllInfoRequest) (*GetAllInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllInfo not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -1400,6 +1430,24 @@ func _Transaction_GetBoxTransferEvent_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_GetUserREvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserREventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetUserREvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetUserREvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetUserREvent(ctx, req.(*GetUserREventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Transaction_GetExchangeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetExchangeListRequest)
 	if err := dec(in); err != nil {
@@ -1540,6 +1588,24 @@ func _Transaction_GetMarketList_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TransactionServer).GetMarketList(ctx, req.(*GetMarketListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_GetAllInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).GetAllInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Transaction_GetAllInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).GetAllInfo(ctx, req.(*GetAllInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1700,6 +1766,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Transaction_GetBoxTransferEvent_Handler,
 		},
 		{
+			MethodName: "GetUserREvent",
+			Handler:    _Transaction_GetUserREvent_Handler,
+		},
+		{
 			MethodName: "GetExchangeList",
 			Handler:    _Transaction_GetExchangeList_Handler,
 		},
@@ -1730,6 +1800,10 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMarketList",
 			Handler:    _Transaction_GetMarketList_Handler,
+		},
+		{
+			MethodName: "GetAllInfo",
+			Handler:    _Transaction_GetAllInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

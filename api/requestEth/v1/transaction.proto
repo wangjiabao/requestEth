@@ -241,6 +241,12 @@ service Transaction {
     };
   }
 
+  rpc GetUserREvent (GetUserREventRequest) returns (GetUserREventReply) {
+    option (google.api.http) = {
+      get: "/api/get_user_r_event"
+    };
+  }
+
   rpc GetExchangeList (GetExchangeListRequest) returns (GetExchangeListReply) {
     option (google.api.http) = {
       get: "/api/get_exchange_list"
@@ -286,6 +292,12 @@ service Transaction {
   rpc GetMarketList (GetMarketListRequest) returns (GetMarketListReply) {
     option (google.api.http) = {
       get: "/api/get_market_box_list"
+    };
+  }
+
+  rpc GetAllInfo (GetAllInfoRequest) returns (GetAllInfoReply) {
+    option (google.api.http) = {
+      get: "/api/get_all_info"
     };
   }
 }
@@ -646,6 +658,13 @@ message GetBoxTransferEventRequest {
 message GetBoxTransferEventReply {
 }
 
+message GetUserREventRequest {
+}
+
+message GetUserREventReply {
+}
+
+
 message GetExchangeListRequest {
   uint64 start = 1;
   uint64 end = 2;
@@ -774,4 +793,36 @@ message GetMarketListReply {
     uint64 blockTime = 5; // 铸造时间
     uint64 listTime = 6; // 上架时间
   }
+}
+
+message GetAllInfoRequest {
+  uint64 start = 1;
+  uint64 end = 2;
+}
+
+
+message GetAllInfoReply {
+  uint64 userCount = 1; // 用户注册总数
+  uint64 todayUserCount = 2; // 今日新增用户总数
+  uint64 todayMintedCount = 3; // 今日铸造量
+  string todayMintedSum = 4; // 今日铸造金额
+  uint64 mintedCount = 5; // 总铸造量
+  string mintedSum = 6; // 总铸金额
+
+  uint64 mintedCountOne = 7; // 总铸造量1档
+  string mintedSumOne = 8; // 总铸金额1档
+
+  uint64 mintedCountTwo = 9; // 总铸造量2档
+  string mintedSumTwo = 10; // 总铸金额2档
+
+  uint64 mintedCountThree = 11; // 总铸造量3档
+  string mintedSumThree = 12; // 总铸金额3档
+
+  uint64 buyCount = 13; // 历史销售总量
+  string buySum = 14; // 历史销售金额
+
+  uint64 todayBuyCount = 15; // 今日历史销售总量
+  string todayBuySum = 16; // 今日历史销售金额
+
+  string openReward = 17; // 盲盒总盈利
 }
