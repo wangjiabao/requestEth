@@ -1594,8 +1594,8 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 		instance = instance.Order("id desc")
 	}
 
-	if 2 > openAtOrder {
-		if 0 < openAtOrder {
+	if 0 < openAtOrder {
+		if 1 < openAtOrder {
 			instance = instance.Order("opened_at asc")
 		} else {
 			instance = instance.Order("opened_at desc")
