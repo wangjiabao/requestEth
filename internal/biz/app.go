@@ -262,7 +262,7 @@ type UserRepo interface {
 	UpdateUnlistedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	UpdateListedCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
 	UpdateBuyCheckStatus(ctx context.Context, id, idT, checkTime uint64) error
-	GetNftMintedByAddressPage(ctx context.Context, b *Pagination, start uint64, end uint64, address []string, status uint64, order uint64, tier uint64, openStatus uint64) ([]*NftMinted, error, int64)
+	GetNftMintedByAddressPage(ctx context.Context, b *Pagination, start uint64, end uint64, address []string, status uint64, order uint64, tier uint64, openStatus uint64, openAtOrder uint64) ([]*NftMinted, error, int64)
 	GetNftMintedPage(ctx context.Context, b *Pagination, order uint64, orderTwo uint64, tier uint64) ([]*NftMinted, error, int64)
 	GetUserRegisteredLast(ctx context.Context) (*UserRegistered, error)
 	InsertUserRegistered(ctx context.Context, iData *UserRegistered) error
@@ -1040,7 +1040,7 @@ func (ac *AppUsecase) GetAddressBox(ctx context.Context, address []string, req *
 	minted, err, count = ac.userRepo.GetNftMintedByAddressPage(ctx, &Pagination{
 		PageNum:  int(req.Page),
 		PageSize: 10,
-	}, req.Start, req.End, address, req.Num, req.NumThree, req.NumTwo, req.OpenStatus)
+	}, req.Start, req.End, address, req.Num, req.NumThree, req.NumTwo, req.OpenStatus, req.NumFour)
 
 	return minted, count, err
 }

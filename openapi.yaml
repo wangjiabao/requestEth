@@ -147,6 +147,10 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: numFour
+                  in: query
+                  schema:
+                    type: string
                 - name: openStatus
                   in: query
                   schema:

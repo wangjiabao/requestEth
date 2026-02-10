@@ -1550,6 +1550,7 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 	order uint64,
 	tier uint64,
 	openStatus uint64,
+	openAtOrder uint64,
 ) ([]*biz.NftMinted, error, int64) {
 
 	var (
@@ -1591,6 +1592,14 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 		instance = instance.Order("id asc")
 	} else {
 		instance = instance.Order("id desc")
+	}
+
+	if 2 > openAtOrder {
+		if 0 < openAtOrder {
+			instance = instance.Order("opened_at asc")
+		} else {
+			instance = instance.Order("opened_at desc")
+		}
 	}
 
 	if err := instance.Scopes(Paginate(b.PageNum, b.PageSize)).Find(&rows).Error; err != nil {
