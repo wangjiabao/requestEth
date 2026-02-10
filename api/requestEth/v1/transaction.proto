@@ -217,6 +217,12 @@ service Transaction {
     };
   }
 
+  rpc GetBoxMintEventFix (GetBoxMintEventRequest) returns (GetBoxMintEventReply) {
+    option (google.api.http) = {
+      get: "/api/get_box_mint_event_fix"
+    };
+  }
+
   rpc GetBoxListEvent (GetBoxListEventRequest) returns (GetBoxListEventReply) {
     option (google.api.http) = {
       get: "/api/get_box_list_event"
@@ -752,6 +758,8 @@ message UpdateBoxReply {
 }
 
 message GetAddressBoxRequest {
+  uint64 start = 7;
+  uint64 end = 8;
   string address = 3;
   uint64 page = 1;
   uint64 num = 2; // 0未上架，1上架中，2全部
@@ -772,6 +780,7 @@ message GetAddressBoxReply {
     uint64 listTime = 6; // 上架时间
     uint64 openStatus = 8;
     uint64 openTime = 9;
+    string minter = 10;
   }
 }
 

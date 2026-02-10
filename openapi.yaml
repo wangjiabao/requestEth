@@ -119,6 +119,14 @@ paths:
                 - Transaction
             operationId: Transaction_GetAddressBox
             parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: string
+                - name: end
+                  in: query
+                  schema:
+                    type: string
                 - name: address
                   in: query
                   schema:
@@ -318,6 +326,24 @@ paths:
             tags:
                 - Transaction
             operationId: Transaction_GetBoxMintEvent
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBoxMintEventReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/get_box_mint_event_fix:
+        get:
+            tags:
+                - Transaction
+            operationId: Transaction_GetBoxMintEventFix
             responses:
                 "200":
                     description: OK
@@ -1191,6 +1217,8 @@ components:
                 openStatus:
                     type: string
                 openTime:
+                    type: string
+                minter:
                     type: string
         GetAllInfoReply:
             type: object

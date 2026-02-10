@@ -33,6 +33,7 @@ const OperationTransactionGetBoxAllLength = "/api.requestEth.v1.Transaction/GetB
 const OperationTransactionGetBoxBuyEvent = "/api.requestEth.v1.Transaction/GetBoxBuyEvent"
 const OperationTransactionGetBoxListEvent = "/api.requestEth.v1.Transaction/GetBoxListEvent"
 const OperationTransactionGetBoxMintEvent = "/api.requestEth.v1.Transaction/GetBoxMintEvent"
+const OperationTransactionGetBoxMintEventFix = "/api.requestEth.v1.Transaction/GetBoxMintEventFix"
 const OperationTransactionGetBoxNew = "/api.requestEth.v1.Transaction/GetBoxNew"
 const OperationTransactionGetBoxOpen = "/api.requestEth.v1.Transaction/GetBoxOpen"
 const OperationTransactionGetBoxOpenEvent = "/api.requestEth.v1.Transaction/GetBoxOpenEvent"
@@ -82,6 +83,7 @@ type TransactionHTTPServer interface {
 	GetBoxBuyEvent(context.Context, *GetBoxBuyEventRequest) (*GetBoxBuyEventReply, error)
 	GetBoxListEvent(context.Context, *GetBoxListEventRequest) (*GetBoxListEventReply, error)
 	GetBoxMintEvent(context.Context, *GetBoxMintEventRequest) (*GetBoxMintEventReply, error)
+	GetBoxMintEventFix(context.Context, *GetBoxMintEventRequest) (*GetBoxMintEventReply, error)
 	GetBoxNew(context.Context, *GetBoxNewRequest) (*GetBoxNewReply, error)
 	GetBoxOpen(context.Context, *GetBoxOpenRequest) (*GetBoxOpenReply, error)
 	GetBoxOpenEvent(context.Context, *GetBoxOpenEventRequest) (*GetBoxOpenEventReply, error)
@@ -152,6 +154,7 @@ func RegisterTransactionHTTPServer(s *http.Server, srv TransactionHTTPServer) {
 	r.GET("/api/get_sell_event", _Transaction_GetSellEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_box_buy_event", _Transaction_GetBoxBuyEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_box_mint_event", _Transaction_GetBoxMintEvent0_HTTP_Handler(srv))
+	r.GET("/api/get_box_mint_event_fix", _Transaction_GetBoxMintEventFix0_HTTP_Handler(srv))
 	r.GET("/api/get_box_list_event", _Transaction_GetBoxListEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_box_unlist_event", _Transaction_GetBoxUnListEvent0_HTTP_Handler(srv))
 	r.GET("/api/get_box_open_event", _Transaction_GetBoxOpenEvent0_HTTP_Handler(srv))
@@ -825,6 +828,25 @@ func _Transaction_GetBoxMintEvent0_HTTP_Handler(srv TransactionHTTPServer) func(
 	}
 }
 
+func _Transaction_GetBoxMintEventFix0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetBoxMintEventRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTransactionGetBoxMintEventFix)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetBoxMintEventFix(ctx, req.(*GetBoxMintEventRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetBoxMintEventReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Transaction_GetBoxListEvent0_HTTP_Handler(srv TransactionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetBoxListEventRequest
@@ -1106,6 +1128,7 @@ type TransactionHTTPClient interface {
 	GetBoxBuyEvent(ctx context.Context, req *GetBoxBuyEventRequest, opts ...http.CallOption) (rsp *GetBoxBuyEventReply, err error)
 	GetBoxListEvent(ctx context.Context, req *GetBoxListEventRequest, opts ...http.CallOption) (rsp *GetBoxListEventReply, err error)
 	GetBoxMintEvent(ctx context.Context, req *GetBoxMintEventRequest, opts ...http.CallOption) (rsp *GetBoxMintEventReply, err error)
+	GetBoxMintEventFix(ctx context.Context, req *GetBoxMintEventRequest, opts ...http.CallOption) (rsp *GetBoxMintEventReply, err error)
 	GetBoxNew(ctx context.Context, req *GetBoxNewRequest, opts ...http.CallOption) (rsp *GetBoxNewReply, err error)
 	GetBoxOpen(ctx context.Context, req *GetBoxOpenRequest, opts ...http.CallOption) (rsp *GetBoxOpenReply, err error)
 	GetBoxOpenEvent(ctx context.Context, req *GetBoxOpenEventRequest, opts ...http.CallOption) (rsp *GetBoxOpenEventReply, err error)
@@ -1323,6 +1346,19 @@ func (c *TransactionHTTPClientImpl) GetBoxMintEvent(ctx context.Context, in *Get
 	pattern := "/api/get_box_mint_event"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTransactionGetBoxMintEvent))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TransactionHTTPClientImpl) GetBoxMintEventFix(ctx context.Context, in *GetBoxMintEventRequest, opts ...http.CallOption) (*GetBoxMintEventReply, error) {
+	var out GetBoxMintEventReply
+	pattern := "/api/get_box_mint_event_fix"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTransactionGetBoxMintEventFix))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

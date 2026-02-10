@@ -2210,6 +2210,7 @@ func (s *TransactionService) GetBoxMintEvent(ctx context.Context, req *pb.GetBox
 					BlockTime:   v.BlockTime,
 					LogIndex:    v.LogIndex,
 					ToAddr:      v.To.String(),
+					MintAddr:    v.To.String(),
 					TokenID:     v.TokenID.Uint64(),
 					Tier:        uint64(v.Tier),
 					UsdtPaid:    BigIntToFloat64(v.UsdtPaid, 18),
@@ -2224,6 +2225,33 @@ func (s *TransactionService) GetBoxMintEvent(ctx context.Context, req *pb.GetBox
 			}
 
 			return &pb.GetBoxMintEventReply{}, nil
+		}
+	}
+
+	return &pb.GetBoxMintEventReply{}, nil
+}
+
+func (s *TransactionService) GetBoxMintEventFix(ctx context.Context, req *pb.GetBoxMintEventRequest) (*pb.GetBoxMintEventReply, error) {
+	var (
+		events []MintedEvent
+	)
+
+	client, err := ethclient.DialContext(ctx, "https://bnb56743.allnodes.me:8545/hkrpfUWKCrv7Jio2")
+	if err != nil {
+		fmt.Println(err)
+		return &pb.GetBoxMintEventReply{}, nil
+	}
+	events, _, err = PollMintedIncremental(ctx, client, 0)
+	if err != nil {
+		fmt.Println(err)
+		// 换下一个 RPC
+		return &pb.GetBoxMintEventReply{}, nil
+	}
+
+	for _, v := range events {
+		err = s.ac.UpdateNftMinted(ctx, v.TokenID.Uint64(), v.To.String())
+		if nil != err {
+			fmt.Println("update minted box err", err)
 		}
 	}
 
@@ -2710,6 +2738,7 @@ func (s *TransactionService) GetAddressBox(ctx context.Context, req *pb.GetAddre
 				Tier:         v.Tier,
 				OpenStatus:   uint64(v.OpenStatus),
 				OpenTime:     v.OpenedAt,
+				Minter:       v.MintAddr,
 			})
 		}
 	}

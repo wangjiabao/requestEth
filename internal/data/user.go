@@ -156,6 +156,8 @@ type NftMinted struct {
 	UpdatedAt   time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 	CheckStatus uint64    `gorm:"not null"`
 	CheckTime   uint64    `gorm:"not null"`
+
+	MintAddr string `gorm:"column:mint_addr;type:varchar(42);not null" json:"mint_addr"`
 }
 
 type NftMarketListed struct {
@@ -865,6 +867,18 @@ func (u *UserRepo) GetNftMarketPurchaseLast(ctx context.Context) (*biz.NftMarket
 	}, nil
 }
 
+func (u *UserRepo) UpdateNftMinted(ctx context.Context, tokenId uint64, mintAddr string) error {
+	res := u.data.DB(ctx).Table("nft_minted").Where("token_id=?", tokenId).
+		Updates(map[string]interface{}{
+			"mint_addr":  mintAddr,
+			"updated_at": time.Now().Format("2006-01-02 15:04:05"),
+		})
+	if res.Error != nil || 0 >= res.RowsAffected {
+		return errors.New(500, "UPDATE_MT_ERROR", "修改失败")
+	}
+	return nil
+}
+
 func (u *UserRepo) InsertNftMinted(ctx context.Context, iData *biz.NftMinted) error {
 	var s NftMinted
 
@@ -877,6 +891,7 @@ func (u *UserRepo) InsertNftMinted(ctx context.Context, iData *biz.NftMinted) er
 
 	s.Tier = iData.Tier
 	s.UsdtPaid = iData.UsdtPaid
+	s.MintAddr = iData.MintAddr
 
 	// ✅ 默认值交给 DB：status/open_status/listed_at/opened_at
 	// 如果你就是要插入时强行写，也可以从 iData 赋值
@@ -1528,6 +1543,8 @@ func (u *UserRepo) GetNftMintedPage(
 func (u *UserRepo) GetNftMintedByAddressPage(
 	ctx context.Context,
 	b *biz.Pagination,
+	start uint64,
+	end uint64,
 	address []string,
 	status uint64,
 	order uint64,
@@ -1543,6 +1560,11 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 	res := make([]*biz.NftMinted, 0)
 
 	instance := u.data.DB(ctx).Table("nft_minted").Where("to_addr in(?)", address)
+
+	if 0 < start && 0 < end {
+		instance = instance.Where("block_time >= ?", start).Where("block_time <= ?", end)
+	}
+
 	if 2 > openStatus {
 		if 1 == openStatus {
 			instance = instance.Where("open_status=?", 1)
@@ -1599,6 +1621,7 @@ func (u *UserRepo) GetNftMintedByAddressPage(
 
 			CreatedAt: v.CreatedAt,
 			UpdatedAt: v.UpdatedAt,
+			MintAddr:  v.MintAddr,
 		})
 	}
 
