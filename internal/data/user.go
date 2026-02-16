@@ -1533,6 +1533,7 @@ func (u *UserRepo) GetNftMintedPage(
 
 			CreatedAt: v.CreatedAt,
 			UpdatedAt: v.UpdatedAt,
+			MintAddr:  v.MintAddr,
 		})
 	}
 
@@ -1734,10 +1735,36 @@ func (u *UserRepo) GetMintNftCount(paidType uint64) int64 {
 	return count
 }
 
+// GetMintNftNotOpenCount .
+func (u *UserRepo) GetMintNftNotOpenCount(paidType uint64) int64 {
+	var (
+		count int64
+	)
+
+	instance := u.data.db.Table("nft_minted").Where("open_status=?", 0)
+	if 0 < paidType {
+		instance = instance.Where("tier", paidType)
+	}
+	instance.Count(&count)
+	return count
+}
+
 // GetMintNftUsdtPaidSum 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
 func (u *UserRepo) GetMintNftUsdtPaidSum(paidType uint64) string {
 	var sum string
 	instance := u.data.db.Table("nft_minted")
+	if 0 < paidType {
+		instance = instance.Where("tier", paidType)
+	}
+
+	instance.Select("COALESCE(SUM(usdt_paid), 0)").Scan(&sum)
+	return sum
+}
+
+// GetMintNftNotOpenUsdtPaidSum 统计时间段内 mint 的 usdt_paid 总和（返回字符串，避免精度问题）
+func (u *UserRepo) GetMintNftNotOpenUsdtPaidSum(paidType uint64) string {
+	var sum string
+	instance := u.data.db.Table("nft_minted").Where("open_status=?", 0)
 	if 0 < paidType {
 		instance = instance.Where("tier", paidType)
 	}

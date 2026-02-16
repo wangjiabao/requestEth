@@ -802,6 +802,7 @@ message GetMarketListReply {
     double priceUsdtNow = 4; // 目前增长金额
     uint64 blockTime = 5; // 铸造时间
     uint64 listTime = 6; // 上架时间
+    string minter = 10;
   }
 }
 
@@ -818,6 +819,8 @@ message GetAllInfoReply {
   string todayMintedSum = 4; // 今日铸造金额
   uint64 mintedCount = 5; // 总铸造量
   string mintedSum = 6; // 总铸金额
+  uint64 mintedCountNoOpen = 115; // 已铸造量未打卡
+  string mintedSumNoOpen = 116; // 已铸金额未打卡
 
   uint64 mintedCountOne = 7; // 总铸造量1档
   string mintedSumOne = 8; // 总铸金额1档

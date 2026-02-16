@@ -2790,6 +2790,7 @@ func (s *TransactionService) GetMarketList(ctx context.Context, req *pb.GetMarke
 				BlockTime:    v.BlockTime,
 				ListTime:     v.ListedAt,
 				Tier:         v.Tier,
+				Minter:       v.MintAddr,
 			})
 		}
 	}

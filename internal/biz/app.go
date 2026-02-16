@@ -271,7 +271,9 @@ type UserRepo interface {
 	GetMintNftCountBySe(ctx context.Context, start, end uint64) int64
 	GetMintNftUsdtPaidSumBySe(ctx context.Context, start, end uint64) string
 	GetMintNftCount(paidType uint64) int64
+	GetMintNftNotOpenCount(paidType uint64) int64
 	GetMintNftUsdtPaidSum(paidType uint64) string
+	GetMintNftNotOpenUsdtPaidSum(paidType uint64) string
 	GetNftBuyCountBySe(ctx context.Context, start, end uint64) int64
 	GetNftBuySumBySe(ctx context.Context, start, end uint64) string
 	GetNftBuySum() string
@@ -1078,22 +1080,24 @@ func (ac *AppUsecase) GetSellBoxList(ctx context.Context, address []string, req 
 func (ac *AppUsecase) GetAllInfo(ctx context.Context, req *pb.GetAllInfoRequest) (*pb.GetAllInfoReply, error) {
 
 	return &pb.GetAllInfoReply{
-		UserCount:        uint64(ac.userRepo.GetUserRCount(ctx)),
-		TodayUserCount:   uint64(ac.userRepo.GetUserRCountBySe(ctx, req.Start, req.End)),
-		TodayMintedCount: uint64(ac.userRepo.GetMintNftCountBySe(ctx, req.Start, req.End)),
-		TodayMintedSum:   ac.userRepo.GetMintNftUsdtPaidSumBySe(ctx, req.Start, req.End),
-		MintedCount:      uint64(ac.userRepo.GetMintNftCount(0)),
-		MintedSum:        ac.userRepo.GetMintNftUsdtPaidSum(0),
-		MintedCountOne:   uint64(ac.userRepo.GetMintNftCount(1)),
-		MintedSumOne:     ac.userRepo.GetMintNftUsdtPaidSum(1),
-		MintedCountTwo:   uint64(ac.userRepo.GetMintNftCount(2)),
-		MintedSumTwo:     ac.userRepo.GetMintNftUsdtPaidSum(2),
-		MintedCountThree: uint64(ac.userRepo.GetMintNftCount(3)),
-		MintedSumThree:   ac.userRepo.GetMintNftUsdtPaidSum(3),
-		BuyCount:         uint64(ac.userRepo.GetNftBuyCount()),
-		BuySum:           ac.userRepo.GetNftBuySum(),
-		TodayBuyCount:    uint64(ac.userRepo.GetNftBuyCountBySe(ctx, req.Start, req.End)),
-		TodayBuySum:      ac.userRepo.GetNftBuySumBySe(ctx, req.Start, req.End),
-		OpenReward:       ac.userRepo.GetNftOpenSum(),
+		UserCount:         uint64(ac.userRepo.GetUserRCount(ctx)),
+		TodayUserCount:    uint64(ac.userRepo.GetUserRCountBySe(ctx, req.Start, req.End)),
+		TodayMintedCount:  uint64(ac.userRepo.GetMintNftCountBySe(ctx, req.Start, req.End)),
+		TodayMintedSum:    ac.userRepo.GetMintNftUsdtPaidSumBySe(ctx, req.Start, req.End),
+		MintedCount:       uint64(ac.userRepo.GetMintNftCount(0)),
+		MintedSum:         ac.userRepo.GetMintNftUsdtPaidSum(0),
+		MintedCountOne:    uint64(ac.userRepo.GetMintNftCount(1)),
+		MintedSumOne:      ac.userRepo.GetMintNftUsdtPaidSum(1),
+		MintedCountTwo:    uint64(ac.userRepo.GetMintNftCount(2)),
+		MintedSumTwo:      ac.userRepo.GetMintNftUsdtPaidSum(2),
+		MintedCountThree:  uint64(ac.userRepo.GetMintNftCount(3)),
+		MintedSumThree:    ac.userRepo.GetMintNftUsdtPaidSum(3),
+		BuyCount:          uint64(ac.userRepo.GetNftBuyCount()),
+		BuySum:            ac.userRepo.GetNftBuySum(),
+		TodayBuyCount:     uint64(ac.userRepo.GetNftBuyCountBySe(ctx, req.Start, req.End)),
+		TodayBuySum:       ac.userRepo.GetNftBuySumBySe(ctx, req.Start, req.End),
+		OpenReward:        ac.userRepo.GetNftOpenSum(),
+		MintedCountNoOpen: uint64(ac.userRepo.GetMintNftNotOpenCount(0)),
+		MintedSumNoOpen:   ac.userRepo.GetMintNftNotOpenUsdtPaidSum(0),
 	}, nil
 }

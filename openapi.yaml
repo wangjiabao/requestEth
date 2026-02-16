@@ -1239,6 +1239,10 @@ components:
                     type: string
                 mintedSum:
                     type: string
+                mintedCountNoOpen:
+                    type: string
+                mintedSumNoOpen:
+                    type: string
                 mintedCountOne:
                     type: string
                 mintedSumOne:
@@ -1479,6 +1483,8 @@ components:
                 blockTime:
                     type: string
                 listTime:
+                    type: string
+                minter:
                     type: string
         GetReservesReply:
             type: object
